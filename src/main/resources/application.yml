@@ -25,11 +25,6 @@ spring:
     open-in-view: false
   jackson:
     property-naming-strategy: SNAKE_CASE
-  data:
-    redis:
-      host: ${REDIS_HOST}
-      port: ${REDIS_PORT}
-      password: ${REDIS_PASSWORD}
   security:
     oauth2:
       client:
@@ -44,7 +39,9 @@ spring:
             authorization-uri: https://kauth.kakao.com/oauth/authorize
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v1/oidc/userinfo
-
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
 jwt:
   secret: ${JWT_SECRET}
   expiration: ${JWT_EXPIRATION:3600000}
@@ -72,9 +69,6 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
     show-sql: true
-  sql:
-    init:
-      mode: always
 jwt:
   expiration: 300000
   refresh:
