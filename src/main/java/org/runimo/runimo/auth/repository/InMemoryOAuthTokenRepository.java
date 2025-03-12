@@ -1,0 +1,47 @@
+package org.runimo.runimo.auth.repository;
+
+import lombok.RequiredArgsConstructor;
+import org.runimo.runimo.auth.jwt.TokenStatus;
+import org.runimo.runimo.common.CacheEntry;
+import org.runimo.runimo.common.InMemoryCache;
+import org.runimo.runimo.user.domain.SocialProvider;
+import org.springframework.stereotype.Component;
+
+import java.time.Duration;
+import java.util.Optional;
+
+@Component
+@RequiredArgsConstructor
+public class InMemoryOAuthTokenRepository implements OAuthTokenRepository {
+
+  private final InMemoryCache<String, TokenStatus> tokenCache;
+
+  public void storeNonce(
+      SocialProvider provider, String sub, String nonce, TokenStatus status, Duration ttl) {
+    String key = generateKey(provider, sub, nonce);
+    tokenCache.put(key, status, ttl);
+  }
+
+  public Optional<TokenStatus> getNonceStatus(SocialProvider provider, String sub, String nonce) {
+    String key = generateKey(provider, sub, nonce);
+    return tokenCache.get(key);
+  }
+
+  public void updateNonceStatus(
+      SocialProvider provider, String sub, String nonce, TokenStatus status) {
+    String key = generateKey(provider, sub, nonce);
+    CacheEntry<TokenStatus> entry =
+        tokenCache
+            .getEntry(key)
+            .orElseThrow(() -> new IllegalStateException("Token not found for key: " + key));
+
+    tokenCache.remove(key);
+
+    Duration remainingTtl = Duration.between(java.time.Instant.now(), entry.expiresAt());
+    tokenCache.put(key, status, remainingTtl);
+  }
+
+  private String generateKey(SocialProvider provider, String sub, String nonce) {
+    return String.format("auth:%s:%s:%s", provider.name(), sub, nonce);
+  }
+}
