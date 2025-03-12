@@ -15,8 +15,8 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class OidcNonceService {
 
-  private final OAuthTokenRepository oAuthTokenRepository;
   private final static String NONCE_CLAIM_KEY = "nonce";
+  private final OAuthTokenRepository oAuthTokenRepository;
 
   public void checkNonceAndSave(final SocialProvider provider, final DecodedJWT decodedJWT) {
     Optional<TokenStatus> existingOidcTokenEntry = oAuthTokenRepository.getNonceStatus(

@@ -26,12 +26,12 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class KakaoTokenVerifier implements OidcTokenVerifier {
 
-  @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
-  private String appKey;
   private final OAuthTokenRepository oAuthTokenRepository;
   private final RestTemplate restTemplate = new RestTemplate();
   private final ObjectMapper objectMapper = new ObjectMapper();
   private final Map<String, RSAPublicKey> publicKeys = new HashMap<>();
+  @Value("${spring.security.oauth2.client.registration.kakao.client-id}")
+  private String appKey;
 
   @Scheduled(fixedRate = 3600000)
   public void refreshPublicKeys() {
@@ -93,8 +93,8 @@ public class KakaoTokenVerifier implements OidcTokenVerifier {
   }
 
   /*
-  * 카카오 토큰 검증을 위한 공개키를 의존성 주입 이후에 조회하여 캐싱하는 메소드
-  * */
+   * 카카오 토큰 검증을 위한 공개키를 의존성 주입 이후에 조회하여 캐싱하는 메소드
+   * */
   @PostConstruct
   public void initKakaoTokenVerifier() {
     refreshPublicKeys();
