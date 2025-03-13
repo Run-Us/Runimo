@@ -1,4 +1,4 @@
-package org.runimo.runimo.common;
+package org.runimo.runimo.common.response;
 
 import lombok.Getter;
 import org.runimo.runimo.exceptions.code.CustomResponseCode;
