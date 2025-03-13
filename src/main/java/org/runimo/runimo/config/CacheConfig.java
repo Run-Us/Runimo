@@ -2,8 +2,8 @@ package org.runimo.runimo.config;
 
 import com.sun.security.auth.UserPrincipal;
 import org.runimo.runimo.auth.jwt.TokenStatus;
-import org.runimo.runimo.common.InMemoryCache;
-import org.runimo.runimo.common.SpringInMemoryCache;
+import org.runimo.runimo.common.cache.InMemoryCache;
+import org.runimo.runimo.common.cache.SpringInMemoryCache;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package org.runimo.runimo.common;
+package org.runimo.runimo.common.cache;
 
 import java.time.Duration;
 import java.util.Optional;

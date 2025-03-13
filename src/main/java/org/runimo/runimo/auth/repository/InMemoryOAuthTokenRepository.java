@@ -2,8 +2,8 @@ package org.runimo.runimo.auth.repository;
 
 import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.auth.jwt.TokenStatus;
-import org.runimo.runimo.common.CacheEntry;
-import org.runimo.runimo.common.InMemoryCache;
+import org.runimo.runimo.common.cache.CacheEntry;
+import org.runimo.runimo.common.cache.InMemoryCache;
 import org.runimo.runimo.user.domain.SocialProvider;
 import org.springframework.stereotype.Component;
 
