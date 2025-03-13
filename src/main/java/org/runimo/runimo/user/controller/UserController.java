@@ -5,9 +5,10 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.runimo.runimo.common.SuccessResponse;
+import org.runimo.runimo.common.presentationDtos.SuccessResponse;
 import org.runimo.runimo.user.controller.request.AuthLoginRequest;
 import org.runimo.runimo.user.controller.request.AuthSignupRequest;
 import org.runimo.runimo.user.domain.SocialProvider;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 
+@Tag(name = "USER", description = "사용자 관련 API")
 @RestController
 @RequestMapping("/api/v1/user")
 @RequiredArgsConstructor
