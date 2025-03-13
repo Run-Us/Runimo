@@ -21,7 +21,6 @@ public class RecordCreateUsecaseImpl implements RecordCreateUsecase {
   public RecordSaveResponse execute(RecordCreateCommand command) {
     User user = userFinder.findUserByPublicId(command.userPublicId())
         .orElseThrow(NoSuchElementException::new);
-    commandService.saveRecord(user.getId(), command);
-    return null;
+    return commandService.saveRecord(user.getId(), command);
   }
 }
