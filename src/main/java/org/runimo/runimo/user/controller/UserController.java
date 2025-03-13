@@ -8,7 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.runimo.runimo.common.presentationDtos.SuccessResponse;
+import org.runimo.runimo.common.response.SuccessResponse;
 import org.runimo.runimo.user.controller.request.AuthLoginRequest;
 import org.runimo.runimo.user.controller.request.AuthSignupRequest;
 import org.runimo.runimo.user.domain.SocialProvider;

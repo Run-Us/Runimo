@@ -1,8 +1,8 @@
 package org.runimo.runimo.records.service;
 
 import lombok.RequiredArgsConstructor;
-import org.runimo.runimo.common.scaleDtos.Distance;
-import org.runimo.runimo.common.scaleDtos.Pace;
+import org.runimo.runimo.common.scale.Distance;
+import org.runimo.runimo.common.scale.Pace;
 import org.runimo.runimo.records.domain.RunningRecord;
 import org.runimo.runimo.records.repository.RecordRepository;
 import org.runimo.runimo.records.service.usecases.model.RecordCreateCommand;

@@ -8,8 +8,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.runimo.runimo.common.BaseEntity;
-import org.runimo.runimo.common.scaleDtos.Distance;
-import org.runimo.runimo.common.scaleDtos.Pace;
+import org.runimo.runimo.common.scale.Distance;
+import org.runimo.runimo.common.scale.Pace;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
