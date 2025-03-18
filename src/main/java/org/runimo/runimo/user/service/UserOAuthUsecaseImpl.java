@@ -22,7 +22,7 @@ import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
-public class UserOAuthService implements UserOAuthUsecase {
+public class UserOAuthUsecaseImpl implements UserOAuthUsecase {
   private final JwtTokenFactory jwtfactory;
   private final OidcService oidcService;
   private final OidcNonceService oidcNonceService;
