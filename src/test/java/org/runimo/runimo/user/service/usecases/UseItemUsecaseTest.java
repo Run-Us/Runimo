@@ -34,7 +34,7 @@ class UseItemUsecaseTest {
   void 아이템_사용_유즈케이스_테스트() {
     //given
     UseItemCommand command = new UseItemCommand(1L, 1L, 10L);
-    when(userItemFinder.findByUserIdAndItemId(any(), any()))
+    when(userItemFinder.findByUserIdAndItemIdWithXLock(any(), any()))
         .thenReturn(Optional.ofNullable(UserItemFixtures.getUserItemWithQuantity(10L)));
     //when
     UseItemResponse res = useItemUsecase.useItem(command);
