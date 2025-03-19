@@ -1,4 +1,4 @@
-package org.runimo.runimo.user.service;
+package org.runimo.runimo.user.service.usecases;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
@@ -11,23 +11,24 @@ import org.runimo.runimo.user.domain.OAuthInfo;
 import org.runimo.runimo.user.domain.SocialProvider;
 import org.runimo.runimo.user.domain.User;
 import org.runimo.runimo.user.repository.OAuthInfoRepository;
-import org.runimo.runimo.user.repository.UserRepository;
+import org.runimo.runimo.user.service.UserCreator;
+import org.runimo.runimo.user.service.UserItemCreator;
 import org.runimo.runimo.user.service.dtos.SignupUserInfo;
 import org.runimo.runimo.user.service.dtos.TokenPair;
 import org.runimo.runimo.user.service.dtos.UserSignupCommand;
-import org.runimo.runimo.user.service.usecases.UserOAuthUsecase;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
 
 @Service
 @RequiredArgsConstructor
-public class UserOAuthService implements UserOAuthUsecase {
+public class UserOAuthUsecaseImpl implements UserOAuthUsecase {
   private final JwtTokenFactory jwtfactory;
   private final OidcService oidcService;
   private final OidcNonceService oidcNonceService;
+  private final UserItemCreator userItemCreator;
   private final OAuthInfoRepository oAuthInfoRepository;
-  private final UserRepository userRepository;
+  private final UserCreator userCreator;
 
   @Override
   @Transactional
@@ -50,17 +51,9 @@ public class UserOAuthService implements UserOAuthUsecase {
           throw new IllegalArgumentException();
         });
 
-    User user = User.builder()
-        .nickname(command.nickname())
-        .imgUrl(command.imgUrl())
-        .build();
-    userRepository.saveAndFlush(user);
-    OAuthInfo oAuthInfo = new OAuthInfo(
-        user,
-        command.provider(),
-        pid
-    );
-    oAuthInfoRepository.save(oAuthInfo);
-    return new SignupUserInfo(user.getId(), jwtfactory.generateTokenPair(user));
+    User savedUser = userCreator.createUser(command);
+    userCreator.createUserOAuthInfo(savedUser, provider, pid);
+    userItemCreator.createAll(savedUser.getId());
+    return new SignupUserInfo(savedUser.getId(), jwtfactory.generateTokenPair(savedUser));
   }
 }

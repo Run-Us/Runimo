@@ -8,6 +8,8 @@ public enum UserHttpResponseCode implements CustomResponseCode {
   SIGNUP_SUCCESS("USH2002", "회원가입 성공", "회원가입 성공"),
   LOGIN_SUCCESS("USH2003", "로그인 성공", "로그인 성공"),
   REFRESH_SUCCESS("USH2004", "토큰 재발급 성공", "토큰 재발급 성공"),
+
+  USE_ITEM_SUCCESS("USH2005", "아이템 사용 성공", "아이템 사용 성공"),
   ;
 
   private final String code;

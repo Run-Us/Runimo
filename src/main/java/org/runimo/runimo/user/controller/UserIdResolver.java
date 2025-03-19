@@ -1,8 +1,8 @@
-package org.runimo.runimo.user.service;
+package org.runimo.runimo.user.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.runimo.runimo.user.controller.UserId;
 import org.runimo.runimo.user.domain.User;
+import org.runimo.runimo.user.service.UserFinder;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

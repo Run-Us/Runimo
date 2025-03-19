@@ -11,11 +11,11 @@ import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.common.response.SuccessResponse;
 import org.runimo.runimo.user.controller.request.AuthLoginRequest;
 import org.runimo.runimo.user.controller.request.AuthSignupRequest;
+import org.runimo.runimo.user.controller.request.UseItemRequest;
 import org.runimo.runimo.user.domain.SocialProvider;
 import org.runimo.runimo.user.enums.UserHttpResponseCode;
-import org.runimo.runimo.user.service.dtos.AuthResponse;
-import org.runimo.runimo.user.service.dtos.SignupUserInfo;
-import org.runimo.runimo.user.service.dtos.TokenPair;
+import org.runimo.runimo.user.service.dtos.*;
+import org.runimo.runimo.user.service.usecases.UseItemUsecase;
 import org.runimo.runimo.user.service.usecases.UserOAuthUsecase;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,11 +27,12 @@ import java.net.URI;
 
 @Tag(name = "USER", description = "사용자 관련 API")
 @RestController
-@RequestMapping("/api/v1/user")
+@RequestMapping("/api/v1/users")
 @RequiredArgsConstructor
 public class UserController {
 
   private final UserOAuthUsecase userOAuthUsecase;
+  private final UseItemUsecase useItemUsecase;
 
   @Operation(summary = "사용자 로그인", description = "사용자가 OIDC 토큰을 사용하여 로그인합니다.")
   @ApiResponses(value = {
@@ -74,5 +75,28 @@ public class UserController {
         .body(SuccessResponse.of(
             UserHttpResponseCode.SIGNUP_SUCCESS,
             new AuthResponse(authResult.tokenPair())));
+  }
+
+  @Operation(summary = "아이템 사용", description = "사용자가 아이템을 사용합니다.")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "아이템 사용 성공",
+          content = @Content(schema = @Schema(implementation = UseItemResponse.class))),
+      @ApiResponse(responseCode = "400", description = "잘못된 요청 데이터"),
+      @ApiResponse(responseCode = "401", description = "인증 실패"),
+      @ApiResponse(responseCode = "404", description = "아이템 없음")
+  })
+  @PostMapping("/me/items/use")
+  public ResponseEntity<SuccessResponse<UseItemResponse>> useItem(
+      @UserId Long userId,
+      @Valid @RequestBody UseItemRequest request
+  ) {
+    UseItemResponse useItemResponse = useItemUsecase.useItem(
+        new UseItemCommand(userId, request.itemId(), request.quantity())
+    );
+    return ResponseEntity.ok().body(
+        SuccessResponse.of(
+            UserHttpResponseCode.USE_ITEM_SUCCESS,
+            useItemResponse
+        ));
   }
 }

@@ -1,0 +1,56 @@
+server:
+  port: 8080
+  tomcat:
+    threads:
+      max: 200
+    accept-count: 100
+    max-connections: 8912
+    max-keep-alive-requests: 200
+spring:
+  config:
+    import:
+      - optional:file:${ENV_PATH:.}/.env.${SPRING_PROFILES_ACTIVE:test}[.properties]
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: ${JPA_DDL_AUTO:update}
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+    open-in-view: false
+  jackson:
+    property-naming-strategy: SNAKE_CASE
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: ${KAKAO_CLIENT_ID}
+            client-name: kakao
+            redirectUri: ${KAKAO_REDIRECT_URI}
+            authorization-grant-type: authorization_code
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v1/oidc/userinfo
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+jwt:
+  secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION:3600000}
+  refresh:
+    expiration: ${JWT_REFRESH_EXPIRATION:86400000}
+
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: debug
