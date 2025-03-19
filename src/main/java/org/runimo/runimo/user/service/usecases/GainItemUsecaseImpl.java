@@ -9,6 +9,8 @@ import org.runimo.runimo.user.service.dtos.GainItemResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.NoSuchElementException;
+
 @Service
 @RequiredArgsConstructor
 public class GainItemUsecaseImpl implements GainItemUsecase {
@@ -20,7 +22,7 @@ public class GainItemUsecaseImpl implements GainItemUsecase {
   @Transactional
   public GainItemResponse gainItem(GainItemCommand command) {
     UserItem userItem = userItemFinder.findByUserIdAndItemId(command.userId(), command.itemId())
-        .orElse(new UserItem(command.userId(), command.itemId(), 0L));
+            .orElseThrow(NoSuchElementException::new);
     userItem.gainItem(command.quantity());
     userItemRepository.save(userItem);
     return new GainItemResponse(
