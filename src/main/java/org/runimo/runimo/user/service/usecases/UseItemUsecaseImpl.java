@@ -1,11 +1,11 @@
-package org.runimo.runimo.user.service;
+package org.runimo.runimo.user.service.usecases;
 
 import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.item.service.ItemActivityCreator;
 import org.runimo.runimo.user.domain.UserItem;
+import org.runimo.runimo.user.service.UserItemFinder;
 import org.runimo.runimo.user.service.dtos.UseItemCommand;
 import org.runimo.runimo.user.service.dtos.UseItemResponse;
-import org.runimo.runimo.user.service.usecases.UseItemUsecase;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +25,6 @@ public class UseItemUsecaseImpl implements UseItemUsecase {
         .orElseThrow(NoSuchElementException::new);
     userItem.useItem(command.quantity());
     itemActivityCreator.createItemActivity(UseItemCommand.toItemUseActivityCommand(command));
-    return new UseItemResponse(userItem.getId(), userItem.getQuantity());
+    return new UseItemResponse(userItem.getItemId(), userItem.getQuantity());
   }
 }
