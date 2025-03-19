@@ -2,6 +2,7 @@ package org.runimo.runimo.user.domain;
 
 
 import org.junit.jupiter.api.Test;
+import org.runimo.runimo.user.UserItemFixtures;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -38,22 +39,5 @@ class UserItemTest {
     //then
     assertEquals(20L, userItem.getQuantity());
   }
-
-
-
-
 }
 
-class UserItemFixtures {
-
-  private static final Long DEFAULT_USER_ID = 1L;
-  private static final Long DEFAULT_ITEM_ID = 1L;
-
-  public static UserItem getUserItemWithQuantity(Long quantity) {
-    return UserItem.builder()
-        .userId(DEFAULT_USER_ID)
-        .itemId(DEFAULT_ITEM_ID)
-        .quantity(quantity)
-        .build();
-  }
-}
