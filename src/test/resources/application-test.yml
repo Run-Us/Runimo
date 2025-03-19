@@ -9,11 +9,10 @@ server:
 spring:
   config:
     import:
-      - optional:file:${ENV_PATH:.}/.env.${SPRING_PROFILES_ACTIVE:dev}[.properties]
-  profiles:
-    active: ${SPRING_PROFILES_ACTIVE:dev}
+      - optional:file:${ENV_PATH:.}/.env.${SPRING_PROFILES_ACTIVE:test}[.properties]
   datasource:
-    driver-class-name: ${DB_DRIVER_CLASS_NAME}
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
   jpa:
@@ -21,7 +20,7 @@ spring:
       ddl-auto: ${JPA_DDL_AUTO:update}
     properties:
       hibernate:
-        dialect: ${JPA_DIALECT}
+        dialect: org.hibernate.dialect.H2Dialect
     open-in-view: false
   jackson:
     property-naming-strategy: SNAKE_CASE
@@ -55,51 +54,3 @@ logging:
         type:
           descriptor:
             sql: debug
-
----
-spring:
-  config:
-    activate:
-      on-profile: dev
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://${DB_HOST}:${DB_PORT}/${DB_NAME}
-  jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
-    show-sql: true
-jwt:
-  expiration: 300000
-  refresh:
-    expiration: 3600000
-
----
-spring:
-  config:
-    activate:
-      on-profile: prod
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:${DB_TYPE}://${DB_HOST}:${DB_PORT}/${DB_NAME}
-  jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.MySQLDialect
-  sql:
-    init:
-      mode: never
-
-jwt:
-  expiration: 3600000
-  refresh:
-    expiration: 604800000
-
----
-spring:
-  config:
-    activate:
-      on-profile: test
-  sql:
-    init:
-      mode: never
