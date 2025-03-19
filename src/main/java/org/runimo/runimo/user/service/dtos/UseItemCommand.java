@@ -1,7 +1,7 @@
 package org.runimo.runimo.user.service.dtos;
 
 import org.runimo.runimo.item.domain.ActivityType;
-import org.runimo.runimo.item.service.CreateActivityCommand;
+import org.runimo.runimo.item.service.dtos.CreateActivityCommand;
 
 public record UseItemCommand(
     Long userId,

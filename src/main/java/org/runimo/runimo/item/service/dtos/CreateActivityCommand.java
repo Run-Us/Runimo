@@ -1,4 +1,4 @@
-package org.runimo.runimo.item.service;
+package org.runimo.runimo.item.service.dtos;
 
 import org.runimo.runimo.item.domain.ActivityType;
 
