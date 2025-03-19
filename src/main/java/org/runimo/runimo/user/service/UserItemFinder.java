@@ -18,4 +18,8 @@ public class UserItemFinder {
   public Optional<UserItem> findByUserIdAndItemId(Long userId, Long itemId) {
     return userItemRepository.findByUserIdAndItemId(userId,itemId);
   }
+
+  public Optional<UserItem> findByUserIdAndItemIdWithXLock(Long userId, Long itemId) {
+    return userItemRepository.findByUserIdAndItemIdForUpdate(userId,itemId);
+  }
 }

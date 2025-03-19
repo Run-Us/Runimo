@@ -21,7 +21,7 @@ public class GainItemUsecaseImpl implements GainItemUsecase {
   @Override
   @Transactional
   public GainItemResponse gainItem(GainItemCommand command) {
-    UserItem userItem = userItemFinder.findByUserIdAndItemId(command.userId(), command.itemId())
+    UserItem userItem = userItemFinder.findByUserIdAndItemIdWithXLock(command.userId(), command.itemId())
             .orElseThrow(NoSuchElementException::new);
     userItem.gainItem(command.quantity());
     userItemRepository.save(userItem);

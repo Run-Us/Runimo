@@ -21,7 +21,7 @@ public class UseItemUsecaseImpl implements UseItemUsecase {
   @Override
   @Transactional
   public UseItemResponse useItem(UseItemCommand command) {
-    UserItem userItem = userItemFinder.findByUserIdAndItemId(command.userId(), command.itemId())
+    UserItem userItem = userItemFinder.findByUserIdAndItemIdWithXLock(command.userId(), command.itemId())
         .orElseThrow(NoSuchElementException::new);
     userItem.useItem(command.quantity());
     itemActivityCreator.createItemActivity(UseItemCommand.toItemUseActivityCommand(command));
