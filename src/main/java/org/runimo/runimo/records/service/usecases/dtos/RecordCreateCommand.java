@@ -1,10 +1,11 @@
-package org.runimo.runimo.records.service.usecases.model;
+package org.runimo.runimo.records.service.usecases.dtos;
 
 import org.runimo.runimo.common.scale.Distance;
 import org.runimo.runimo.common.scale.Pace;
-import org.runimo.runimo.records.controller.model.RecordSaveRequest;
+import org.runimo.runimo.records.controller.requests.RecordSaveRequest;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 
 public record RecordCreateCommand(
     String userPublicId,
@@ -22,5 +23,13 @@ public record RecordCreateCommand(
         new Pace(request.averagePaceInMilliSeconds()),
         new Distance(request.totalDistanceInMeters())
     );
+  }
+
+  public Long totalDistanceInMeters() {
+    return totalDistance.getAmount();
+  }
+
+  public Long totalDurationInSeconds() {
+    return ChronoUnit.SECONDS.between(startedAt, endAt);
   }
 }

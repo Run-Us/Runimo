@@ -2,7 +2,7 @@ package org.runimo.runimo.records.service.usecases;
 
 import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.records.service.RecordCommandService;
-import org.runimo.runimo.records.service.usecases.model.RecordUpdateCommand;
+import org.runimo.runimo.records.service.usecases.dtos.RecordUpdateCommand;
 import org.runimo.runimo.user.service.UserFinder;
 import org.springframework.stereotype.Service;
 

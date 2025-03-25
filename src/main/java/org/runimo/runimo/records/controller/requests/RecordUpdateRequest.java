@@ -1,8 +1,8 @@
-package org.runimo.runimo.records.controller.model;
+package org.runimo.runimo.records.controller.requests;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.runimo.runimo.records.service.usecases.model.RecordUpdateCommand;
+import org.runimo.runimo.records.service.usecases.dtos.RecordUpdateCommand;
 
 import java.time.LocalDateTime;
 

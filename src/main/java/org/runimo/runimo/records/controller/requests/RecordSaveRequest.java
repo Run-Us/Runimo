@@ -1,4 +1,4 @@
-package org.runimo.runimo.records.controller.model;
+package org.runimo.runimo.records.controller.requests;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

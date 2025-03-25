@@ -5,9 +5,9 @@ import org.runimo.runimo.common.scale.Distance;
 import org.runimo.runimo.common.scale.Pace;
 import org.runimo.runimo.records.domain.RunningRecord;
 import org.runimo.runimo.records.repository.RecordRepository;
-import org.runimo.runimo.records.service.usecases.model.RecordCreateCommand;
-import org.runimo.runimo.records.service.usecases.model.RecordSaveResponse;
-import org.runimo.runimo.records.service.usecases.model.RecordUpdateCommand;
+import org.runimo.runimo.records.service.usecases.dtos.RecordCreateCommand;
+import org.runimo.runimo.records.service.usecases.dtos.RecordSaveResponse;
+import org.runimo.runimo.records.service.usecases.dtos.RecordUpdateCommand;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
