@@ -15,6 +15,11 @@ public class RecordFinder {
   private final RecordRepository recordRepository;
 
   @Transactional(readOnly = true)
+  public Optional<RunningRecord> findById(Long id) {
+    return recordRepository.findById(id);
+  }
+
+  @Transactional(readOnly = true)
   public Optional<RunningRecord> findByPublicId(String id) {
     return recordRepository.findByRecordPublicId(id);
   }
