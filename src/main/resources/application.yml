@@ -102,4 +102,4 @@ spring:
       on-profile: test
   sql:
     init:
-      mode: never
+      mode: always
