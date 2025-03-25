@@ -22,9 +22,9 @@ public class UserItemCreator {
   }
 
   /*
-  * 아이템ID, 유저ID의 모든 순서쌍을 저장한다.
-  * 회원가입 시 실행된다.
-  * */
+   * 아이템ID, 유저ID의 모든 순서쌍을 저장한다.
+   * 회원가입 시 실행된다.
+   * */
   @Transactional
   public void createAll(Long userId) {
     List<Long> itemIds = itemRepository.findAllItemIds();
