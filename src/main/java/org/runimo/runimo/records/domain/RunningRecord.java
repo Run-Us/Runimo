@@ -1,8 +1,7 @@
 package org.runimo.runimo.records.domain;
 
 
-import jakarta.persistence.Embedded;
-import jakarta.persistence.Entity;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,6 +14,7 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
+@Table(name = "running_records")
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -25,6 +25,7 @@ public class RunningRecord extends BaseEntity {
   private LocalDateTime startedAt;
   private LocalDateTime endAt;
   @Embedded
+  @AttributeOverride(name = "amount", column = @Column(name = "total_distance"))
   private Distance totalDistance;
   @Embedded
   private Pace averagePace;
