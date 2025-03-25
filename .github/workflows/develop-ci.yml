@@ -3,8 +3,6 @@ on:
   push:
     branches:
       - main
-      - 'feat/**'
-      - 'fix/**'
   pull_request:
     types: [ opened, reopened, edited, synchronize ]
 jobs:
@@ -32,6 +30,17 @@ jobs:
           echo "${{ secrets.ENV_DEV }}" > .env.dev
           touch .env.test
           echo "${{ secrets.ENV_DEV }}" > .env.test
+        shell: bash
+
+      - name: touch dev data.sql
+        run: |
+          touch src/main/resources/sql/data.sql
+          echo "${{ secrets.DATA_SQL }}" > src/main/resources/sql/data.sql
+        shell: bash
+      - name: touch test data.sql
+        run: |
+          touch src/test/resources/sql/data.sql
+          echo "${{ secrets.TEST_DATA_SQL }}" > src/test/resources/sql/data.sql
         shell: bash
 
       - name: Build and analyze

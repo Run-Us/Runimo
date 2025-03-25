@@ -17,4 +17,8 @@ public class Distance implements Serializable {
   public Distance(Long amount) {
     this.amount = amount;
   }
+
+  public Long getAmount() {
+    return amount;
+  }
 }

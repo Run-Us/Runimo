@@ -1,12 +1,14 @@
 package org.runimo.runimo.user.domain;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.runimo.runimo.common.BaseEntity;
 
+@Table(name = "user_item")
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -37,6 +39,6 @@ public class UserItem extends BaseEntity {
   }
 
   private void validateQuantity(Long quantity) {
-    if(quantity < 0) throw new IllegalArgumentException("quantity must be greater than zero");
+    if (quantity < 0) throw new IllegalArgumentException("quantity must be greater than zero");
   }
 }

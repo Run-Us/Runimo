@@ -22,7 +22,7 @@ public class GainItemUsecaseImpl implements GainItemUsecase {
   @Transactional
   public GainItemResponse gainItem(GainItemCommand command) {
     UserItem userItem = userItemFinder.findByUserIdAndItemIdWithXLock(command.userId(), command.itemId())
-            .orElseThrow(NoSuchElementException::new);
+        .orElseThrow(NoSuchElementException::new);
     userItem.gainItem(command.quantity());
     userItemRepository.save(userItem);
     return new GainItemResponse(

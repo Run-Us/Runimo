@@ -1,5 +1,6 @@
 package org.runimo.runimo.common.scale;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,7 @@ import java.io.Serializable;
 public class Pace implements Serializable {
   @Serial
   private static final long serialVersionUID = 1L;
+  @Column(name = "pace_in_milli_seconds")
   private Long paceInMilliSeconds;
 
   public Pace(Long paceInMilliSeconds) {

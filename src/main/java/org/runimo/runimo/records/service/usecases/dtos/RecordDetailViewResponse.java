@@ -1,4 +1,4 @@
-package org.runimo.runimo.records.service.usecases.model;
+package org.runimo.runimo.records.service.usecases.dtos;
 
 import lombok.Builder;
 import org.runimo.runimo.common.scale.Distance;

@@ -3,7 +3,7 @@ package org.runimo.runimo.records.service.usecases;
 import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.records.domain.RunningRecord;
 import org.runimo.runimo.records.service.RecordFinder;
-import org.runimo.runimo.records.service.usecases.model.RecordDetailViewResponse;
+import org.runimo.runimo.records.service.usecases.dtos.RecordDetailViewResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.NoSuchElementException;
