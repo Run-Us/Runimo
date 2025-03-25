@@ -26,7 +26,7 @@ class UserItemTest {
     UserItem userItem = UserItemFixtures.getUserItemWithQuantity(10L);
 
     //when
-    assertThrows(IllegalArgumentException.class, ()-> userItem.useItem(20L));
+    assertThrows(IllegalArgumentException.class, () -> userItem.useItem(20L));
     assertEquals(10L, userItem.getQuantity());
   }
 
