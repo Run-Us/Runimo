@@ -87,6 +87,7 @@ CREATE TABLE `item_activity`
     `activity_user_id`    integer      NOT NULL,
     `activity_item_id`    integer      NOT NULL,
     `activity_event_type` varchar(255) NOT NULL,
+    `quantity`            integer,
     `created_at`          timestamp,
     `updated_at`          timestamp,
     `deleted_at`          TIMESTAMP
