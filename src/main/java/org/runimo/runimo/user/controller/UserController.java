@@ -41,7 +41,7 @@ public class UserController {
       @ApiResponse(responseCode = "400", description = "잘못된 요청 데이터"),
       @ApiResponse(responseCode = "401", description = "인증 실패")
   })
-  @PostMapping("/login")
+  @PostMapping("/auth/login")
   public ResponseEntity<SuccessResponse<AuthResponse>> login(
       @Valid @RequestBody AuthLoginRequest request
   ) {
@@ -63,7 +63,7 @@ public class UserController {
       @ApiResponse(responseCode = "400", description = "잘못된 요청 데이터"),
       @ApiResponse(responseCode = "409", description = "이미 존재하는 사용자")
   })
-  @PostMapping("/signup")
+  @PostMapping("/auth/signup")
   public ResponseEntity<SuccessResponse<AuthResponse>> signupAndLogin(
       @Valid @RequestBody AuthSignupRequest request) {
     SignupUserInfo authResult = userOAuthUsecase.validateAndSignup(

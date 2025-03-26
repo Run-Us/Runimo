@@ -49,7 +49,7 @@ class RewardTest {
   void setUp() {
     //given
     UserSignupCommand command = new UserSignupCommand("test", SocialProvider.KAKAO, "1234");
-    savedUser = userRegisterService.register(command, SocialProvider.KAKAO, "1234");
+    savedUser = userRegisterService.register(command, "1234");
   }
 
   @AfterEach

@@ -31,7 +31,7 @@ public class UserIdResolver implements HandlerMethodArgumentResolver {
     if (authentication == null || !authentication.isAuthenticated()) {
       throw new SecurityException("No authentication found");
     }
-    User user = userFinder.findUserById(Long.valueOf(authentication.getName()))
+    User user = userFinder.findUserByPublicId(authentication.getName())
         .orElseThrow(NoPermissionException::new);
     return user.getId();
   }

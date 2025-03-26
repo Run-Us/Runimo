@@ -47,7 +47,7 @@ public class UserOAuthUsecaseImpl implements UserOAuthUsecase {
         .ifPresent(oAuthInfo -> {
           throw new IllegalArgumentException();
         });
-    User savedUser = userRegisterService.register(command, provider, pid);
+    User savedUser = userRegisterService.register(command, pid);
     return new SignupUserInfo(savedUser.getId(), jwtfactory.generateTokenPair(savedUser));
   }
 }

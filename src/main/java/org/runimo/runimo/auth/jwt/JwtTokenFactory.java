@@ -23,24 +23,24 @@ public class JwtTokenFactory {
   @Value("${jwt.refresh.expiration}")
   private long jwtRefreshExpiration;
 
-  public String generateAccessToken(User user) {
+  public String generateAccessToken(String userPublicId) {
     Date now = new Date();
     Date expiryDate = new Date(now.getTime() + jwtExpiration);
 
     return JWT.create()
-        .withSubject(user.getPublicId())
+        .withSubject(userPublicId)
         .withIssuedAt(now)
         .withExpiresAt(expiryDate)
         .withIssuer(ISSUER)
         .sign(Algorithm.HMAC256(jwtSecret));
   }
 
-  public String generateRefreshToken(User user) {
+  public String generateRefreshToken(String userPublicId) {
     Date now = new Date();
     Date expiryDate = new Date(now.getTime() + jwtRefreshExpiration);
 
     return JWT.create()
-        .withSubject(user.getPublicId())
+        .withSubject(userPublicId)
         .withIssuedAt(now)
         .withExpiresAt(expiryDate)
         .withIssuer(ISSUER)
@@ -49,8 +49,8 @@ public class JwtTokenFactory {
   }
 
   public TokenPair generateTokenPair(User user) {
-    String accessToken = generateAccessToken(user);
-    String refreshToken = generateRefreshToken(user);
+    String accessToken = generateAccessToken(user.getPublicId());
+    String refreshToken = generateRefreshToken(user.getPublicId());
     return new TokenPair(accessToken, refreshToken);
   }
 }

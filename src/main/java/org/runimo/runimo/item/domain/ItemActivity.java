@@ -1,8 +1,6 @@
 package org.runimo.runimo.item.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,11 +15,12 @@ import org.runimo.runimo.common.BaseEntity;
 public class ItemActivity extends BaseEntity {
   @Column(name = "activity_user_id", nullable = false)
   private Long userId;
-  @Column(name = "activity_event_id", nullable = false)
+  @Column(name = "activity_item_id", nullable = false)
   private Long itemId;
-
+  @Column(name = "quantity", nullable = false)
   private Long quantity;
   @Column(name = "activity_event_type", nullable = false)
+  @Enumerated(EnumType.STRING)
   private ActivityType type;
 
   @Builder

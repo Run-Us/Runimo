@@ -10,13 +10,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtResolver {
 
-  private static final String ISSUER = "RunUSAuthService";
+  private static final String ISSUER = "RUNIMO_SERVICE";
   @Value("${jwt.secret}")
   private String jwtSecret;
-  @Value("${jwt.expiration}")
-  private long jwtExpiration;
-  @Value("${jwt.refresh.expiration}")
-  private long jwtRefreshExpiration;
 
   public DecodedJWT verifyAccessToken(String token) throws JWTVerificationException {
     return JWT.require(Algorithm.HMAC256(jwtSecret)).withIssuer(ISSUER).build().verify(token);
