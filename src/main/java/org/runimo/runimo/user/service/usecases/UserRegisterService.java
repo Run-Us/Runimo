@@ -2,7 +2,6 @@ package org.runimo.runimo.user.service.usecases;
 
 import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.rewards.service.eggs.EggGrantService;
-import org.runimo.runimo.user.domain.SocialProvider;
 import org.runimo.runimo.user.domain.User;
 import org.runimo.runimo.user.service.UserCreator;
 import org.runimo.runimo.user.service.UserItemCreator;
@@ -19,9 +18,9 @@ public class UserRegisterService {
   private final EggGrantService eggGrantService;
 
   @Transactional
-  public User register(UserSignupCommand command, SocialProvider provider, String providerId) {
+  public User register(UserSignupCommand command, String providerId) {
     User savedUser = userCreator.createUser(command);
-    userCreator.createUserOAuthInfo(savedUser, provider, providerId);
+    userCreator.createUserOAuthInfo(savedUser, command.provider(), providerId);
     userItemCreator.createAll(savedUser.getId());
     eggGrantService.grantGreetingEggToUser(savedUser);
     return savedUser;
