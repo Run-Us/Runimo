@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtResolver {
 
-  private static final String ISSUER = "RunUSAuthService";
+  private static final String ISSUER = "RUNIMO_SERVICE";
   @Value("${jwt.secret}")
   private String jwtSecret;
   @Value("${jwt.expiration}")
