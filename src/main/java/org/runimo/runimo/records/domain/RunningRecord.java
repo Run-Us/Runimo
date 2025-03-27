@@ -29,14 +29,17 @@ public class RunningRecord extends BaseEntity {
   private Distance totalDistance;
   @Embedded
   private Pace averagePace;
+  @Column(name = "is_rewarded", nullable = false)
+  private Boolean isRewarded;
 
   @Builder
-  public RunningRecord(Long userId, String title, LocalDateTime startedAt, LocalDateTime endAt, Distance totalDistance, Pace averagePace) {
+  public RunningRecord(Long userId, String title, LocalDateTime startedAt, LocalDateTime endAt, Distance totalDistance, Pace averagePace, Boolean isRewarded) {
     this.userId = userId;
     this.title = title;
     this.recordPublicId = UUID.randomUUID().toString();
     this.startedAt = startedAt;
     this.endAt = endAt;
+    this.isRewarded = isRewarded;
     this.totalDistance = totalDistance;
     this.averagePace = averagePace;
   }
@@ -59,8 +62,17 @@ public class RunningRecord extends BaseEntity {
     this.endAt = updatedEntity.getEndAt();
     this.averagePace = updatedEntity.averagePace;
     this.recordPublicId = updatedEntity.recordPublicId;
+    this.isRewarded = updatedEntity.isRewarded;
   }
 
+  public void reward(Long editorId) {
+    validateEditor(editorId);
+    this.isRewarded = true;
+  }
+
+  public boolean isRecordAlreadyRewarded() {
+    return this.isRewarded;
+  }
 
   private void validateEditor(Long editorId) {
     if (editorId == null || !Objects.equals(this.userId, editorId)) {

@@ -21,7 +21,7 @@ public class RecordCommandService {
 
   @Transactional
   public RecordSaveResponse saveRecord(Long userId, RecordCreateCommand command) {
-    RunningRecord runningRecord = mapToRunningRecord(userId, command);
+    RunningRecord runningRecord = mapToCreatedRunningRecord(userId, command);
     recordRepository.save(runningRecord);
     return new RecordSaveResponse(runningRecord.getId());
   }
@@ -45,13 +45,14 @@ public class RecordCommandService {
     );
   }
 
-  private RunningRecord mapToRunningRecord(Long id, RecordCreateCommand command) {
+  private RunningRecord mapToCreatedRunningRecord(Long id, RecordCreateCommand command) {
     return RunningRecord.builder()
         .userId(id)
         .startedAt(command.startedAt())
         .endAt(command.endAt())
         .averagePace(command.averagePace())
         .totalDistance(command.totalDistance())
+        .isRewarded(false)
         .build();
   }
 }
