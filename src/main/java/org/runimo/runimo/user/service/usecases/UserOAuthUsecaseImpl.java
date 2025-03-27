@@ -11,7 +11,8 @@ import org.runimo.runimo.user.domain.OAuthInfo;
 import org.runimo.runimo.user.domain.SocialProvider;
 import org.runimo.runimo.user.domain.User;
 import org.runimo.runimo.user.repository.OAuthInfoRepository;
-import org.runimo.runimo.user.service.dtos.SignupUserInfo;
+import org.runimo.runimo.user.service.dtos.AuthResponse;
+import org.runimo.runimo.user.service.dtos.SignupUserResponse;
 import org.runimo.runimo.user.service.dtos.TokenPair;
 import org.runimo.runimo.user.service.dtos.UserSignupCommand;
 import org.springframework.stereotype.Service;
@@ -29,25 +30,27 @@ public class UserOAuthUsecaseImpl implements UserOAuthUsecase {
 
   @Override
   @Transactional
-  public TokenPair validateAndLogin(final String rawToken, final SocialProvider provider) {
+  public AuthResponse validateAndLogin(final String rawToken, final SocialProvider provider) {
     DecodedJWT token = JWT.decode(rawToken);
     String pid = oidcService.validateOidcTokenAndGetProviderId(token, provider);
     OAuthInfo oAuthInfo = oAuthInfoRepository.findByProviderAndProviderId(provider, pid)
         .orElseThrow(() -> new NoSuchElementException("가입된 유저 없음."));
     oidcNonceService.useNonce(token, provider);
-    return jwtfactory.generateTokenPair(oAuthInfo.getUser());
+    TokenPair tokenPair = jwtfactory.generateTokenPair(oAuthInfo.getUser());
+    return new AuthResponse(oAuthInfo.getUser(), tokenPair);
   }
 
   @Override
   @Transactional
-  public SignupUserInfo validateAndSignup(final UserSignupCommand command, final String rawToken, SocialProvider provider) {
+  public SignupUserResponse validateAndSignup(final UserSignupCommand command, final String rawToken, SocialProvider provider) {
     DecodedJWT token = JWT.decode(rawToken);
     String pid = oidcService.validateOidcTokenAndGetProviderId(token, provider);
     oAuthInfoRepository.findByProviderAndProviderId(provider, pid)
         .ifPresent(oAuthInfo -> {
-          throw new IllegalArgumentException();
+          throw new IllegalArgumentException("이미 존재하는 회원입니다.");
         });
     User savedUser = userRegisterService.register(command, pid);
-    return new SignupUserInfo(savedUser.getId(), jwtfactory.generateTokenPair(savedUser));
+    TokenPair tokenPair = jwtfactory.generateTokenPair(savedUser);
+    return new SignupUserResponse(savedUser, tokenPair);
   }
 }
