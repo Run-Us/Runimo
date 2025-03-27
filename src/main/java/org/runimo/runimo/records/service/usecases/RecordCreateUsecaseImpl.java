@@ -23,7 +23,7 @@ public class RecordCreateUsecaseImpl implements RecordCreateUsecase {
   @Override
   @Transactional
   public RecordSaveResponse execute(RecordCreateCommand command) {
-    User user = userFinder.findUserByPublicId(command.userPublicId())
+    User user = userFinder.findUserById(command.userId())
         .orElseThrow(NoSuchElementException::new);
     userStatService.updateUserStats(user, command);
     return commandService.saveRecord(user.getId(), command);
