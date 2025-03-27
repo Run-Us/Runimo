@@ -16,4 +16,6 @@ public final class GlobalConsts {
       "/v3/api-docs"
   );
 
+  public static final String EMPTYFIELD = "EMPTY";
+
 }
