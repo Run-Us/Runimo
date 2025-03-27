@@ -17,8 +17,7 @@ public interface RecordRepository extends JpaRepository<RunningRecord, Long> {
 
   @Query("SELECT r FROM RunningRecord r " +
       "WHERE r.userId = :userId " +
-      "AND r.startedAt BETWEEN :startOfWeek AND :now " +
-      "ORDER BY r.startedAt ASC")
+      "AND r.startedAt BETWEEN :startOfWeek AND :now")
   Slice<RunningRecord> findFirstRunOfWeek(
       @Param("userId") Long userId,
       @Param("startOfWeek") LocalDateTime startOfWeek,

@@ -31,7 +31,7 @@ public class RecordFinder {
   public Optional<RunningRecord> findFirstRunOfCurrentWeek(Long userId) {
     LocalDateTime now = LocalDateTime.now();
     LocalDateTime startOfWeek = now.minusDays(now.getDayOfWeek().getValue() - 1L).withHour(0).withMinute(0).withSecond(0);
-    PageRequest pageRequest = PageRequest.of(0, 1, Sort.by("createdAt").ascending());
+    PageRequest pageRequest = PageRequest.of(0, 1, Sort.by("startedAt").ascending());
     return recordRepository.findFirstRunOfWeek(userId, startOfWeek, now, pageRequest).stream().findFirst();
   }
 }
