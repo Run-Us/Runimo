@@ -140,7 +140,7 @@ class UserItemAcceptanceTest {
         .log().ifError()
         .statusCode(HttpStatus.CREATED.value());
 
-    String accessToken = res.extract().body().jsonPath().getString("payload.access_token");
+    String accessToken = res.extract().body().jsonPath().getString("payload.token_pair.access_token");
 
     given()
         .header("Authorization", "Bearer " + accessToken)
