@@ -60,7 +60,7 @@ class RewardTest {
   @Test
   void 보상_요청_테스트() {
     RecordCreateCommand recordCreateCommand = new RecordCreateCommand(
-        savedUser.getPublicId(),
+        savedUser.getId(),
         LocalDateTime.now(),
         LocalDateTime.now().plusHours(1),
         new Pace(1909L),

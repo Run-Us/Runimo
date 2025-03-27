@@ -10,7 +10,8 @@ public class CleanUpUtil {
   private static final String[] USER_TABLES = {
       "user_item",
       "oauth_accounts",
-      "users"
+      "users",
+      "running_records",
   };
 
   @Autowired
