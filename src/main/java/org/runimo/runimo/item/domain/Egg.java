@@ -9,10 +9,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import static org.runimo.runimo.common.GlobalConsts.EMPTYFIELD;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Egg extends Item {
+  public static final Egg EMPTY = new Egg(EMPTYFIELD, EMPTYFIELD, EMPTYFIELD, EMPTYFIELD, null, 0L);
   @Column(name = "egg_type")
   @Enumerated(EnumType.STRING)
   private EggType eggType;
