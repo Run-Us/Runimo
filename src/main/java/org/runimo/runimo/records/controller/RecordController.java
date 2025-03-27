@@ -7,8 +7,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.runimo.runimo.common.response.SuccessResponse;
 import org.runimo.runimo.records.controller.requests.RecordSaveRequest;
 import org.runimo.runimo.records.controller.requests.RecordUpdateRequest;
+import org.runimo.runimo.records.enums.RecordHttpResponse;
 import org.runimo.runimo.records.service.usecases.RecordCreateUsecase;
 import org.runimo.runimo.records.service.usecases.RecordQueryUsecase;
 import org.runimo.runimo.records.service.usecases.RecordUpdateUsecase;
@@ -39,11 +41,13 @@ public class RecordController {
       @ApiResponse(responseCode = "401", description = "인증 실패")
   })
   @PostMapping
-  public ResponseEntity<RecordSaveResponse> saveRecord(
-      @RequestBody RecordSaveRequest request
+  public ResponseEntity<SuccessResponse<RecordSaveResponse>> saveRecord(
+      @RequestBody RecordSaveRequest request,
+      @UserId Long userId
   ) {
-    RecordSaveResponse response = recordCreateUsecase.execute(RecordCreateCommand.from(request));
-    return ResponseEntity.created(URI.create("/api/v1/records/" + response.savedId())).body(response);
+    RecordSaveResponse response = recordCreateUsecase.execute(RecordCreateCommand.from(request, userId));
+    return ResponseEntity.created(URI.create("/api/v1/records/" + response.savedId()))
+        .body(SuccessResponse.of(RecordHttpResponse.RECORD_SAVED, response));
   }
 
   @Operation(summary = "기록 조회", description = "기록을 조회합니다.")

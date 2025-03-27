@@ -60,6 +60,7 @@ CREATE TABLE `running_records`
     `end_at`                timestamp,
     `total_distance`        integer,
     `pace_in_milli_seconds` integer,
+    `is_rewarded`           boolean,
     `created_at`            timestamp,
     `updated_at`            timestamp,
     `deleted_at`            TIMESTAMP

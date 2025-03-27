@@ -8,16 +8,16 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 
 public record RecordCreateCommand(
-    String userPublicId,
+    Long userId,
     LocalDateTime startedAt,
     LocalDateTime endAt,
     Pace averagePace,
     Distance totalDistance
 ) {
 
-  public static RecordCreateCommand from(RecordSaveRequest request) {
+  public static RecordCreateCommand from(final RecordSaveRequest request, final Long userId) {
     return new RecordCreateCommand(
-        request.userPublicId(),
+        userId,
         request.startedAt(),
         request.endAt(),
         new Pace(request.averagePaceInMilliSeconds()),
