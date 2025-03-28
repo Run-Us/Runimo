@@ -124,6 +124,7 @@ class UserItemAcceptanceTest {
   }
 
   @Test
+  @Sql(scripts = "/sql/user_item_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
   void 회원가입후_알_지급_성공() throws JsonProcessingException {
     String token = jwtTokenFactory.generateAccessToken("test-user-uuid-1");
     when(oidcService.validateOidcTokenAndGetProviderId(any(), any()))

@@ -11,6 +11,7 @@ import org.runimo.runimo.records.service.RecordFinder;
 import org.runimo.runimo.rewards.service.dtos.RewardClaimCommand;
 import org.runimo.runimo.rewards.service.dtos.RewardResponse;
 import org.runimo.runimo.rewards.service.eggs.EggGrantService;
+import org.runimo.runimo.rewards.service.lovepoint.LoveGrantService;
 import org.runimo.runimo.user.UserFixtures;
 import org.runimo.runimo.user.service.UserFinder;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -32,6 +33,8 @@ class RewardServiceTest {
   private UserFinder userFinder;
   @Mock
   private EggGrantService eggGrantService;
+  @Mock
+  private LoveGrantService loveGrantService;
 
   private static RunningRecord getRunningRecordWithIds(Long userId, Long recordId, boolean isRewarded) {
     RunningRecord runningRecord = RunningRecord.builder()
@@ -47,7 +50,7 @@ class RewardServiceTest {
   @BeforeEach
   void setUp() {
     openMocks(this);
-    rewardService = new RewardService(recordFinder, userFinder, eggGrantService);
+    rewardService = new RewardService(recordFinder, userFinder, eggGrantService, loveGrantService);
     when(userFinder.findUserById(any())).thenReturn(Optional.of(UserFixtures.getUserWithId(1L)));
   }
 
@@ -59,10 +62,11 @@ class RewardServiceTest {
     when(recordFinder.findById(any())).thenReturn(java.util.Optional.of(unRewardedRecord));
     when(recordFinder.findFirstRunOfCurrentWeek(any())).thenReturn(java.util.Optional.of(unRewardedRecord));
     when(eggGrantService.grantRandomEggToUser(any())).thenReturn(Egg.builder().eggType(EggType.MADANG).build());
-
+    when(loveGrantService.grantLoveToUserWithDistance(any())).thenReturn(10L);
     RewardResponse res = rewardService.claimReward(command);
     assertNotNull(res);
     assertEquals(EggType.MADANG, res.eggType());
+    assertNotEquals(0, res.lovePointAmount());
   }
 
   @Test
@@ -73,6 +77,7 @@ class RewardServiceTest {
     when(recordFinder.findById(any())).thenReturn(java.util.Optional.of(alreadyRewardedRecord));
     when(recordFinder.findFirstRunOfCurrentWeek(any())).thenReturn(java.util.Optional.of(alreadyRewardedRecord));
     when(eggGrantService.grantRandomEggToUser(any())).thenReturn(Egg.builder().eggType(EggType.MADANG).build());
+    when(loveGrantService.grantLoveToUserWithDistance(any())).thenReturn(10L);
 
     assertThrows(IllegalStateException.class, () -> rewardService.claimReward(command));
   }
@@ -85,6 +90,7 @@ class RewardServiceTest {
 
     when(recordFinder.findById(any())).thenReturn(java.util.Optional.of(unRewardedRecord));
     when(recordFinder.findFirstRunOfCurrentWeek(any())).thenReturn(Optional.of(anotherRecord));
+    when(loveGrantService.grantLoveToUserWithDistance(any())).thenReturn(10L);
 
     RewardResponse res = rewardService.claimReward(command);
     verify(eggGrantService, never()).grantRandomEggToUser(any());

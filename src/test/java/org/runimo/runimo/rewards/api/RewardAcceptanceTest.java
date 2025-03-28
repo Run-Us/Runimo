@@ -193,6 +193,80 @@ class RewardAcceptanceTest {
         .body("payload.egg_code", equalTo("EMPTY"));
   }
 
+  @Test
+  @Sql(scripts = "/sql/user_item_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+  void 달리기_기록_저장_후_애정_포인트_지급() throws JsonProcessingException {
+    String header = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
+    RecordSaveRequest request = new RecordSaveRequest(
+        pivotTime,
+        pivotTime.plusMinutes(20),
+        1000L,
+        1000L);
+    ValidatableResponse res = given()
+        .header("Authorization", header)
+        .body(objectMapper.writeValueAsString(request))
+        .contentType(ContentType.JSON)
+        .when()
+        .post("/api/v1/records")
+        .then()
+        .log().ifValidationFails()
+        .statusCode(HttpStatus.CREATED.value())
+        .body("payload", notNullValue())
+        .body("payload.saved_id", notNullValue());
 
+    Integer recordId = res.extract().path("payload.saved_id");
+
+    RewardClaimRequest rewardClaimRequest = new RewardClaimRequest(Long.valueOf(recordId));
+
+    given()
+        .header("Authorization", header)
+        .body(objectMapper.writeValueAsString(rewardClaimRequest))
+        .contentType(ContentType.JSON)
+        .when()
+        .post("/api/v1/rewards/runnings")
+        .then()
+        .log().all()
+        .statusCode(HttpStatus.OK.value())
+        .body("payload.love_point_amount", notNullValue())
+        .body("payload.love_point_amount", greaterThan(0));
+  }
+
+  @Test
+  @Sql(scripts = "/sql/user_item_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+  void 기준거리_미달이면_애정을_미지급() throws JsonProcessingException {
+    String header = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
+    RecordSaveRequest request = new RecordSaveRequest(
+        pivotTime,
+        pivotTime.plusMinutes(20),
+        900L,
+        1000L);
+    ValidatableResponse res = given()
+        .header("Authorization", header)
+        .body(objectMapper.writeValueAsString(request))
+        .contentType(ContentType.JSON)
+        .when()
+        .post("/api/v1/records")
+        .then()
+        .log().ifValidationFails()
+        .statusCode(HttpStatus.CREATED.value())
+        .body("payload", notNullValue())
+        .body("payload.saved_id", notNullValue());
+
+    Integer recordId = res.extract().path("payload.saved_id");
+
+    RewardClaimRequest rewardClaimRequest = new RewardClaimRequest(Long.valueOf(recordId));
+
+    given()
+        .header("Authorization", header)
+        .body(objectMapper.writeValueAsString(rewardClaimRequest))
+        .contentType(ContentType.JSON)
+        .when()
+        .post("/api/v1/rewards/runnings")
+        .then()
+        .log().all()
+        .statusCode(HttpStatus.OK.value())
+        .body("payload.love_point_amount", notNullValue())
+        .body("payload.love_point_amount", equalTo(0));
+  }
 
 }
