@@ -7,6 +7,7 @@ import org.runimo.runimo.user.repository.UserItemRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -14,6 +15,11 @@ import java.util.Optional;
 public class UserItemFinder {
 
   private final UserItemRepository userItemRepository;
+
+  @Transactional(readOnly = true)
+  public List<UserItem> findEggsByUserId(Long userId) {
+    return userItemRepository.findAllEggsByUserId(userId);
+  }
 
   @Transactional(readOnly = true)
   public Optional<UserItem> findEggByUserIdAndEggType(Long userId, EggType eggType) {

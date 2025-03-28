@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -27,4 +28,9 @@ public interface UserItemRepository extends JpaRepository<UserItem, Long> {
       "join Egg e on ui.itemId = e.id " +
       "where ui.userId = :userId and e.eggType = :eggType")
   Optional<UserItem> findByUserIdAndEggType(Long userId, EggType eggType);
+
+  @Query("select ui from UserItem ui " +
+      "join Egg e on ui.itemId = e.id " +
+      "where ui.userId = :userId")
+  List<UserItem> findAllEggsByUserId(Long userId);
 }

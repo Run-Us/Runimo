@@ -15,7 +15,7 @@ public class UserItemProcessor {
 
   @Transactional
   public void updateItemQuantity(Long userId, Long itemId, Long amount) {
-    UserItem userItem = userItemFinder.findByUserIdAndItemId(userId, itemId)
+    UserItem userItem = userItemFinder.findByUserIdAndItemIdWithXLock(userId, itemId)
         .orElseThrow(IllegalStateException::new);
     userItem.gainItem(amount);
     userItemRepository.save(userItem);
