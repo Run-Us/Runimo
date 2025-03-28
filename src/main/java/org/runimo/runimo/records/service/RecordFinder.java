@@ -34,4 +34,9 @@ public class RecordFinder {
     PageRequest pageRequest = PageRequest.of(0, 1, Sort.by("startedAt").ascending());
     return recordRepository.findFirstRunOfWeek(userId, startOfWeek, now, pageRequest).stream().findFirst();
   }
+
+  @Transactional(readOnly = true)
+  public Long countByUserId(Long userId) {
+    return recordRepository.countByUserId(userId);
+  }
 }

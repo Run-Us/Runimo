@@ -24,4 +24,7 @@ public interface RecordRepository extends JpaRepository<RunningRecord, Long> {
       @Param("now") LocalDateTime now,
       Pageable pageable
   );
+
+  @Query("SELECT COUNT(r.id) FROM RunningRecord r WHERE r.userId = :id")
+  Long countByUserId(Long id);
 }
