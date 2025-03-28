@@ -21,6 +21,7 @@ public class UserRegisterService {
   public User register(UserSignupCommand command, String providerId) {
     User savedUser = userCreator.createUser(command);
     userCreator.createUserOAuthInfo(savedUser, command.provider(), providerId);
+    userCreator.createLovePoint(savedUser.getId());
     userItemCreator.createAll(savedUser.getId());
     eggGrantService.grantGreetingEggToUser(savedUser);
     return savedUser;

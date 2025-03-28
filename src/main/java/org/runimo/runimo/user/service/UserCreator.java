@@ -1,9 +1,8 @@
 package org.runimo.runimo.user.service;
 
 import lombok.RequiredArgsConstructor;
-import org.runimo.runimo.user.domain.OAuthInfo;
-import org.runimo.runimo.user.domain.SocialProvider;
-import org.runimo.runimo.user.domain.User;
+import org.runimo.runimo.user.domain.*;
+import org.runimo.runimo.user.repository.LovePointRepository;
 import org.runimo.runimo.user.repository.OAuthInfoRepository;
 import org.runimo.runimo.user.repository.UserRepository;
 import org.runimo.runimo.user.service.dtos.UserSignupCommand;
@@ -15,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserCreator {
   private final UserRepository userRepository;
   private final OAuthInfoRepository oAuthInfoRepository;
+  private final LovePointRepository lovePointRepository;
 
   @Transactional
   public User createUser(UserSignupCommand command) {
@@ -33,5 +33,14 @@ public class UserCreator {
         .providerId(providerId)
         .build();
     return oAuthInfoRepository.save(oAuthInfo);
+  }
+
+  @Transactional
+  public LovePoint createLovePoint(Long userId) {
+    LovePoint lovePoint = LovePoint.builder()
+        .userId(userId)
+        .amount(0L)
+        .build();
+    return lovePointRepository.save(lovePoint);
   }
 }
