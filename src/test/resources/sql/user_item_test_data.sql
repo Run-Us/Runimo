@@ -11,15 +11,19 @@ SET FOREIGN_KEY_CHECKS = 1;
 TRUNCATE TABLE items;
 INSERT INTO items (name, item_code, description, item_type, img_url, dtype, egg_type, hatch_require_amount, created_at,
                    updated_at)
-VALUES ('마당알', 'A100', '마당알: 기본 알', 'USABLE', 'example.url', 'Egg', 'MADANG', 10, NOW(), NOW());
+VALUES ('마당알', 'A100', '마당알: 기본 알', 'USABLE', 'example.url', 'EGG', 'MADANG', 10, NOW(), NOW());
 
 INSERT INTO items (name, item_code, description, item_type, img_url, dtype, egg_type, hatch_require_amount, created_at,
                    updated_at)
-VALUES ('숲알', 'A101', '숲알: 기본 알', 'USABLE', 'example1.url', 'Egg', 'FOREST', 20, NOW(), NOW());
+VALUES ('숲알', 'A101', '숲알: 기본 알', 'USABLE', 'example1.url', 'EGG', 'FOREST', 20, NOW(), NOW());
 
 
 -- 보유 아이템
 TRUNCATE TABLE user_item;
 INSERT INTO user_item (id, user_id, item_id, quantity, created_at, updated_at)
 VALUES (1001, 1, 1, 2, NOW(), NOW()),
-       (1002, 1, 2, 1, NOW(), NOW())
+       (1002, 1, 2, 1, NOW(), NOW());
+
+TRUNCATE TABLE user_love_point;
+INSERT INTO user_love_point (id, user_id, amount, created_at, updated_at)
+VALUES (1001, 1, 0, NOW(), NOW());

@@ -21,4 +21,12 @@ public class Distance implements Serializable {
   public Long getAmount() {
     return amount;
   }
+
+  public Distance add(Distance distance) {
+    return new Distance(this.amount + distance.amount);
+  }
+
+  public Distance divide(Distance divisor) {
+    return new Distance(this.amount / divisor.getAmount());
+  }
 }

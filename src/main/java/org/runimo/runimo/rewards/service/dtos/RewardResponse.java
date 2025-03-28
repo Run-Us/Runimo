@@ -4,6 +4,7 @@ import org.runimo.runimo.item.domain.EggType;
 
 public record RewardResponse(
     String eggCode,
-    EggType eggType
+    EggType eggType,
+    Long lovePointAmount
 ) {
 }

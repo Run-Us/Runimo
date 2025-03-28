@@ -21,6 +21,7 @@ import org.runimo.runimo.user.service.usecases.UserRegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDateTime;
 
@@ -58,6 +59,7 @@ class RewardTest {
   }
 
   @Test
+  @Sql(scripts = "/sql/egg_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
   void 보상_요청_테스트() {
     RecordCreateCommand recordCreateCommand = new RecordCreateCommand(
         savedUser.getId(),

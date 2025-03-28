@@ -12,6 +12,7 @@ public class CleanUpUtil {
       "oauth_accounts",
       "users",
       "running_records",
+      "user_love_point"
   };
 
   @Autowired

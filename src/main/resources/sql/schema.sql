@@ -10,6 +10,7 @@ DROP TABLE IF EXISTS item_activity;
 DROP TABLE IF EXISTS runimo;
 DROP TABLE IF EXISTS items;
 DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS user_love_point;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
@@ -35,6 +36,16 @@ CREATE TABLE `user_token`
     `deleted_at`   TIMESTAMP,
 
     FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+);
+
+CREATE TABLE `user_love_point`
+(
+    `id`        BIGINT PRIMARY KEY AUTO_INCREMENT,
+    `user_id`   BIGINT NOT NULL,
+    `amount` BIGINT NOT NULL DEFAULT 0,
+    `created_at` TIMESTAMP,
+    `updated_at` TIMESTAMP,
+    `deleted_at` TIMESTAMP
 );
 
 CREATE TABLE `oauth_accounts`

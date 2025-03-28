@@ -8,6 +8,7 @@ import org.runimo.runimo.records.service.RecordFinder;
 import org.runimo.runimo.rewards.service.eggs.EggGrantService;
 import org.runimo.runimo.rewards.service.dtos.RewardClaimCommand;
 import org.runimo.runimo.rewards.service.dtos.RewardResponse;
+import org.runimo.runimo.rewards.service.lovepoint.LoveGrantService;
 import org.runimo.runimo.user.domain.User;
 import org.runimo.runimo.user.service.UserFinder;
 import org.springframework.stereotype.Service;
@@ -24,6 +25,8 @@ public class RewardService {
   private final RecordFinder recordFinder;
   private final UserFinder userFinder;
   private final EggGrantService eggGrantService;
+  private final LoveGrantService loveGrantService;
+
 
   @Transactional
   public RewardResponse claimReward(RewardClaimCommand command) {
@@ -31,9 +34,9 @@ public class RewardService {
         .orElseThrow(NoSuchElementException::new);
     validateRecord(runningRecord);
     Egg grantedEgg = rewardEgg(command);
+    Long grantedLoveAmount = loveGrantService.grantLoveToUserWithDistance(runningRecord);
     runningRecord.reward(command.userId());
-    //TODO: 애정 보상
-    return new RewardResponse(grantedEgg.getItemCode(), grantedEgg.getEggType());
+    return new RewardResponse(grantedEgg.getItemCode(), grantedEgg.getEggType(), grantedLoveAmount);
   }
 
   private Egg rewardEgg(RewardClaimCommand command) {
