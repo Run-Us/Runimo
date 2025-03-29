@@ -1,4 +1,4 @@
-package org.runimo.runimo.user.service.usecases;
+package org.runimo.runimo.user.service.usecases.auth;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;

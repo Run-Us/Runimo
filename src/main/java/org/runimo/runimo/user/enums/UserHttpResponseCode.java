@@ -10,7 +10,8 @@ public enum UserHttpResponseCode implements CustomResponseCode {
   REFRESH_SUCCESS("USH2004", "토큰 재발급 성공", "토큰 재발급 성공"),
 
   USE_ITEM_SUCCESS("USH2005", "아이템 사용 성공", "아이템 사용 성공"),
-  ;
+  REGISTER_EGG_SUCCESS("USH2006", "부화기 등록 성공", "부화기 등록 성공"),
+  USE_LOVE_POINT_SUCCESS("USH2007","애정 사용 성공" , "애정 사용 성공");
 
   private final String code;
   private final String clientMessage;

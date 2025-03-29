@@ -1,4 +1,4 @@
-package org.runimo.runimo.user.service.usecases;
+package org.runimo.runimo.user.service.usecases.items;
 
 import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.item.service.ItemActivityCreator;
