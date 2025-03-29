@@ -17,7 +17,7 @@ import org.runimo.runimo.user.domain.User;
 import org.runimo.runimo.user.domain.UserItem;
 import org.runimo.runimo.user.service.UserItemFinder;
 import org.runimo.runimo.user.service.dtos.UserSignupCommand;
-import org.runimo.runimo.user.service.usecases.UserRegisterService;
+import org.runimo.runimo.user.service.usecases.auth.UserRegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
