@@ -2,7 +2,7 @@ package org.runimo.runimo.user.api;
 
 import org.junit.jupiter.api.Test;
 import org.runimo.runimo.auth.jwt.JwtTokenFactory;
-import org.runimo.runimo.user.service.usecases.MainViewQueryUsecase;
+import org.runimo.runimo.user.service.usecases.query.MainViewQueryUsecase;
 import org.runimo.runimo.user.service.dtos.MainViewResponse;
 import org.runimo.runimo.user.UserFixtures;
 import org.runimo.runimo.user.service.UserFinder;

@@ -11,6 +11,7 @@ DROP TABLE IF EXISTS runimo;
 DROP TABLE IF EXISTS items;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS user_love_point;
+DROP TABLE IF EXISTS incubating_eggs;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
@@ -114,6 +115,20 @@ CREATE TABLE `user_item`
     `created_at` timestamp,
     `updated_at` timestamp,
     `deleted_at` TIMESTAMP
+);
+
+CREATE TABLE `incubating_eggs`
+(
+    `id`
+                                BIGINT PRIMARY KEY AUTO_INCREMENT,
+    `user_id`                integer      NOT NULL,
+    `egg_id`                 integer      NOT NULL,
+    `current_love_point_amount` integer,
+    `hatch_require_amount`   integer,
+    `egg_status`             varchar(255),
+    `created_at`             timestamp,
+    `updated_at`             timestamp,
+    `deleted_at`             TIMESTAMP
 );
 
 ALTER TABLE `user_token`

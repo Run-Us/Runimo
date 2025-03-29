@@ -5,7 +5,7 @@ import org.runimo.runimo.auth.jwt.JwtTokenFactory;
 import org.runimo.runimo.user.UserFixtures;
 import org.runimo.runimo.user.service.UserFinder;
 import org.runimo.runimo.user.service.dtos.ItemQueryResponse;
-import org.runimo.runimo.user.service.usecases.MyItemQueryUsecase;
+import org.runimo.runimo.user.service.usecases.query.MyItemQueryUsecase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;

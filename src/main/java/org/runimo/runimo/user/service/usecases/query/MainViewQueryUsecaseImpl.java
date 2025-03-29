@@ -1,4 +1,4 @@
-package org.runimo.runimo.user.service.usecases;
+package org.runimo.runimo.user.service.usecases.query;
 
 import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.records.service.RecordFinder;

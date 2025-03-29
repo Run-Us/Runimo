@@ -1,4 +1,4 @@
-package org.runimo.runimo.user.service.usecases;
+package org.runimo.runimo.user.service.usecases.auth;
 
 import org.runimo.runimo.user.domain.SocialProvider;
 import org.runimo.runimo.user.service.dtos.AuthResponse;

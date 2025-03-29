@@ -1,4 +1,4 @@
-package org.runimo.runimo.user.service.usecases;
+package org.runimo.runimo.user.service.usecases.auth;
 
 import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.rewards.service.eggs.EggGrantService;

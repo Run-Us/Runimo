@@ -12,8 +12,8 @@ import org.runimo.runimo.user.enums.UserHttpResponseCode;
 import org.runimo.runimo.user.service.dtos.ItemQueryResponse;
 import org.runimo.runimo.user.service.dtos.UseItemCommand;
 import org.runimo.runimo.user.service.dtos.UseItemResponse;
-import org.runimo.runimo.user.service.usecases.MyItemQueryUsecase;
-import org.runimo.runimo.user.service.usecases.UseItemUsecase;
+import org.runimo.runimo.user.service.usecases.query.MyItemQueryUsecase;
+import org.runimo.runimo.user.service.usecases.items.UseItemUsecase;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

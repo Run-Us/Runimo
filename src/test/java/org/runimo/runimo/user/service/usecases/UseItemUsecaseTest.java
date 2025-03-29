@@ -6,6 +6,7 @@ import org.runimo.runimo.user.UserItemFixtures;
 import org.runimo.runimo.user.service.UserItemFinder;
 import org.runimo.runimo.user.service.dtos.UseItemCommand;
 import org.runimo.runimo.user.service.dtos.UseItemResponse;
+import org.runimo.runimo.user.service.usecases.items.UseItemUsecase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;

@@ -13,7 +13,7 @@ import org.runimo.runimo.user.domain.SocialProvider;
 import org.runimo.runimo.user.enums.UserHttpResponseCode;
 import org.runimo.runimo.user.service.dtos.AuthResponse;
 import org.runimo.runimo.user.service.dtos.SignupUserResponse;
-import org.runimo.runimo.user.service.usecases.UserOAuthUsecase;
+import org.runimo.runimo.user.service.usecases.auth.UserOAuthUsecase;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

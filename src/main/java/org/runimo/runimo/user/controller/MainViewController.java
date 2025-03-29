@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.common.response.SuccessResponse;
-import org.runimo.runimo.user.service.usecases.MainViewQueryUsecase;
+import org.runimo.runimo.user.service.usecases.query.MainViewQueryUsecase;
 import org.runimo.runimo.user.service.dtos.MainViewResponse;
 import org.runimo.runimo.user.enums.UserHttpResponseCode;
 import org.springframework.http.ResponseEntity;
