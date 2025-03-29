@@ -2,7 +2,7 @@ package org.runimo.runimo.user.service.usecases.eggs;
 
 import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.user.domain.IncubatingEgg;
-import org.runimo.runimo.user.controller.UseLovePointResponse;
+import org.runimo.runimo.user.service.dtos.UseLovePointResponse;
 import org.runimo.runimo.user.service.IncubatingEggProcessor;
 import org.runimo.runimo.user.service.LovePointProcessor;
 import org.runimo.runimo.user.service.dtos.UseLovePointCommand;

@@ -1,4 +1,4 @@
-package org.runimo.runimo.user.controller;
+package org.runimo.runimo.user.service.dtos;
 
 public record UseLovePointResponse(
     Long eggId,

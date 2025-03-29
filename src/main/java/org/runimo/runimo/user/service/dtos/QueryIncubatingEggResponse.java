@@ -1,6 +1,4 @@
-package org.runimo.runimo.user.controller;
-
-import org.runimo.runimo.user.service.dtos.IncubatingEggView;
+package org.runimo.runimo.user.service.dtos;
 
 import java.util.List;
 

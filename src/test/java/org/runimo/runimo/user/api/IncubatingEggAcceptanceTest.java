@@ -9,7 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.runimo.runimo.CleanUpUtil;
 import org.runimo.runimo.auth.jwt.JwtTokenFactory;
-import org.runimo.runimo.user.controller.UseLovePointRequest;
+import org.runimo.runimo.user.controller.request.UseLovePointRequest;
 import org.runimo.runimo.user.controller.request.RegisterEggRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

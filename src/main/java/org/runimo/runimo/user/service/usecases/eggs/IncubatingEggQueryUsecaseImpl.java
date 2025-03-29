@@ -1,6 +1,7 @@
-package org.runimo.runimo.user.controller;
+package org.runimo.runimo.user.service.usecases.eggs;
 
 import lombok.RequiredArgsConstructor;
+import org.runimo.runimo.user.service.dtos.QueryIncubatingEggResponse;
 import org.runimo.runimo.user.service.dtos.IncubatingEggView;
 import org.runimo.runimo.user.service.IncubatingEggFinder;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package org.runimo.runimo.user.controller;
+package org.runimo.runimo.user.controller.request;
 
 public record UseLovePointRequest(
     Long itemId,
