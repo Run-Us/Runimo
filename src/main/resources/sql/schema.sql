@@ -73,6 +73,7 @@ CREATE TABLE `running_records`
     `total_distance`        integer,
     `pace_in_milli_seconds` integer,
     `is_rewarded`           boolean,
+    `pace_per_km`           VARCHAR(10000),
     `created_at`            timestamp,
     `updated_at`            timestamp,
     `deleted_at`            TIMESTAMP

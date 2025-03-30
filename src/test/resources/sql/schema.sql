@@ -73,6 +73,7 @@ CREATE TABLE `running_records`
     `total_distance`        integer,
     `pace_in_milli_seconds` integer,
     `is_rewarded`           boolean,
+    `pace_per_km`           VARCHAR(10000),
     `created_at`            timestamp,
     `updated_at`            timestamp,
     `deleted_at`            TIMESTAMP
@@ -120,7 +121,7 @@ CREATE TABLE `user_item`
 CREATE TABLE `incubating_eggs`
 (
     `id`
-        BIGINT PRIMARY KEY AUTO_INCREMENT,
+                                BIGINT PRIMARY KEY AUTO_INCREMENT,
     `user_id`                integer      NOT NULL,
     `egg_id`                 integer      NOT NULL,
     `current_love_point_amount` integer,
