@@ -58,11 +58,11 @@ public class RecordController {
       @ApiResponse(responseCode = "401", description = "인증 실패")
   })
   @GetMapping("/{recordId}")
-  public ResponseEntity<RecordDetailViewResponse> viewRecord(
-      @PathVariable String recordId
+  public ResponseEntity<SuccessResponse<RecordDetailViewResponse>> viewRecord(
+      @PathVariable Long recordId
   ) {
     RecordDetailViewResponse response = recordQueryUsecase.getRecordDetailView(recordId);
-    return ResponseEntity.ok(response);
+    return ResponseEntity.ok(SuccessResponse.of(RecordHttpResponse.RECORD_FETCHED, response));
   }
 
   @Operation(summary = "기록 수정", description = "기록을 수정합니다.")

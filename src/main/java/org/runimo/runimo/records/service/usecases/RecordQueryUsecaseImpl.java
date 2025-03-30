@@ -15,8 +15,8 @@ public class RecordQueryUsecaseImpl implements RecordQueryUsecase {
   private final RecordFinder recordFinder;
 
   @Override
-  public RecordDetailViewResponse getRecordDetailView(String recordPublicId) {
-    RunningRecord runningRecord = recordFinder.findByPublicId(recordPublicId)
+  public RecordDetailViewResponse getRecordDetailView(Long recordId) {
+    RunningRecord runningRecord = recordFinder.findById(recordId)
         .orElseThrow(NoSuchElementException::new);
     return RecordDetailViewResponse.from(runningRecord);
   }

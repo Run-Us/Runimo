@@ -53,6 +53,7 @@ public class RecordCommandService {
         .averagePace(command.averagePace())
         .totalDistance(command.totalDistance())
         .isRewarded(false)
+        .pacePerKm(command.segmentPaces())
         .build();
   }
 }

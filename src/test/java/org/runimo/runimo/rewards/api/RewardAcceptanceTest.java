@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.runimo.runimo.CleanUpUtil;
 import org.runimo.runimo.auth.jwt.JwtTokenFactory;
+import org.runimo.runimo.records.RecordFixtures;
 import org.runimo.runimo.records.controller.requests.RecordSaveRequest;
 import org.runimo.runimo.rewards.controller.requests.RewardClaimRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
@@ -55,11 +57,7 @@ class RewardAcceptanceTest {
   @Sql(scripts = "/sql/user_item_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
   void 달리기_기록_저장_후_주간_첫번째_달리기보상_수령() throws JsonProcessingException {
     String header = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
-    RecordSaveRequest request = new RecordSaveRequest(
-        pivotTime,
-        pivotTime.plusMinutes(20),
-        1000L,
-        1000L);
+    RecordSaveRequest request = RecordFixtures.createRecordSaveRequest();
     ValidatableResponse res = given()
         .header("Authorization", header)
         .body(objectMapper.writeValueAsString(request))
@@ -91,11 +89,7 @@ class RewardAcceptanceTest {
   @Sql(scripts = "/sql/user_item_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
   void 달리기_보상_수령_후_재시도_시_예외() throws JsonProcessingException {
     String header = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
-    RecordSaveRequest request = new RecordSaveRequest(
-        pivotTime,
-        pivotTime.plusMinutes(20),
-        1000L,
-        1000L);
+    RecordSaveRequest request = RecordFixtures.createRecordSaveRequest();
     ValidatableResponse res = given()
         .header("Authorization", header)
         .body(objectMapper.writeValueAsString(request))
@@ -144,7 +138,8 @@ class RewardAcceptanceTest {
         pivotTime,
         pivotTime.plusMinutes(20),
         1000L,
-        1000L);
+        1000L,
+        null);
     ValidatableResponse firstRes = given()
         .header("Authorization", header)
         .body(objectMapper.writeValueAsString(firstRequest))
@@ -164,7 +159,8 @@ class RewardAcceptanceTest {
         pivotTime.minusDays(1),
         pivotTime.minusDays(1).plusMinutes(20),
         1000L,
-        1000L);
+        1000L,
+        null);
     given()
         .header("Authorization", header)
         .body(objectMapper.writeValueAsString(secondRequest))
@@ -197,11 +193,8 @@ class RewardAcceptanceTest {
   @Sql(scripts = "/sql/user_item_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
   void 달리기_기록_저장_후_애정_포인트_지급() throws JsonProcessingException {
     String header = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
-    RecordSaveRequest request = new RecordSaveRequest(
-        pivotTime,
-        pivotTime.plusMinutes(20),
-        1000L,
-        1000L);
+    RecordSaveRequest request = RecordFixtures.createRecordSaveRequest();
+
     ValidatableResponse res = given()
         .header("Authorization", header)
         .body(objectMapper.writeValueAsString(request))
@@ -239,7 +232,9 @@ class RewardAcceptanceTest {
         pivotTime,
         pivotTime.plusMinutes(20),
         900L,
-        1000L);
+        1000L,
+        List.of()
+    );
     ValidatableResponse res = given()
         .header("Authorization", header)
         .body(objectMapper.writeValueAsString(request))
