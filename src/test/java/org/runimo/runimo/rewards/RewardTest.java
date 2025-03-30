@@ -24,6 +24,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -66,7 +67,8 @@ class RewardTest {
         LocalDateTime.now(),
         LocalDateTime.now().plusHours(1),
         new Pace(1909L),
-        new Distance(10000L)
+        new Distance(10000L),
+        List.of()
     );
     RecordSaveResponse response = recordCreateUsecase.execute(recordCreateCommand);
     RewardClaimCommand rewardClaimCommand = new RewardClaimCommand(savedUser.getId(), response.savedId());
