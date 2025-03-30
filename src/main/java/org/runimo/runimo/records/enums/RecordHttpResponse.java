@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 
 public enum RecordHttpResponse implements CustomResponseCode {
   RECORD_SAVED("RSH2001", "달리기 기록 저장 성공", "달리기 기록 저장 성공"),
-  ;
+  RECORD_FETCHED("RSH2002", "달리기 기록 조회 성공", "달리기 기록 조회 성공");
 
   private final String code;
   private final String clientMessage;

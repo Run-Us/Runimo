@@ -6,23 +6,28 @@ import org.runimo.runimo.common.scale.Pace;
 import org.runimo.runimo.records.domain.RunningRecord;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Builder
 public record RecordDetailViewResponse(
+    Long recordId,
     String title,
     LocalDateTime startedAt,
     LocalDateTime endAt,
-    Pace averagePace,
-    Distance totalDistance,
+    Long averagePace,
+    Long totalDistance,
+    List<SegmentPace> segmentPaceList,
     String imgUrl
 ) {
   public static RecordDetailViewResponse from(RunningRecord runningRecord) {
     return RecordDetailViewResponse.builder()
+        .recordId(runningRecord.getId())
         .title(runningRecord.getTitle())
         .startedAt(runningRecord.getStartedAt())
         .endAt(runningRecord.getEndAt())
-        .averagePace(runningRecord.getAveragePace())
-        .totalDistance(runningRecord.getTotalDistance())
+        .averagePace(runningRecord.getAveragePace().getPaceInMilliSeconds())
+        .totalDistance(runningRecord.getTotalDistance().getAmount())
+        .segmentPaceList(runningRecord.getPacePerKm())
         .build();
   }
 }

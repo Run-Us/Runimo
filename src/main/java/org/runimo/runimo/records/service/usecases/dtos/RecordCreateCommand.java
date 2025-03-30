@@ -6,13 +6,15 @@ import org.runimo.runimo.records.controller.requests.RecordSaveRequest;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 public record RecordCreateCommand(
     Long userId,
     LocalDateTime startedAt,
     LocalDateTime endAt,
     Pace averagePace,
-    Distance totalDistance
+    Distance totalDistance,
+    List<SegmentPace> segmentPaces
 ) {
 
   public static RecordCreateCommand from(final RecordSaveRequest request, final Long userId) {
@@ -21,7 +23,8 @@ public record RecordCreateCommand(
         request.startedAt(),
         request.endAt(),
         new Pace(request.averagePaceInMilliSeconds()),
-        new Distance(request.totalDistanceInMeters())
+        new Distance(request.totalDistanceInMeters()),
+        request.segmentPaces()
     );
   }
 

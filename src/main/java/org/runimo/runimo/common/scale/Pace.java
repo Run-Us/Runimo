@@ -16,6 +16,10 @@ public class Pace implements Serializable {
   @Column(name = "pace_in_milli_seconds")
   private Long paceInMilliSeconds;
 
+  public Long getPaceInMilliSeconds() {
+    return paceInMilliSeconds;
+  }
+
   public Pace(Long paceInMilliSeconds) {
     this.paceInMilliSeconds = paceInMilliSeconds;
   }
