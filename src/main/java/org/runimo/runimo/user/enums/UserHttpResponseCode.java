@@ -11,7 +11,10 @@ public enum UserHttpResponseCode implements CustomResponseCode {
 
   USE_ITEM_SUCCESS("USH2005", "아이템 사용 성공", "아이템 사용 성공"),
   REGISTER_EGG_SUCCESS("USH2006", "부화기 등록 성공", "부화기 등록 성공"),
-  USE_LOVE_POINT_SUCCESS("USH2007","애정 사용 성공" , "애정 사용 성공");
+  USE_LOVE_POINT_SUCCESS("USH2007","애정 사용 성공" , "애정 사용 성공"),
+
+  LOGIN_FAIL_NOT_SIGN_IN("UEH4041", "로그인 실패 - 회원가입하지 않은 사용자", "로그인 실패 - 회원가입하지 않은 사용자"),
+  SIGNIN_FAIL_ALREADY_EXIST("UEH4042", "로그인 실패 - 이미 존재하는 사용자", "로그인 실패 - 이미 존재하는 사용자"),;
 
   private final String code;
   private final String clientMessage;
