@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
@@ -18,6 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
   private final JwtAuthenticationFilter jwtAuthenticationFilter;
+  private final AuthenticationFailureHandler customAuthenticationFailureHandler;
 
   @Bean
   @Profile({"prod", "test"})
@@ -27,6 +29,11 @@ public class SecurityConfig {
         .sessionManagement(session -> session
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         )
+        .oauth2Login(oAuth2Login -> {
+          oAuth2Login
+              .loginPage("/api/v1/users/auth/login")
+              .failureHandler(customAuthenticationFailureHandler);
+        })
         .authorizeHttpRequests(authorize -> authorize
             .requestMatchers("/api/v1/users/auth/**").permitAll()
             .anyRequest().authenticated()
@@ -44,6 +51,11 @@ public class SecurityConfig {
         .sessionManagement(session -> session
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         )
+        .oauth2Login(oAuth2Login -> {
+          oAuth2Login
+              .loginPage("/api/v1/users/auth/login")
+              .failureHandler(customAuthenticationFailureHandler);
+        })
         .authorizeHttpRequests(authorize -> authorize
             .requestMatchers("/api/v1/users/auth/**").permitAll()
             .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()

@@ -39,4 +39,10 @@ public class RecordFinder {
   public Long countByUserId(Long userId) {
     return recordRepository.countByUserId(userId);
   }
+
+  @Transactional(readOnly = true)
+  public Optional<RunningRecord> findLatestRunningRecordByUserId(Long userId) {
+    PageRequest pageRequest = PageRequest.of(0, 1, Sort.by("startedAt").descending());
+    return recordRepository.findLatestByUserId(userId, pageRequest).stream().findFirst();
+  }
 }
