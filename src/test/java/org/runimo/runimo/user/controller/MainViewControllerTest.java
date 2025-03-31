@@ -1,16 +1,14 @@
-package org.runimo.runimo.user.api;
+package org.runimo.runimo.user.controller;
 
 import org.junit.jupiter.api.Test;
 import org.runimo.runimo.auth.jwt.JwtTokenFactory;
+import org.runimo.runimo.configs.ControllerTest;
 import org.runimo.runimo.user.service.usecases.query.MainViewQueryUsecase;
 import org.runimo.runimo.user.service.dtos.MainViewResponse;
 import org.runimo.runimo.user.UserFixtures;
 import org.runimo.runimo.user.service.UserFinder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -21,9 +19,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
+@ControllerTest(controllers = {MainViewController.class})
 class MainViewControllerTest {
 
   @Autowired

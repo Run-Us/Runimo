@@ -2,26 +2,24 @@ package org.runimo.runimo.auth.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.user.domain.User;
 import org.runimo.runimo.user.service.dtos.TokenPair;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
-@Component
-@RequiredArgsConstructor
 public class JwtTokenFactory {
 
   private static final String ISSUER = "RUNIMO_SERVICE";
 
-  @Value("${jwt.secret}")
-  private String jwtSecret;
-  @Value("${jwt.expiration}")
-  private long jwtExpiration;
-  @Value("${jwt.refresh.expiration}")
-  private long jwtRefreshExpiration;
+  private final String jwtSecret;
+  private final long jwtExpiration;
+  private final long jwtRefreshExpiration;
+
+  public JwtTokenFactory(String jwtSecret, long jwtExpiration, long jwtRefreshExpiration) {
+    this.jwtSecret = jwtSecret;
+    this.jwtExpiration = jwtExpiration;
+    this.jwtRefreshExpiration = jwtRefreshExpiration;
+  }
 
   public String generateAccessToken(String userPublicId) {
     Date now = new Date();

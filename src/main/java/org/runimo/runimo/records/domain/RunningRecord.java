@@ -12,6 +12,7 @@ import org.runimo.runimo.common.scale.Distance;
 import org.runimo.runimo.common.scale.Pace;
 import org.runimo.runimo.records.service.usecases.dtos.SegmentPace;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -89,6 +90,9 @@ public class RunningRecord extends BaseEntity {
     return new Distance(totalDistance.getAmount());
   }
 
+  public Duration getRunningTime() {
+    return Duration.between(startedAt, endAt);
+  }
   private void validateEditor(Long editorId) {
     if (editorId == null || !Objects.equals(this.userId, editorId)) {
       throw new IllegalArgumentException("Invalid editor id");

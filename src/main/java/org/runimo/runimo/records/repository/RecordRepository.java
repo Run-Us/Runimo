@@ -27,4 +27,7 @@ public interface RecordRepository extends JpaRepository<RunningRecord, Long> {
 
   @Query("SELECT COUNT(r.id) FROM RunningRecord r WHERE r.userId = :id")
   Long countByUserId(Long id);
+
+  @Query("select r from RunningRecord r where r.userId = :userId")
+  Slice<RunningRecord> findLatestByUserId(Long userId, Pageable pageRequest);
 }

@@ -1,15 +1,14 @@
-package org.runimo.runimo.user.api;
+package org.runimo.runimo.user.controller;
 
 import org.junit.jupiter.api.Test;
 import org.runimo.runimo.auth.jwt.JwtTokenFactory;
+import org.runimo.runimo.configs.ControllerTest;
 import org.runimo.runimo.user.UserFixtures;
 import org.runimo.runimo.user.service.UserFinder;
 import org.runimo.runimo.user.service.dtos.ItemQueryResponse;
+import org.runimo.runimo.user.service.usecases.items.UseItemUsecase;
 import org.runimo.runimo.user.service.usecases.query.MyItemQueryUsecase;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -22,9 +21,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@ActiveProfiles("test")
+@ControllerTest(controllers = {UserItemController.class})
 class QueryItemControllerTest {
 
   @Autowired
@@ -36,6 +33,8 @@ class QueryItemControllerTest {
   private UserFinder userFinder;
   @MockitoBean
   private MyItemQueryUsecase myItemQueryUsecase;
+  @MockitoBean
+  private UseItemUsecase useItemUsecase;
 
   @Test
   void 보유한_아이템_조회_성공() throws Exception {
