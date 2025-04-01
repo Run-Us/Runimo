@@ -28,12 +28,12 @@ public class GlobalExceptionHandler {
   @ExceptionHandler(IllegalArgumentException.class)
   public ResponseEntity<ErrorResponse> handleIllegalArgumentException(IllegalArgumentException e) {
     log.debug("ERROR: {}}", e.getMessage(), e);
-    return ResponseEntity.badRequest().build();
+    return ResponseEntity.badRequest().body(ErrorResponse.of("잘못된 요청입니다.", e.getMessage()));
   }
 
   @ExceptionHandler(IllegalStateException.class)
   public ResponseEntity<ErrorResponse> handleIllegalStateException(IllegalStateException e) {
     log.debug("ERROR: {}}", e.getMessage(), e);
-    return ResponseEntity.badRequest().build();
+    return ResponseEntity.badRequest().body(ErrorResponse.of("잘못된 요청입니다.", e.getMessage()));
   }
 }
