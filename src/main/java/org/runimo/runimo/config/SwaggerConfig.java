@@ -6,14 +6,21 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.Collections;
 
 @Configuration
 public class SwaggerConfig {
 
   @Bean
   public OpenAPI customOpenAPI() {
+
+    Server server = new Server();
+    server.setUrl("https://toy.hyeonjae.dev");
+
     return new OpenAPI()
         .info(new Info()
             .title("Runimo User API")
@@ -26,6 +33,7 @@ public class SwaggerConfig {
                 .name("Apache 2.0")
                 .url("https://www.apache.org/licenses/LICENSE-2.0"))
         ).addSecurityItem(new SecurityRequirement().addList("JWT"))
+        .servers(Collections.singletonList(server))
         .components(new io.swagger.v3.oas.models.Components()
             .addSecuritySchemes("JWT",
                 new SecurityScheme()
