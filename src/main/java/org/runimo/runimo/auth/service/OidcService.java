@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 public class OidcService {
 
   private final KakaoTokenVerifier verifier;
-  private final OidcNonceService nonceService;
 
   public String validateOidcTokenAndGetProviderId(final DecodedJWT token, final SocialProvider provider) {
     DecodedJWT verifyResult;
@@ -20,7 +19,6 @@ public class OidcService {
       case KAKAO -> verifyResult = verifier.verifyToken(token);
       default -> throw new IllegalStateException("not supported provider");
     }
-    nonceService.checkNonceAndSave(provider, verifyResult);
     return verifyResult.getSubject();
   }
 }

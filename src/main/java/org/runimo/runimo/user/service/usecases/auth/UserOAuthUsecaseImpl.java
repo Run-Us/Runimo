@@ -10,6 +10,8 @@ import org.runimo.runimo.auth.service.OidcService;
 import org.runimo.runimo.user.domain.OAuthInfo;
 import org.runimo.runimo.user.domain.SocialProvider;
 import org.runimo.runimo.user.domain.User;
+import org.runimo.runimo.user.enums.UserHttpResponseCode;
+import org.runimo.runimo.user.exceptions.SignUpException;
 import org.runimo.runimo.user.repository.OAuthInfoRepository;
 import org.runimo.runimo.user.service.dtos.AuthResponse;
 import org.runimo.runimo.user.service.dtos.SignupUserResponse;
@@ -34,8 +36,8 @@ public class UserOAuthUsecaseImpl implements UserOAuthUsecase {
     DecodedJWT token = JWT.decode(rawToken);
     String pid = oidcService.validateOidcTokenAndGetProviderId(token, provider);
     OAuthInfo oAuthInfo = oAuthInfoRepository.findByProviderAndProviderId(provider, pid)
-        .orElseThrow(() -> new NoSuchElementException("가입된 유저 없음."));
-    oidcNonceService.useNonce(token, provider);
+        .orElseThrow(() -> new SignUpException(UserHttpResponseCode.LOGIN_FAIL_NOT_SIGN_IN));
+    //oidcNonceService.useNonce(token, provider);
     TokenPair tokenPair = jwtfactory.generateTokenPair(oAuthInfo.getUser());
     return new AuthResponse(oAuthInfo.getUser(), tokenPair);
   }
@@ -47,7 +49,7 @@ public class UserOAuthUsecaseImpl implements UserOAuthUsecase {
     String pid = oidcService.validateOidcTokenAndGetProviderId(token, provider);
     oAuthInfoRepository.findByProviderAndProviderId(provider, pid)
         .ifPresent(oAuthInfo -> {
-          throw new IllegalArgumentException("이미 존재하는 회원입니다.");
+          throw new SignUpException(UserHttpResponseCode.SIGNIN_FAIL_ALREADY_EXIST);
         });
     User savedUser = userRegisterService.register(command, pid);
     TokenPair tokenPair = jwtfactory.generateTokenPair(savedUser);

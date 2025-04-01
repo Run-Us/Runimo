@@ -1,10 +1,10 @@
-package org.runimo.runimo.config;
+package org.runimo.runimo.configs;
 
-import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.auth.filters.JwtAuthenticationFilter;
+import org.runimo.runimo.config.CustomAuthenticationFailureHandler;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
+import org.springframework.context.annotation.Import;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -13,22 +13,32 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-@Configuration
+@TestConfiguration
 @EnableWebSecurity
-@RequiredArgsConstructor
-public class SecurityConfig {
+@Import(CustomAuthenticationFailureHandler.class)
+public class TestSecurityConfig {
 
   private final JwtAuthenticationFilter jwtAuthenticationFilter;
   private final AuthenticationFailureHandler customAuthenticationFailureHandler;
 
+  public TestSecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter,
+                            AuthenticationFailureHandler customAuthenticationFailureHandler) {
+    this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    this.customAuthenticationFailureHandler = customAuthenticationFailureHandler;
+  }
+
   @Bean
-  @Profile({"prod", "test"})
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http
         .csrf(AbstractHttpConfigurer::disable)
         .sessionManagement(session -> session
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         )
+        .oauth2Login(oAuth2Login -> {
+          oAuth2Login
+              .loginPage("/api/v1/users/auth/login")
+              .failureHandler(customAuthenticationFailureHandler);
+        })
         .authorizeHttpRequests(authorize -> authorize
             .requestMatchers("/api/v1/users/auth/**").permitAll()
             .anyRequest().authenticated()
@@ -37,21 +47,5 @@ public class SecurityConfig {
 
     return http.build();
   }
-
-  @Bean
-  @Profile("dev")
-  public SecurityFilterChain devSecurityFilterChain(HttpSecurity http) throws Exception {
-    http
-        .csrf(AbstractHttpConfigurer::disable)
-        .sessionManagement(session -> session
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        )
-        .authorizeHttpRequests(authorize -> authorize
-            .requestMatchers("/api/v1/users/auth/**").permitAll()
-            .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
-            .anyRequest().authenticated()
-        );
-
-    return http.build();
-  }
 }
+

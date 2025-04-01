@@ -27,7 +27,6 @@ import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-
 @ActiveProfiles("test")
 class UserItemAcceptanceTest {
 
