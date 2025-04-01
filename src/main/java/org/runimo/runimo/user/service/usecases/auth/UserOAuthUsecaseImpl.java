@@ -37,7 +37,7 @@ public class UserOAuthUsecaseImpl implements UserOAuthUsecase {
     String pid = oidcService.validateOidcTokenAndGetProviderId(token, provider);
     OAuthInfo oAuthInfo = oAuthInfoRepository.findByProviderAndProviderId(provider, pid)
         .orElseThrow(() -> new SignUpException(UserHttpResponseCode.LOGIN_FAIL_NOT_SIGN_IN));
-    oidcNonceService.useNonce(token, provider);
+    //oidcNonceService.useNonce(token, provider);
     TokenPair tokenPair = jwtfactory.generateTokenPair(oAuthInfo.getUser());
     return new AuthResponse(oAuthInfo.getUser(), tokenPair);
   }

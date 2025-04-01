@@ -29,11 +29,6 @@ public class SecurityConfig {
         .sessionManagement(session -> session
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         )
-        .oauth2Login(oAuth2Login -> {
-          oAuth2Login
-              .loginPage("/api/v1/users/auth/login")
-              .failureHandler(customAuthenticationFailureHandler);
-        })
         .authorizeHttpRequests(authorize -> authorize
             .requestMatchers("/api/v1/users/auth/**").permitAll()
             .anyRequest().authenticated()
@@ -51,11 +46,6 @@ public class SecurityConfig {
         .sessionManagement(session -> session
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         )
-        .oauth2Login(oAuth2Login -> {
-          oAuth2Login
-              .loginPage("/api/v1/users/auth/login")
-              .failureHandler(customAuthenticationFailureHandler);
-        })
         .authorizeHttpRequests(authorize -> authorize
             .requestMatchers("/api/v1/users/auth/**").permitAll()
             .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()

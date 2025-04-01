@@ -1,5 +1,6 @@
 package org.runimo.runimo.config;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
@@ -7,6 +8,7 @@ import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -41,6 +43,11 @@ public class SwaggerConfig {
                     .type(SecurityScheme.Type.HTTP)
                     .scheme("bearer")
                     .bearerFormat("JWT")));
+  }
+
+  @Bean
+  public Jackson2ObjectMapperBuilderCustomizer customizer() {
+    return builder -> builder.propertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
   }
 }
 
