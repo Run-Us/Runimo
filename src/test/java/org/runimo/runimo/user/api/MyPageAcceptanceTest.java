@@ -14,6 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 
@@ -44,7 +47,7 @@ public class MyPageAcceptanceTest {
   void 마이페이지_조회_시_프로필정보와_최근_달리기가_표시된다() {
 
     String accessToken = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
-
+    int diff = (int) LocalDateTime.parse("2025-03-29T13:00:00").until(LocalDateTime.now(), ChronoUnit.DAYS);
     given()
         .header("Authorization", accessToken)
         .contentType(ContentType.JSON)
@@ -57,7 +60,7 @@ public class MyPageAcceptanceTest {
         .body("payload.nickname", equalTo("Daniel"))
         .body("payload.profile_image_url", equalTo("https://example.com/images/user1.png"))
         .body("payload.total_distance_in_meters", equalTo(10000))
-        .body("payload.latest_run_date_before", equalTo(2))
+        .body("payload.latest_run_date_before", equalTo(diff))
         .body("payload.latest_running_record.title", equalTo("record-title-2"))
         .body("payload.latest_running_record.start_date_time", equalTo("2025-03-29T13:00:00"))
         .body("payload.latest_running_record.distance_in_meters", equalTo(2345))
