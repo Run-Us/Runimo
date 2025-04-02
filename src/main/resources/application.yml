@@ -72,6 +72,8 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
+    show-sql: true
+
 jwt:
   expiration: 300000
   refresh:
