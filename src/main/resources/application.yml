@@ -55,6 +55,10 @@ logging:
         type:
           descriptor:
             sql: debug
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true
 
 ---
 spring:
@@ -69,6 +73,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
     show-sql: true
+
 jwt:
   expiration: 300000
   refresh:

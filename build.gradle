@@ -23,7 +23,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.5'
-    implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.6.2'
+    implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
     implementation 'me.paulschwarz:spring-dotenv:4.0.0'
 
     implementation 'org.springframework.security:spring-security-oauth2-client'
