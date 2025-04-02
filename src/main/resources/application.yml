@@ -47,14 +47,14 @@ jwt:
   expiration: ${JWT_EXPIRATION:3600000}
   refresh:
     expiration: ${JWT_REFRESH_EXPIRATION:86400000}
-#
-#logging:
-#  level:
-#    org:
-#      hibernate:
-#        type:
-#          descriptor:
-#            sql: debug
+
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: debug
 decorator:
   datasource:
     p6spy:
