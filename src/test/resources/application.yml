@@ -62,4 +62,9 @@ logging:
       hibernate:
         type:
           descriptor:
-            sql: debug
+            sql: trace
+
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true
