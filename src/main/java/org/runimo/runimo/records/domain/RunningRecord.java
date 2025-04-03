@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-@Table(name = "running_records")
+@Table(name = "running_record")
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
