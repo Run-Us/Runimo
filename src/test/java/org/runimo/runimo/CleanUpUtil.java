@@ -9,11 +9,11 @@ public class CleanUpUtil {
 
   private static final String[] USER_TABLES = {
       "user_item",
-      "oauth_accounts",
+      "oauth_account",
       "users",
-      "running_records",
+      "running_record",
       "user_love_point",
-      "incubating_eggs"
+      "incubating_egg"
   };
 
   @Autowired

@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.runimo.runimo.common.BaseEntity;
 
-@Table(name = "incubating_eggs")
+@Table(name = "incubating_egg")
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

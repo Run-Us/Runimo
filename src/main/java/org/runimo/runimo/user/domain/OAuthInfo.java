@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import org.runimo.runimo.common.BaseEntity;
 
 @Entity
-@Table(name = "oauth_accounts")
+@Table(name = "oauth_account")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OAuthInfo extends BaseEntity {

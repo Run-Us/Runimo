@@ -1,17 +1,17 @@
 SET FOREIGN_KEY_CHECKS = 0;
 
 DROP TABLE IF EXISTS user_token;
-DROP TABLE IF EXISTS oauth_accounts;
-DROP TABLE IF EXISTS running_records;
+DROP TABLE IF EXISTS oauth_account;
+DROP TABLE IF EXISTS running_record;
 DROP TABLE IF EXISTS user_item;
 DROP TABLE IF EXISTS incubator;
 DROP TABLE IF EXISTS user_runimo;
 DROP TABLE IF EXISTS item_activity;
 DROP TABLE IF EXISTS runimo;
-DROP TABLE IF EXISTS items;
+DROP TABLE IF EXISTS item;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS user_love_point;
-DROP TABLE IF EXISTS incubating_eggs;
+DROP TABLE IF EXISTS incubating_egg;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
@@ -49,7 +49,7 @@ CREATE TABLE `user_love_point`
     `deleted_at` TIMESTAMP
 );
 
-CREATE TABLE `oauth_accounts`
+CREATE TABLE `oauth_account`
 (
     `id`          BIGINT PRIMARY KEY AUTO_INCREMENT,
     `user_id`     BIGINT NOT NULL,
@@ -62,7 +62,7 @@ CREATE TABLE `oauth_accounts`
 );
 
 
-CREATE TABLE `running_records`
+CREATE TABLE `running_record`
 (
     `id`                    integer PRIMARY KEY AUTO_INCREMENT,
     `user_id`               integer      NOT NULL,
@@ -79,7 +79,7 @@ CREATE TABLE `running_records`
     `deleted_at`            TIMESTAMP
 );
 
-CREATE TABLE `items`
+CREATE TABLE `item`
 (
     `id`                   integer PRIMARY KEY AUTO_INCREMENT,
     `name`                 varchar(255) NOT NULL,
@@ -118,7 +118,7 @@ CREATE TABLE `user_item`
     `deleted_at` TIMESTAMP
 );
 
-CREATE TABLE `incubating_eggs`
+CREATE TABLE `incubating_egg`
 (
     `id`
                                 BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -158,5 +158,5 @@ CREATE TABLE `user_runimo`
 ALTER TABLE `user_token`
     ADD FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
-ALTER TABLE `oauth_accounts`
+ALTER TABLE `oauth_account`
     ADD FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
