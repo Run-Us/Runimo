@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.runimo.runimo.common.BaseEntity;
+import org.runimo.runimo.item.domain.EggType;
 
 @Entity
 @Table(name = "runimo")
@@ -15,19 +16,20 @@ public class Runimo extends BaseEntity {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "code")
+    @Column(name = "code", nullable = false)
     private String code;
 
     @Column(name = "description")
     private String description;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "type", nullable = false)
-    private RunimoType type;
+    @Column(name = "egg_type", nullable = false)
+    private EggType type;
 
     @Builder
-    public Runimo(String name, String description, RunimoType type) {
+    public Runimo(String name, String code, String description, EggType type) {
         this.name = name;
+        this.code = code;
         this.description = description;
         this.type = type;
     }
