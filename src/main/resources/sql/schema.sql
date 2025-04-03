@@ -132,6 +132,28 @@ CREATE TABLE `incubating_egg`
     `deleted_at`             TIMESTAMP
 );
 
+CREATE TABLE `runimo`
+(
+    `id`            BIGINT PRIMARY KEY AUTO_INCREMENT,
+    `name`          varchar(255),
+    `code`          varchar(255),
+    `description`   varchar(255),
+    `type`          varchar(255) NOT NULL,
+    `created_at`    timestamp,
+    `updated_at`    timestamp,
+    `deleted_at`    timestamp
+);
+
+CREATE TABLE `user_runimo`
+(
+    `id`            BIGINT PRIMARY KEY AUTO_INCREMENT,
+    `user_id`       BIGINT NOT NULL,
+    `runimo_id`     BIGINT NOT NULL,
+    `created_at`    timestamp,
+    `updated_at`    timestamp,
+    `deleted_at`    timestamp
+);
+
 ALTER TABLE `user_token`
     ADD FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
