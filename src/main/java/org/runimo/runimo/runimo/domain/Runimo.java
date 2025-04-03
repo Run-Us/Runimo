@@ -8,12 +8,15 @@ import lombok.NoArgsConstructor;
 import org.runimo.runimo.common.BaseEntity;
 
 @Entity
-@Table(name = "runimos")
+@Table(name = "runimo")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Runimo extends BaseEntity {
     @Column(name = "name")
     private String name;
+
+    @Column(name = "code")
+    private String code;
 
     @Column(name = "description")
     private String description;
