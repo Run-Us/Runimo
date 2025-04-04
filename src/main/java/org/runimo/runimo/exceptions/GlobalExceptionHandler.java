@@ -13,6 +13,12 @@ import java.util.NoSuchElementException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+  @ExceptionHandler(BusinessException.class)
+  public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException e) {
+    log.debug("ERROR: {}}", e.getMessage(), e);
+    return ResponseEntity.status(e.getHttpStatusCode()).body(ErrorResponse.of(e.getMessage(), e.getErrorCode().getCode()));
+  }
+
   @ExceptionHandler(SignUpException.class)
   public ResponseEntity<ErrorResponse> handleSignUpException(SignUpException e) {
     log.debug("ERROR: {}}", e.getMessage(), e);
