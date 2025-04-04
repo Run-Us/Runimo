@@ -83,7 +83,7 @@ public class EggController {
     QueryIncubatingEggResponse response = incubatingEggQueryUsecase.execute(userId);
     return ResponseEntity.ok().body(
         SuccessResponse.of(
-            UserHttpResponseCode.MY_PAGE_DATA_FETCHED,
+            UserHttpResponseCode.MY_INCUBATING_EGG_FETCHED,
             response
         ));
   }

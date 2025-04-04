@@ -32,6 +32,6 @@ public class MainViewController {
   public ResponseEntity<SuccessResponse<MainViewResponse>> queryMainView(
       @UserId Long userId) {
     MainViewResponse response = mainViewQueryUsecase.execute(userId);
-    return ResponseEntity.ok(SuccessResponse.of(UserHttpResponseCode.MY_PAGE_DATA_FETCHED, response));
+    return ResponseEntity.ok(SuccessResponse.of(UserHttpResponseCode.MAIN_PAGE_DATA_FETCHED, response));
   }
 }

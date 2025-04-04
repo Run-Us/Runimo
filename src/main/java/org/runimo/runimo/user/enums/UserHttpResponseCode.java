@@ -4,23 +4,27 @@ import org.runimo.runimo.exceptions.code.CustomResponseCode;
 import org.springframework.http.HttpStatus;
 
 public enum UserHttpResponseCode implements CustomResponseCode {
-  MY_PAGE_DATA_FETCHED("USH2001", "마이페이지 데이터 조회 성공", "마이페이지 데이터 조회 성공"),
-  SIGNUP_SUCCESS("USH2002", "회원가입 성공", "회원가입 성공"),
-  LOGIN_SUCCESS("USH2003", "로그인 성공", "로그인 성공"),
-  REFRESH_SUCCESS("USH2004", "토큰 재발급 성공", "토큰 재발급 성공"),
+  MY_PAGE_DATA_FETCHED(HttpStatus.OK, "마이페이지 데이터 조회 성공", "마이페이지 데이터 조회 성공"),
+  MAIN_PAGE_DATA_FETCHED(HttpStatus.OK, "메인페이지 데이터 조회 성공", "메인페이지 데이터 조회 성공"),
+  SIGNUP_SUCCESS(HttpStatus.CREATED, "회원가입 성공", "회원가입 성공"),
+  LOGIN_SUCCESS(HttpStatus.OK, "로그인 성공", "로그인 성공"),
+  REFRESH_SUCCESS(HttpStatus.OK, "토큰 재발급 성공", "토큰 재발급 성공"),
 
-  USE_ITEM_SUCCESS("USH2005", "아이템 사용 성공", "아이템 사용 성공"),
-  REGISTER_EGG_SUCCESS("USH2006", "부화기 등록 성공", "부화기 등록 성공"),
-  USE_LOVE_POINT_SUCCESS("USH2007","애정 사용 성공" , "애정 사용 성공"),
+  USE_ITEM_SUCCESS(HttpStatus.OK, "아이템 사용 성공", "아이템 사용 성공"),
+  REGISTER_EGG_SUCCESS(HttpStatus.CREATED, "부화기 등록 성공", "부화기 등록 성공"),
+  USE_LOVE_POINT_SUCCESS(HttpStatus.OK,"애정 사용 성공" , "애정 사용 성공"),
+  MY_INCUBATING_EGG_FETCHED(HttpStatus.OK, "부화기중인 알 조회 성공", "부화중인 알 조회 성공"),
 
-  LOGIN_FAIL_NOT_SIGN_IN("UEH4041", "로그인 실패 - 회원가입하지 않은 사용자", "로그인 실패 - 회원가입하지 않은 사용자"),
-  SIGNIN_FAIL_ALREADY_EXIST("UEH4042", "로그인 실패 - 이미 존재하는 사용자", "로그인 실패 - 이미 존재하는 사용자"),;
+  LOGIN_FAIL_NOT_SIGN_IN(HttpStatus.UNAUTHORIZED, "로그인 실패 - 회원가입하지 않은 사용자", "로그인 실패 - 회원가입하지 않은 사용자"),
+  SIGNIN_FAIL_ALREADY_EXIST(HttpStatus.CONFLICT, "로그인 실패 - 이미 존재하는 사용자", "로그인 실패 - 이미 존재하는 사용자"),
+  JWT_TOKEN_BROKEN(HttpStatus.BAD_REQUEST, "JWT 토큰이 손상되었습니다", "JWT 토큰이 손상되었습니다"),;
 
-  private final String code;
+  private final HttpStatus code;
   private final String clientMessage;
   private final String logMessage;
 
-  UserHttpResponseCode(String code, String clientMessage, String logMessage) {
+
+  UserHttpResponseCode(HttpStatus code, String clientMessage, String logMessage) {
     this.code = code;
     this.clientMessage = clientMessage;
     this.logMessage = logMessage;
@@ -28,7 +32,7 @@ public enum UserHttpResponseCode implements CustomResponseCode {
 
   @Override
   public String getCode() {
-    return this.code;
+    return this.name();
   }
 
   @Override
@@ -43,7 +47,7 @@ public enum UserHttpResponseCode implements CustomResponseCode {
 
   @Override
   public HttpStatus getHttpStatusCode() {
-    return null;
+    return this.code;
   }
 }
 
