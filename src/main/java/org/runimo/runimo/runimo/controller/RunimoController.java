@@ -1,0 +1,60 @@
+package org.runimo.runimo.runimo.controller;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import lombok.RequiredArgsConstructor;
+import org.runimo.runimo.common.response.SuccessResponse;
+import org.runimo.runimo.runimo.controller.dto.response.GetMyRunimoListResponse;
+import org.runimo.runimo.runimo.controller.dto.response.SetMainRunimoResponse;
+import org.runimo.runimo.runimo.exception.RunimoHttpResponseCode;
+import org.runimo.runimo.runimo.service.usecase.RunimoUsecase;
+import org.runimo.runimo.user.controller.UserId;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
+@RequiredArgsConstructor
+@RestController
+public class RunimoController {
+    private final RunimoUsecase runimoUsecase;
+
+    @Operation(summary = "보유 러니모 조회", description = "사용자가 보유한 러니모 목록을 조회합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "[MSH2001] 나의 보유 러니모 목록 조회 성공")
+    })
+    @GetMapping("/api/v1/runimos/my")
+    public ResponseEntity<SuccessResponse<GetMyRunimoListResponse>> getMyRunimoList(@UserId Long userId){
+        GetMyRunimoListResponse response = runimoUsecase.getMyRunimoList(userId);
+
+        return ResponseEntity.ok().body(
+                SuccessResponse.of(
+                        RunimoHttpResponseCode.GET_MY_RUNIMO_LIST_SUCCESS,
+                        response)
+        );
+    }
+
+    @Operation(summary = "대표 러니모 설정", description = "사용자의 대표 러니모를 설정합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "[MSH2002] 대표 러니모 설정 성공"),
+            @ApiResponse(responseCode = "400", description = "[MSH4001] 요청 러니모의 소유자가 존재하지 않음"),
+            @ApiResponse(responseCode = "401", description = "인증 실패"),
+            @ApiResponse(responseCode = "403", description = "[MSH4031] 요청 러니모의 소유자가 아님"),
+            @ApiResponse(responseCode = "404", description = "[MSH4041] 요청 러니모가 존재하지 않음")
+    })
+    @PatchMapping("/api/v1/runimos/{runimoId}/main")
+    public ResponseEntity<SuccessResponse<SetMainRunimoResponse>> setMainRunimo(
+            @UserId Long userId,
+            @PathVariable Long runimoId){
+        SetMainRunimoResponse response = runimoUsecase.setMainRunimo(userId, runimoId);
+
+        return ResponseEntity.ok().body(
+                SuccessResponse.of(
+                        RunimoHttpResponseCode.SET_MAIN_RUNIMO_SUCCESS,
+                        response)
+        );
+    }
+
+}
