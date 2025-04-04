@@ -1,5 +1,8 @@
 package org.runimo.runimo.hatch.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.common.response.SuccessResponse;
 import org.runimo.runimo.hatch.controller.dto.response.HatchEggResponse;
@@ -7,8 +10,8 @@ import org.runimo.runimo.hatch.exception.HatchHttpResponseCode;
 import org.runimo.runimo.hatch.service.usecase.HatchUsecase;
 import org.runimo.runimo.user.controller.UserId;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -16,8 +19,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class HatchController {
     private final HatchUsecase hatchUsecase;
 
-    // TODO : swagger 달기
-    @PatchMapping("/api/v1/eggs/{eggId}/hatch")
+    @Operation(summary = "알 부화", description = "알을 부화합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "[HSH2011] 알 부화 성공"),
+            @ApiResponse(responseCode = "400", description = "[HEH4001] 부화 요청 알이 부화 가능한 상태가 아님"),
+            @ApiResponse(responseCode = "404", description = "[HEH4041] 부화 요청 알이 존재하지 않음")
+    })
+    @PostMapping("/api/v1/eggs/{eggId}/hatch")
     public ResponseEntity<SuccessResponse<HatchEggResponse>> hatch(
             @UserId Long userId,
             @PathVariable Long eggId){
