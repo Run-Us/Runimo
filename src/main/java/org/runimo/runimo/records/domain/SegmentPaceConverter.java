@@ -7,9 +7,9 @@ import org.runimo.runimo.records.service.usecases.dtos.SegmentPace;
 
 import java.util.List;
 
-public class SegmentPaceConverter implements AttributeConverter<List<SegmentPace>, String>
-{
-  private ObjectMapper objectMapper = new ObjectMapper();
+public class SegmentPaceConverter implements AttributeConverter<List<SegmentPace>, String> {
+  private final ObjectMapper objectMapper = new ObjectMapper();
+
   @Override
   public String convertToDatabaseColumn(List<SegmentPace> segmentPaces) {
     try {
@@ -21,9 +21,10 @@ public class SegmentPaceConverter implements AttributeConverter<List<SegmentPace
 
   @Override
   public List<SegmentPace> convertToEntityAttribute(String s) {
-    TypeReference<List<SegmentPace>> typeRef = new TypeReference<List<SegmentPace>>() {};
+    TypeReference<List<SegmentPace>> typeRef = new TypeReference<List<SegmentPace>>() {
+    };
     try {
-      if(s == null || s.isEmpty()) {
+      if (s == null || s.isEmpty()) {
         return List.of();
       }
       return objectMapper.readValue(s, typeRef);

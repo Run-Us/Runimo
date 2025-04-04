@@ -1,7 +1,6 @@
 package org.runimo.runimo.records.domain;
 
 
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -93,6 +92,7 @@ public class RunningRecord extends BaseEntity {
   public Duration getRunningTime() {
     return Duration.between(startedAt, endAt);
   }
+
   private void validateEditor(Long editorId) {
     if (editorId == null || !Objects.equals(this.userId, editorId)) {
       throw new IllegalArgumentException("Invalid editor id");

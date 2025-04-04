@@ -1,4 +1,5 @@
 package org.runimo.runimo.records.enums;
+
 import org.runimo.runimo.exceptions.code.CustomResponseCode;
 import org.springframework.http.HttpStatus;
 
