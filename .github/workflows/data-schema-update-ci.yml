@@ -1,0 +1,25 @@
+name: schema-change-notification
+
+on:
+  push:
+    paths:
+      - 'src/main/resources/sql/schema.sql'
+  pull_request:
+    paths:
+      - 'src/main/resources/sql/schema.sql'
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Send notification
+        uses: sarisia/actions-status-discord@v1
+        with:
+          title: 📢 Schema.sql Changed 📢
+          webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          color: 00FF00
+          text: '데이터 스키마가 변경되었어요. 변경된 내용을 확인해주세요.'
