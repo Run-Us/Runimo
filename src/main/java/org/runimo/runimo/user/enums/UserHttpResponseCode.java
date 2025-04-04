@@ -15,7 +15,8 @@ public enum UserHttpResponseCode implements CustomResponseCode {
   USE_LOVE_POINT_SUCCESS(HttpStatus.OK,"애정 사용 성공" , "애정 사용 성공"),
   MY_INCUBATING_EGG_FETCHED(HttpStatus.OK, "부화기중인 알 조회 성공", "부화중인 알 조회 성공"),
 
-  LOGIN_FAIL_NOT_SIGN_IN(HttpStatus.UNAUTHORIZED, "로그인 실패 - 회원가입하지 않은 사용자", "로그인 실패 - 회원가입하지 않은 사용자"),
+  LOGIN_FAIL_NOT_SIGN_IN(HttpStatus.NOT_FOUND
+      , "로그인 실패 - 회원가입하지 않은 사용자", "로그인 실패 - 회원가입하지 않은 사용자"),
   SIGNIN_FAIL_ALREADY_EXIST(HttpStatus.CONFLICT, "로그인 실패 - 이미 존재하는 사용자", "로그인 실패 - 이미 존재하는 사용자"),
   JWT_TOKEN_BROKEN(HttpStatus.BAD_REQUEST, "JWT 토큰이 손상되었습니다", "JWT 토큰이 손상되었습니다"),;
 

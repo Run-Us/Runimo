@@ -38,7 +38,7 @@ public class UserItemController {
   public ResponseEntity<SuccessResponse<ItemQueryResponse>> queryItems(
       @UserId Long userId
   ) {
-    ItemQueryResponse response = myItemQueryUsecase.execute(userId);
+    ItemQueryResponse response = myItemQueryUsecase.queryMyAllItems(userId);
     return ResponseEntity.ok(SuccessResponse.of(UserHttpResponseCode.MY_PAGE_DATA_FETCHED, response));
   }
 

@@ -14,6 +14,7 @@ import org.runimo.runimo.user.enums.UserHttpResponseCode;
 import org.runimo.runimo.user.service.usecases.eggs.IncubatingEggQueryUsecase;
 import org.runimo.runimo.user.service.usecases.eggs.EggRegisterUsecase;
 import org.runimo.runimo.user.service.usecases.eggs.GiveLovePointToEggUsecase;
+import org.runimo.runimo.user.service.usecases.query.MyItemQueryUsecase;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,6 +29,7 @@ public class EggController {
   private final EggRegisterUsecase eggRegisterUsecase;
   private final GiveLovePointToEggUsecase giveLovePointToEggUsecase;
   private final IncubatingEggQueryUsecase incubatingEggQueryUsecase;
+  private final MyItemQueryUsecase myItemQueryUsecase;
 
   @Operation(summary = "알 등록", description = "사용자가 알을 부화기에 등록합니다.")
   @ApiResponses(value = {
@@ -48,6 +50,22 @@ public class EggController {
             UserHttpResponseCode.REGISTER_EGG_SUCCESS,
             registerEggResponse
         ));
+  }
+
+  @Operation(summary = "내가 보유한 알 종류별 조회", description = "내 보유알들을 조회합니다.")
+  @ApiResponses(
+      value = {
+          @ApiResponse(responseCode = "200", description = "아이템 조회 성공"),
+          @ApiResponse(responseCode = "401", description = "인증 실패"),
+          @ApiResponse(responseCode = "403", description = "권한 없음"),
+      }
+  )
+  @GetMapping()
+  public ResponseEntity<SuccessResponse<ItemQueryResponse>> queryMyEggs(
+      @UserId Long userId
+  ) {
+    ItemQueryResponse response = myItemQueryUsecase.queryMyEggs(userId);
+    return ResponseEntity.ok(SuccessResponse.of(UserHttpResponseCode.MY_PAGE_DATA_FETCHED, response));
   }
 
   @Operation(summary = "애정 포인트 사용", description = "사용자가 알에 애정 포인트를 사용합니다.")
@@ -76,7 +94,7 @@ public class EggController {
       @ApiResponse(responseCode = "200", description = "부화중인 알 조회 성공"),
       @ApiResponse(responseCode = "401", description = "인증 실패")
   })
-  @GetMapping
+  @GetMapping("/incubators")
   public ResponseEntity<SuccessResponse<QueryIncubatingEggResponse>> getIncubatingEgg(
       @UserId Long userId
   ) {
