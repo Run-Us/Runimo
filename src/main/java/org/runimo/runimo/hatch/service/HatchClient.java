@@ -10,6 +10,6 @@ public class HatchClient {
 
     // TODO : 로직 구현
     public Runimo getRunimoFromEgg(IncubatingEgg incubatingEgg) {
-        return new Runimo("토끼_dummy", "R-100", "마당에 사는 토끼 dummy", EggType.MADANG);
+        return new Runimo("토끼_dummy", "R-100", "마당에 사는 토끼 dummy", "http://dummy", EggType.MADANG);
     }
 }
