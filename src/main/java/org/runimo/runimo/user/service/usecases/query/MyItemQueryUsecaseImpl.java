@@ -16,7 +16,13 @@ public class MyItemQueryUsecaseImpl implements MyItemQueryUsecase {
   private final MyItemRepository myItemRepository;
 
   @Override
-  public ItemQueryResponse execute(Long userId) {
+  public ItemQueryResponse queryMyEggs(Long userId) {
+    List<InventoryItem> myItems = myItemRepository.findMyEggsByUserId(userId);
+    return new ItemQueryResponse(myItems);
+  }
+
+  @Override
+  public ItemQueryResponse queryMyAllItems(Long userId) {
     List<InventoryItem> myItems = myItemRepository.findInventoryItemsByUserId(userId);
     return new ItemQueryResponse(myItems);
   }

@@ -34,7 +34,8 @@ public class UserController {
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "로그인 성공"),
       @ApiResponse(responseCode = "400", description = "잘못된 요청 데이터"),
-      @ApiResponse(responseCode = "401", description = "인증 실패")
+      @ApiResponse(responseCode = "401", description = "인증 실패"),
+      @ApiResponse(responseCode = "404", description = "가입 안함"),
   })
   @PostMapping("/auth/login")
   public ResponseEntity<SuccessResponse<AuthResponse>> login(

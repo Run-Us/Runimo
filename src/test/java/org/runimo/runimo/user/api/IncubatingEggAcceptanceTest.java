@@ -56,7 +56,7 @@ class IncubatingEggAcceptanceTest {
         .header("Authorization", token)
         .contentType(ContentType.JSON)
         .when()
-        .get("/api/v1/users/eggs")
+        .get("/api/v1/users/eggs/incubators")
         .then()
         .log().all()
         .statusCode(200)
