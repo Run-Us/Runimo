@@ -57,7 +57,7 @@ class MainViewAcceptanceTest {
         .then()
         .log().ifValidationFails()
         .statusCode(200)
-        .body("code", equalTo("USH2001"))
+        .body("code", equalTo("MAIN_PAGE_DATA_FETCHED"))
         .body("payload.nickname", equalTo("Daniel"))
         .body("payload.profile_image_url", equalTo("https://example.com/images/user1.png"))
         .body("payload.total_running_count", equalTo(2))

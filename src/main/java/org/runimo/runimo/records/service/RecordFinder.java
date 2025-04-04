@@ -3,12 +3,14 @@ package org.runimo.runimo.records.service;
 import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.records.domain.RunningRecord;
 import org.runimo.runimo.records.repository.RecordRepository;
+import org.runimo.runimo.records.service.dtos.DailyStat;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -44,5 +46,10 @@ public class RecordFinder {
   public Optional<RunningRecord> findLatestRunningRecordByUserId(Long userId) {
     PageRequest pageRequest = PageRequest.of(0, 1, Sort.by("startedAt").descending());
     return recordRepository.findLatestByUserId(userId, pageRequest).stream().findFirst();
+  }
+
+  @Transactional(readOnly = true)
+  public List<DailyStat> findDailyStatByUserIdBetween(Long id, LocalDateTime from, LocalDateTime to) {
+    return recordRepository.findDailyDistanceByUserIdAndThisWeek(id, from, to);
   }
 }

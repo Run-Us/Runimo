@@ -16,4 +16,10 @@ public interface MyItemRepository extends JpaRepository<UserItem, Integer> {
       " join Item it on i.itemId = it.id" +
       " WHERE i.userId = :userId")
   List<InventoryItem> findInventoryItemsByUserId(Long userId);
+
+  @Query("SELECT new org.runimo.runimo.user.service.dtos.InventoryItem(it.itemId, e.name, it.quantity, e.imgUrl) " +
+      "FROM UserItem it" +
+      " join Egg e on it.itemId = e.id" +
+      " WHERE it.userId = :userId")
+  List<InventoryItem> findMyEggsByUserId(Long userId);
 }

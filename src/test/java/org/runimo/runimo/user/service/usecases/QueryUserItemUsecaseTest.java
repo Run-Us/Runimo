@@ -40,7 +40,22 @@ class QueryUserItemUsecaseTest {
         new InventoryItem(2L, "숲알", 30L, "imgUr2l"))
     );
     // when
-    ItemQueryResponse res = myItemQueryUsecase.execute(userId);
+    ItemQueryResponse res = myItemQueryUsecase.queryMyAllItems(userId);
+    // then
+    assertNotNull(res);
+    assertEquals(2, res.items().size());
+  }
+
+  @Test
+  void 사용자가_보유한_알_조회() {
+    // given
+    Long userId = 1L;
+    given(myItemRepository.findMyEggsByUserId(userId)).willReturn(List.of(
+        new InventoryItem(1L, "마당알", 1L, "imgUrl"),
+        new InventoryItem(2L, "숲알", 30L, "imgUr2l"))
+    );
+    // when
+    ItemQueryResponse res = myItemQueryUsecase.queryMyEggs(userId);
     // then
     assertNotNull(res);
     assertEquals(2, res.items().size());
