@@ -138,6 +138,7 @@ CREATE TABLE `runimo`
     `name`          varchar(255),
     `code`          varchar(255) NOT NULL,
     `description`   varchar(255),
+    `img_url`       varchar(255),
     `egg_type`      varchar(255) NOT NULL,
     `created_at`    timestamp,
     `updated_at`    timestamp,

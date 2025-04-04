@@ -22,6 +22,9 @@ public class Runimo extends BaseEntity {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "img_url")
+    private String imgUrl;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "egg_type", nullable = false)
     private EggType type;
