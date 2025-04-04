@@ -13,6 +13,7 @@ import org.runimo.runimo.records.service.usecases.dtos.SegmentPace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -31,7 +32,8 @@ class RecordAcceptanceTest {
 
   @Autowired
   private JwtTokenFactory jwtTokenFactory;
-
+  private static final String USER_UUID = "test-user-uuid-1";
+  private static final String AUTH_HEADER_PREFIX = "Bearer ";
   @Autowired
   private ObjectMapper objectMapper;
   @Autowired
@@ -132,5 +134,77 @@ class RecordAcceptanceTest {
         .body("payload.segment_pace_list[0].pace", equalTo(732000));
   }
 
+
+
+  @Test
+  @WithMockUser(username = USER_UUID)
+  @Sql(scripts = "/sql/weekly_record_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+  void 주간_달리기_거리_조회_성공시_정확한_정보를_반환한다() {
+    // given
+    String token = AUTH_HEADER_PREFIX + jwtTokenFactory.generateAccessToken(USER_UUID);
+
+    // when & then
+    given()
+        .header("Authorization", token)
+        .contentType(ContentType.JSON)
+        .param("startDate", "2025-03-31")
+        .param("endDate", "2025-04-06")
+        .when()
+        .get("/api/v1/records/stats/weekly")
+        .then()
+        .log().all()
+        .statusCode(200)
+        .body("code", equalTo("USH2001"))
+        .body("payload.daily_stats.size()", equalTo(7))
+        .body("payload.daily_stats[0].date", equalTo("2025-03-31"))
+        .body("payload.daily_stats[0].distance", equalTo(1000))
+        .body("payload.daily_stats[1].date", equalTo("2025-04-01"))
+        .body("payload.daily_stats[1].distance", equalTo(2000))
+        .body("payload.daily_stats[2].date", equalTo("2025-04-02"))
+        .body("payload.daily_stats[2].distance", equalTo(3000))
+        .body("payload.daily_stats[3].date", equalTo("2025-04-03"))
+        .body("payload.daily_stats[3].distance", equalTo(4000))
+        .body("payload.daily_stats[4].date", equalTo("2025-04-04"))
+        .body("payload.daily_stats[4].distance", equalTo(5000))
+        .body("payload.daily_stats[5].date", equalTo("2025-04-05"))
+        .body("payload.daily_stats[5].distance", equalTo(6000))
+        .body("payload.daily_stats[6].date", equalTo("2025-04-06"))
+        .body("payload.daily_stats[6].distance", equalTo(7000));
+  }
+
+  @Test
+  @Sql(scripts = "/sql/weekly_record_partial_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+  void 주간_달리기_거리_조회_성공시_일부_날짜에_데이터가_없을때_0을_반환한다() {
+    // given
+    String token = AUTH_HEADER_PREFIX + jwtTokenFactory.generateAccessToken(USER_UUID);
+
+    // when & then
+    given()
+        .header("Authorization", token)
+        .contentType(ContentType.JSON)
+        .param("startDate", "2025-03-31")
+        .param("endDate", "2025-04-06")
+        .when()
+        .get("/api/v1/records/stats/weekly")
+        .then()
+        .log().ifValidationFails()
+        .statusCode(200)
+        .body("code", equalTo("USH2001"))
+        .body("payload.daily_stats.size()", equalTo(7))
+        .body("payload.daily_stats[0].date", equalTo("2025-03-31"))
+        .body("payload.daily_stats[0].distance", equalTo(1000))
+        .body("payload.daily_stats[1].date", equalTo("2025-04-01"))
+        .body("payload.daily_stats[1].distance", equalTo(2000))
+        .body("payload.daily_stats[2].date", equalTo("2025-04-02"))
+        .body("payload.daily_stats[2].distance", equalTo(0))
+        .body("payload.daily_stats[3].date", equalTo("2025-04-03"))
+        .body("payload.daily_stats[3].distance", equalTo(0))
+        .body("payload.daily_stats[4].date", equalTo("2025-04-04"))
+        .body("payload.daily_stats[4].distance", equalTo(5000))
+        .body("payload.daily_stats[5].date", equalTo("2025-04-05"))
+        .body("payload.daily_stats[5].distance", equalTo(6000))
+        .body("payload.daily_stats[6].date", equalTo("2025-04-06"))
+        .body("payload.daily_stats[6].distance", equalTo(7000));
+  }
 }
 
