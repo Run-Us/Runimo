@@ -3,7 +3,7 @@ package org.runimo.runimo.records.service;
 import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.records.domain.RunningRecord;
 import org.runimo.runimo.records.repository.RecordRepository;
-import org.runimo.runimo.records.service.dtos.RunningRecordDistance;
+import org.runimo.runimo.records.service.dtos.DailyStat;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
@@ -49,7 +49,7 @@ public class RecordFinder {
   }
 
   @Transactional(readOnly = true)
-  public List<RunningRecordDistance> findDailyStatByUserIdBetween(Long id, LocalDateTime from, LocalDateTime to) {
+  public List<DailyStat> findDailyStatByUserIdBetween(Long id, LocalDateTime from, LocalDateTime to) {
     return recordRepository.findDailyDistanceByUserIdAndThisWeek(id, from, to);
   }
 }
