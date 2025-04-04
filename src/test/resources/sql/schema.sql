@@ -23,6 +23,7 @@ CREATE TABLE `users`
     `img_url`                  VARCHAR(255),
     `total_distance_in_meters` BIGINT NOT NULL DEFAULT 0,
     `total_time_in_seconds`    BIGINT NOT NULL DEFAULT 0,
+    `main_runimo_id`           BIGINT,
     `updated_at`               TIMESTAMP,
     `created_at`               TIMESTAMP,
     `deleted_at`               TIMESTAMP
