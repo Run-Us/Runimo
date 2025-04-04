@@ -18,11 +18,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
-import java.util.Optional;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -58,7 +56,7 @@ class IncubatingEggAcceptanceTest {
         .header("Authorization", token)
         .contentType(ContentType.JSON)
         .when()
-        .get("/api/v1/users/eggs")
+        .get("/api/v1/users/eggs/incubators")
         .then()
         .log().all()
         .statusCode(200)
