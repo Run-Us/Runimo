@@ -56,7 +56,7 @@ public class MyPageAcceptanceTest {
         .then()
         .log().all()
         .statusCode(HttpStatus.OK.value())
-        .body("code", equalTo("USH2001"))
+        .body("code", equalTo("MY_PAGE_DATA_FETCHED"))
         .body("payload.nickname", equalTo("Daniel"))
         .body("payload.profile_image_url", equalTo("https://example.com/images/user1.png"))
         .body("payload.total_distance_in_meters", equalTo(10000))

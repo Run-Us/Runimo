@@ -18,8 +18,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.util.Optional;
+
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -59,7 +62,7 @@ class IncubatingEggAcceptanceTest {
         .then()
         .log().all()
         .statusCode(200)
-        .body("code", equalTo("USH2001"))
+        .body("code", equalTo("MY_INCUBATING_EGG_FETCHED"))
         .body("payload.incubating_eggs.size()", greaterThan(0))
         .body("payload.incubating_eggs[0].name", equalTo("마당알"))
         .body("payload.incubating_eggs[0].id", equalTo(1))
@@ -84,7 +87,7 @@ class IncubatingEggAcceptanceTest {
         .then()
         .log().all()
         .statusCode(HttpStatus.CREATED.value())
-        .body("code", equalTo("USH2006"))
+        .body("code", equalTo("REGISTER_EGG_SUCCESS"))
         .body("payload.current_love_point_amount", equalTo(0))
         .body("payload.required_love_point_amount", equalTo(100));
   }
@@ -103,7 +106,7 @@ class IncubatingEggAcceptanceTest {
         .then()
         .log().all()
         .statusCode(200)
-        .body("code", equalTo("USH2007"))
+        .body("code", equalTo("USE_LOVE_POINT_SUCCESS"))
         .body("payload.current_love_point_amount", equalTo(70))
         .body("payload.required_love_point_amount", equalTo(100))
         .body("payload.egg_hatchable", equalTo(false));
