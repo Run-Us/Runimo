@@ -54,7 +54,7 @@ class MainViewControllerTest {
             .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.code").value("USH2001"))
+        .andExpect(jsonPath("$.code").value("MAIN_PAGE_DATA_FETCHED"))
         .andExpect(jsonPath("$.payload.nickname").value("Daniel"))
         .andExpect(jsonPath("$.payload.profile_image_url").value("https://example.com/images/user1.png"))
         .andExpect(jsonPath("$.payload.total_running_count").value(100))

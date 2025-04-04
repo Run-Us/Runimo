@@ -9,6 +9,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.auth.repository.OAuthTokenRepository;
+import org.runimo.runimo.user.enums.UserHttpResponseCode;
+import org.runimo.runimo.user.exceptions.UserJwtException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -88,7 +90,7 @@ public class KakaoTokenVerifier implements OidcTokenVerifier {
           .build()
           .verify(token);
     } catch (JWTVerificationException exception) {
-      throw new IllegalArgumentException("ID token verification failed", exception);
+      throw new UserJwtException(UserHttpResponseCode.JWT_TOKEN_BROKEN,exception.getMessage());
     }
   }
 

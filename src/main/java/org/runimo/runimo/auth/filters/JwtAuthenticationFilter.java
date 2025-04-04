@@ -45,7 +45,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       }
       filterChain.doFilter(request, response);
     } catch (Exception e) {
-      log.warn("[ERROR]JWT broken : {}", e.getMessage());
+      log.warn("[ERROR] JWT broken : {}", e.getMessage());
       setErrorResponse(UserErrorCode.JWT_BROKEN, response);
     } finally {
       SecurityContextHolder.clearContext();
