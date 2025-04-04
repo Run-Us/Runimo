@@ -23,7 +23,7 @@ public class LoveGrantService {
       User user = userFinder.findUserById(runningRecord.getUserId())
           .orElseThrow(IllegalStateException::new);
       Long loveAmount = calculateLoveAmount(runningRecord.getTotalDistance());
-      LovePoint lovePoint = lovePointProcessor.updateLovePoint(user.getId(), loveAmount);
+      LovePoint lovePoint = lovePointProcessor.acquireLovePoint(user.getId(), loveAmount);
       return lovePoint.getAmount();
   }
 

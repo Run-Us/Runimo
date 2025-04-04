@@ -19,7 +19,7 @@ public class GiveLovePointToEggUsecaseImpl implements GiveLovePointToEggUsecase 
   @Transactional
   public UseLovePointResponse execute(UseLovePointCommand command) {
     IncubatingEgg incubatingEgg = incubatingEggProcessor.giveLovePoint(command);
-    lovePointProcessor.updateLovePoint(command.userId(), command.lovePoint());
+    lovePointProcessor.useLovePoint(command.userId(), command.lovePoint());
     return new UseLovePointResponse(
         incubatingEgg.getId(),
         incubatingEgg.getCurrentLovePointAmount(),
