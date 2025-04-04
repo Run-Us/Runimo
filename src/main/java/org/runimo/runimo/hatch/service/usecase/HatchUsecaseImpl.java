@@ -12,8 +12,10 @@ import org.runimo.runimo.runimo.repository.UserRunimoRepository;
 import org.runimo.runimo.user.domain.IncubatingEgg;
 import org.runimo.runimo.user.repository.IncubatingEggRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 @Service
 public class HatchUsecaseImpl implements HatchUsecase {
     private final RunimoRepository runimoRepository;
@@ -21,6 +23,7 @@ public class HatchUsecaseImpl implements HatchUsecase {
     private final UserRunimoRepository userRunimoRepository;
     private final HatchClient hatchClient;
 
+    @Transactional
     @Override
     public HatchEggResponse execute(Long userId, Long eggId) {
         IncubatingEgg incubatingEgg = incubatingEggRepository.findByEggId(eggId)
