@@ -19,10 +19,18 @@ public class LovePointProcessor {
    *  유저의 러브포인트를 업데이트한다. XLOCK을 걸어서 동시성 문제를 해결한다.
    * */
   @Transactional
-  public LovePoint updateLovePoint(Long userId, Long loveAmount) {
+  public LovePoint acquireLovePoint(Long userId, Long loveAmount) {
     LovePoint lp = lovePointRepository.findByUserIdWithXLock(userId)
         .orElseThrow(IllegalStateException::new);
     lp.add(loveAmount);
+    return lovePointRepository.save(lp);
+  }
+
+  @Transactional
+  public LovePoint useLovePoint(Long userId, Long loveAmount) {
+    LovePoint lp = lovePointRepository.findByUserIdWithXLock(userId)
+        .orElseThrow(IllegalStateException::new);
+    lp.subtract(loveAmount);
     return lovePointRepository.save(lp);
   }
 }

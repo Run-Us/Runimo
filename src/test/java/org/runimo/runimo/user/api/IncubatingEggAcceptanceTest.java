@@ -18,11 +18,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
-import java.util.Optional;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -110,5 +108,136 @@ class IncubatingEggAcceptanceTest {
         .body("payload.current_love_point_amount", equalTo(70))
         .body("payload.required_love_point_amount", equalTo(100))
         .body("payload.egg_hatchable", equalTo(false));
+  }
+
+  @Test
+  @Sql(scripts = "/sql/incubating_egg_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+  void 알에_애정을_부여하면_사용자의_보유_애정이_감소한다() throws JsonProcessingException {
+    // given
+    String userUuid = "test-user-uuid-1";
+    String token = "Bearer " + jwtTokenFactory.generateAccessToken(userUuid);
+
+    // 사용자의 초기 애정 포인트 조회
+    Integer initialLovePoint = given()
+        .header("Authorization", token)
+        .contentType(ContentType.JSON)
+        .when()
+        .get("/api/v1/main")
+        .then()
+        .statusCode(200)
+        .extract()
+        .path("payload.love_point");
+
+    // when
+    // 20포인트의 애정을 부여
+    Long useLovePointAmount = 20L;
+    UseLovePointRequest request = new UseLovePointRequest(1L, useLovePointAmount);
+
+    // 알에 애정 부여 요청
+    given()
+        .header("Authorization", token)
+        .contentType(ContentType.JSON)
+        .body(objectMapper.writeValueAsString(request))
+        .when()
+        .patch("/api/v1/users/eggs")
+        .then()
+        .log().all()
+        .statusCode(200)
+        .body("payload.current_love_point_amount", equalTo(70));
+
+    // then
+    // 사용자의 애정 포인트가 감소했는지 확인
+    given()
+        .header("Authorization", token)
+        .contentType(ContentType.JSON)
+        .when()
+        .get("/api/v1/main")
+        .then()
+        .log().all()
+        .statusCode(200)
+        .body("payload.love_point", equalTo(initialLovePoint - useLovePointAmount.intValue()));
+  }
+
+
+  @Test
+  @Sql(scripts = "/sql/incubating_egg_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+  void 보유한_애정보다_더_많은_애정부여_요청_시_예외() throws JsonProcessingException {
+    // given
+    String userUuid = "test-user-uuid-1";
+    String token = "Bearer " + jwtTokenFactory.generateAccessToken(userUuid);
+
+    // 사용자의 초기 애정 포인트 조회
+    given()
+        .header("Authorization", token)
+        .contentType(ContentType.JSON)
+        .when()
+        .get("/api/v1/main")
+        .then()
+        .statusCode(200)
+        .extract()
+        .path("payload.love_point");
+
+    // when
+    // 20포인트의 애정을 부여
+    Long useLovePointAmount = 25L;
+    UseLovePointRequest request = new UseLovePointRequest(1L, useLovePointAmount);
+
+    // 알에 애정 부여 요청
+    given()
+        .header("Authorization", token)
+        .contentType(ContentType.JSON)
+        .body(objectMapper.writeValueAsString(request))
+        .when()
+        .patch("/api/v1/users/eggs")
+        .then()
+        .log().all()
+        .statusCode(400);
+  }
+
+  @Test
+  @Sql(scripts = "/sql/incubating_egg_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+  void 애정부여_예외_시_애정보유량_유지() throws JsonProcessingException {
+    // given
+    String userUuid = "test-user-uuid-1";
+    String token = "Bearer " + jwtTokenFactory.generateAccessToken(userUuid);
+
+    // 사용자의 초기 애정 포인트 조회
+    Integer initialLovePoint = given()
+        .header("Authorization", token)
+        .contentType(ContentType.JSON)
+        .when()
+        .get("/api/v1/main")
+        .then()
+        .statusCode(200)
+        .extract()
+        .path("payload.love_point");
+
+    // when
+    // 20포인트의 애정을 부여
+    Long useLovePointAmount = 25L;
+    UseLovePointRequest request = new UseLovePointRequest(1L, useLovePointAmount);
+
+    // 알에 애정 부여 요청
+    given()
+        .header("Authorization", token)
+        .contentType(ContentType.JSON)
+        .body(objectMapper.writeValueAsString(request))
+        .when()
+        .patch("/api/v1/users/eggs")
+        .then()
+        .log().all()
+        .statusCode(400);
+
+    // then
+    // 사용자의 애정 포인트가 감소했는지 확인
+    given()
+        .header("Authorization", token)
+        .contentType(ContentType.JSON)
+        .when()
+        .get("/api/v1/main")
+        .then()
+        .log().all()
+        .statusCode(200)
+        .body("payload.love_point", equalTo(initialLovePoint));
   }
 }
