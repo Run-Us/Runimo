@@ -9,6 +9,7 @@ import org.runimo.runimo.hatch.controller.dto.response.HatchEggResponse;
 import org.runimo.runimo.hatch.exception.HatchHttpResponseCode;
 import org.runimo.runimo.hatch.service.usecase.HatchUsecase;
 import org.runimo.runimo.user.controller.UserId;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +32,7 @@ public class HatchController {
             @PathVariable Long eggId){
         HatchEggResponse response = hatchUsecase.execute(userId, eggId);
 
-        return ResponseEntity.ok().body(
+        return ResponseEntity.status(HttpStatus.CREATED).body(
                 SuccessResponse.of(
                         HatchHttpResponseCode.HATCH_EGG_SUCCESS,
                         response)
