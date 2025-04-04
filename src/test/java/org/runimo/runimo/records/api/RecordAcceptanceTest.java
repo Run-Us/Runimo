@@ -190,21 +190,77 @@ class RecordAcceptanceTest {
         .log().ifValidationFails()
         .statusCode(200)
         .body("code", equalTo("MY_PAGE_DATA_FETCHED"))
-        .body("payload.daily_stats.size()", equalTo(7))
+        .body("payload.daily_stats.size()", equalTo(5))
         .body("payload.daily_stats[0].date", equalTo("2025-03-31"))
         .body("payload.daily_stats[0].distance", equalTo(1000))
         .body("payload.daily_stats[1].date", equalTo("2025-04-01"))
         .body("payload.daily_stats[1].distance", equalTo(2000))
-        .body("payload.daily_stats[2].date", equalTo("2025-04-02"))
-        .body("payload.daily_stats[2].distance", equalTo(0))
-        .body("payload.daily_stats[3].date", equalTo("2025-04-03"))
-        .body("payload.daily_stats[3].distance", equalTo(0))
-        .body("payload.daily_stats[4].date", equalTo("2025-04-04"))
-        .body("payload.daily_stats[4].distance", equalTo(5000))
-        .body("payload.daily_stats[5].date", equalTo("2025-04-05"))
-        .body("payload.daily_stats[5].distance", equalTo(6000))
-        .body("payload.daily_stats[6].date", equalTo("2025-04-06"))
-        .body("payload.daily_stats[6].distance", equalTo(7000));
+        .body("payload.daily_stats[2].date", equalTo("2025-04-04"))
+        .body("payload.daily_stats[2].distance", equalTo(5000))
+        .body("payload.daily_stats[3].date", equalTo("2025-04-05"))
+        .body("payload.daily_stats[3].distance", equalTo(6000))
+        .body("payload.daily_stats[4].date", equalTo("2025-04-06"))
+        .body("payload.daily_stats[4].distance", equalTo(7000));
+  }
+
+  @Test
+  @WithMockUser(username = USER_UUID)
+  @Sql(scripts = "/sql/weekly_record_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+  void 월간_기록_통계_조회_성공시_정확한_정보를_반환한다() {
+    // given
+    String token = AUTH_HEADER_PREFIX + jwtTokenFactory.generateAccessToken(USER_UUID);
+
+    // when & then
+    given()
+        .header("Authorization", token)
+        .contentType(ContentType.JSON)
+        .param("year", 2025)
+        .param("month", 4)
+        .when()
+        .get("/api/v1/records/stats/monthly")
+        .then()
+        .log().all()
+        .statusCode(200)
+        .body("code", equalTo("MY_PAGE_DATA_FETCHED"))
+        .body("payload.daily_stats.size()", equalTo(6))
+        .body("payload.daily_stats[0].date", equalTo("2025-04-01"))
+        .body("payload.daily_stats[0].distance", equalTo(2000))
+        .body("payload.daily_stats[1].date", equalTo("2025-04-02"))
+        .body("payload.daily_stats[1].distance", equalTo(3000));
+  }
+
+  @Test
+  @WithMockUser(username = USER_UUID)
+  @Sql(scripts = "/sql/weekly_record_partial_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+  void 월간_기록_통계_조회_잘못된_요청_데이터() {
+    // given
+    String token = AUTH_HEADER_PREFIX + jwtTokenFactory.generateAccessToken(USER_UUID);
+
+    // when & then
+    given()
+        .header("Authorization", token)
+        .contentType(ContentType.JSON)
+        .param("year", 2025)
+        .param("month", 13) // 잘못된 월
+        .when()
+        .get("/api/v1/records/stats/monthly")
+        .then()
+        .log().all()
+        .statusCode(400);
+  }
+
+  @Test
+  void 월간_기록_통계_조회_인증_실패() {
+    // when & then
+    given()
+        .contentType(ContentType.JSON)
+        .param("year", 2025)
+        .param("month", 4)
+        .when()
+        .get("/api/v1/records/stats/monthly")
+        .then()
+        .log().all()
+        .statusCode(401);
   }
 }
 
