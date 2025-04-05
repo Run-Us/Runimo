@@ -46,7 +46,7 @@ public class RunimoUsecaseImpl implements RunimoUsecase{
     }
 
     private void validateOwner(Long userId, Long runimoId) {
-        UserRunimo userRunimo = userRunimoRepository.findByRunimoId(runimoId)
+        UserRunimo userRunimo = userRunimoRepository.findByUserIdAndRunimoId(userId, runimoId)
                 .orElseThrow(() -> RunimoException.of(RunimoHttpResponseCode.RUNIMO_USER_INFO_NOT_FOUND));
 
         if(!userRunimo.getUserId().equals(userId)){

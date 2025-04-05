@@ -11,7 +11,7 @@ import java.util.Optional;
 
 public interface UserRunimoRepository extends JpaRepository<UserRunimo, Long> {
 
-    Optional<UserRunimo> findByRunimoId(Long runimoId);
+    Optional<UserRunimo> findByUserIdAndRunimoId(Long UserId, Long runimoId);
 
     @Query("""
         select new org.runimo.runimo.runimo.service.model.RunimoSimpleModel(r.id, r.name, r.imgUrl, r.code, r.type, r.description)
