@@ -3,6 +3,8 @@ package org.runimo.runimo.exceptions;
 import jakarta.persistence.LockTimeoutException;
 import lombok.extern.slf4j.Slf4j;
 import org.runimo.runimo.common.response.ErrorResponse;
+import org.runimo.runimo.hatch.exception.HatchException;
+import org.runimo.runimo.runimo.exception.RunimoException;
 import org.runimo.runimo.user.exceptions.SignUpException;
 import org.runimo.runimo.user.exceptions.UserJwtException;
 import org.springframework.http.HttpStatus;
@@ -21,6 +23,19 @@ import java.util.NoSuchElementException;
 public class GlobalExceptionHandler {
 
   private static final String ERROR_LOG_HEADER = "ERROR: ";
+
+
+  @ExceptionHandler(RunimoException.class)
+  public ResponseEntity<ErrorResponse> handleRunimoException(RunimoException e) {
+    log.warn("{} {}", ERROR_LOG_HEADER, e.getMessage(), e);
+    return ResponseEntity.status(e.getHttpStatusCode()).body(ErrorResponse.of(e.getErrorCode()));
+  }
+
+  @ExceptionHandler(HatchException.class)
+  public ResponseEntity<ErrorResponse> handleHatchException(HatchException e) {
+    log.warn("{} {}", ERROR_LOG_HEADER, e.getMessage(), e);
+    return ResponseEntity.status(e.getHttpStatusCode()).body(ErrorResponse.of(e.getErrorCode()));
+  }
 
   @ExceptionHandler(UserJwtException.class)
   public ResponseEntity<ErrorResponse> handleUserJwtException(UserJwtException e) {
