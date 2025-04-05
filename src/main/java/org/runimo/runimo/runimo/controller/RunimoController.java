@@ -39,7 +39,6 @@ public class RunimoController {
     @Operation(summary = "대표 러니모 설정", description = "사용자의 대표 러니모를 설정합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "[MSH2002] 대표 러니모 설정 성공"),
-            @ApiResponse(responseCode = "400", description = "[MSH4001] 요청 러니모의 소유자가 존재하지 않음"),
             @ApiResponse(responseCode = "401", description = "인증 실패"),
             @ApiResponse(responseCode = "403", description = "[MSH4031] 요청 러니모의 소유자가 아님"),
             @ApiResponse(responseCode = "404", description = "[MSH4041] 요청 러니모가 존재하지 않음")
