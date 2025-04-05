@@ -10,5 +10,5 @@ SET FOREIGN_KEY_CHECKS = 1;
 -- 부화할 알
 TRUNCATE TABLE incubating_egg;
 INSERT INTO incubating_egg (id, user_id, egg_id, current_love_point_amount, hatch_require_amount, egg_status, created_at, updated_at)
-VALUES (1, 1, 1, 100, 100, 'INCUBATED', NOW(), NOW());
-VALUES (2, 1, 2, 50, 100, 'INCUBATED', NOW(), NOW());
+VALUES (1, 1, 1, 100, 100, 'INCUBATED', NOW(), NOW()),
+       (2, 1, 2, 50, 100, 'INCUBATING', NOW(), NOW());
