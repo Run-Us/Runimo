@@ -11,4 +11,8 @@ public class RunimoException extends BusinessException {
     protected RunimoException(CustomResponseCode errorCode, String logMessage) {
         super(errorCode, logMessage);
     }
+
+    public static RunimoException of(CustomResponseCode errorCode) {
+        return new RunimoException(errorCode, errorCode.getLogMessage());
+    }
 }

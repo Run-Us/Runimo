@@ -11,4 +11,8 @@ public class HatchException extends BusinessException {
     protected HatchException(CustomResponseCode errorCode, String logMessage) {
         super(errorCode, logMessage);
     }
+
+    public static HatchException of(CustomResponseCode errorCode) {
+        return new HatchException(errorCode, errorCode.getLogMessage());
+    }
 }
