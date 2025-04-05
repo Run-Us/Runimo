@@ -28,7 +28,7 @@ public class HatchUsecaseImpl implements HatchUsecase {
     public HatchEggResponse execute(Long userId, Long eggId) {
         IncubatingEgg incubatingEgg = incubatingEggRepository.findByEggId(eggId)
                 .orElseThrow(() -> HatchException.of(HatchHttpResponseCode.HATCH_EGG_NOT_FOUND));
-        validIncubatingEgg(incubatingEgg);
+        validAndHatchIncubatingEgg(incubatingEgg);
 
         // 부화 - 러니모 획득
         Runimo runimo = hatchClient.getRunimoFromEgg(incubatingEgg);
@@ -52,7 +52,7 @@ public class HatchUsecaseImpl implements HatchUsecase {
         );
     }
 
-    void validIncubatingEgg(IncubatingEgg incubatingEgg){
+    void validAndHatchIncubatingEgg(IncubatingEgg incubatingEgg){
         if(incubatingEgg.isReadyToHatch()){
             incubatingEgg.hatch();
         } else {
