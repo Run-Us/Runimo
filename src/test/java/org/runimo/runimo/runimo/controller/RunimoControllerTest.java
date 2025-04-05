@@ -8,6 +8,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.runimo.runimo.CleanUpUtil;
 import org.runimo.runimo.auth.jwt.JwtTokenFactory;
+import org.runimo.runimo.exceptions.code.CustomResponseCode;
+import org.runimo.runimo.runimo.exception.RunimoHttpResponseCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -90,5 +92,47 @@ class RunimoControllerTest {
 
                 .body("code", equalTo("MSH2002"))
                 .body("payload.main_runimo_id", equalTo(1));
+    }
+
+    @Test
+    @Sql(scripts = "/sql/set_main_runimo_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void 대표_러니모_설정_실패_러니모의_소유자_아님() {
+        String token = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
+        CustomResponseCode responseCode = RunimoHttpResponseCode.USER_DO_NOT_OWN_RUNIMO;
+
+        given()
+                .header("Authorization", token)
+                .contentType(ContentType.JSON)
+
+                .when()
+                .patch("/api/v1/runimos/"+"4"+"/main")
+
+                .then()
+                .log().all()
+                .statusCode(responseCode.getHttpStatusCode().value())
+
+                .body("code", equalTo(responseCode.getCode()))
+                .body("message", equalTo(responseCode.getClientMessage()));
+    }
+
+    @Test
+    @Sql(scripts = "/sql/set_main_runimo_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void 대표_러니모_설정_실패_러니모_존재하지않음() {
+        String token = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
+        CustomResponseCode responseCode = RunimoHttpResponseCode.RUNIMO_NOT_FOUND;
+
+        given()
+                .header("Authorization", token)
+                .contentType(ContentType.JSON)
+
+                .when()
+                .patch("/api/v1/runimos/"+"9999"+"/main")
+
+                .then()
+                .log().all()
+                .statusCode(responseCode.getHttpStatusCode().value())
+
+                .body("code", equalTo(responseCode.getCode()))
+                .body("message", equalTo(responseCode.getClientMessage()));
     }
 }

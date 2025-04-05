@@ -13,12 +13,11 @@ INSERT INTO runimo (id, name, code, description, img_url, egg_type, created_at, 
 VALUES (1, '토끼', 'R-101', '마당 토끼예여', 'http://dummy1', 'MADANG', NOW(), NOW()),
        (2, '강아지', 'R-102', '마당 강아지예여', 'http://dummy2', 'MADANG', NOW(), NOW()),
        (3, '오리', 'R-103', '마당 오리예여', 'http://dummy3', 'MADANG', NOW(), NOW()),
-       (4, '늑대', 'R-104', '마당 늑대예여', 'http://dummy4', 'MADANG', NOW(), NOW());
+       (4, '늑대', 'R-104', '주인없는 마당 늑대예여', 'http://dummy4', 'MADANG', NOW(), NOW());
 
--- 사용자-알 맵핑
+-- 사용자-러니모 맵핑
 TRUNCATE TABLE user_runimo;
 INSERT INTO user_runimo (id, user_id, runimo_id, created_at, updated_at)
 VALUES (1, 1, 1, NOW(), NOW()),
        (2, 1, 2, NOW(), NOW()),
-       (3, 1, 3, NOW(), NOW()),
-       (4, 2, 4, NOW(), NOW());
+       (3, 1, 3, NOW(), NOW());

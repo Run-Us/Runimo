@@ -102,7 +102,7 @@ class HatchControllerTest {
                 .contentType(ContentType.JSON)
 
                 .when()
-                .post("/api/v1/incubating-eggs/"+"9"+"/hatch")
+                .post("/api/v1/incubating-eggs/"+"9999"+"/hatch")
 
                 .then()
                 .log().all()
