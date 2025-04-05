@@ -16,7 +16,7 @@ import java.util.Optional;
 @Repository
 public interface IncubatingEggRepository extends JpaRepository<IncubatingEgg, Integer> {
 
-  Optional<IncubatingEgg> findByEggId(Long eggId);
+  Optional<IncubatingEgg> findById(Long id);
 
   @Lock(LockModeType.PESSIMISTIC_WRITE)
   @QueryHints({@QueryHint(name = "jakarta.persistence.lock.timeout", value = "3000")})

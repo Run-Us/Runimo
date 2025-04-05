@@ -1,6 +1,7 @@
 package org.runimo.runimo.hatch.service.usecase;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.runimo.runimo.hatch.controller.dto.response.HatchEggResponse;
 import org.runimo.runimo.hatch.exception.HatchException;
 import org.runimo.runimo.hatch.exception.HatchHttpResponseCode;
@@ -25,8 +26,8 @@ public class HatchUsecaseImpl implements HatchUsecase {
 
     @Transactional
     @Override
-    public HatchEggResponse execute(Long userId, Long eggId) {
-        IncubatingEgg incubatingEgg = incubatingEggRepository.findByEggId(eggId)
+    public HatchEggResponse execute(Long userId, Long incubatingEggId) {
+        IncubatingEgg incubatingEgg = incubatingEggRepository.findById(incubatingEggId)
                 .orElseThrow(() -> HatchException.of(HatchHttpResponseCode.HATCH_EGG_NOT_FOUND));
         validAndHatchIncubatingEgg(incubatingEgg);
 

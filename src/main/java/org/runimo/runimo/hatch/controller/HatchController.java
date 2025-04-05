@@ -26,11 +26,11 @@ public class HatchController {
             @ApiResponse(responseCode = "400", description = "[HEH4001] 부화 요청 알이 부화 가능한 상태가 아님"),
             @ApiResponse(responseCode = "404", description = "[HEH4041] 부화 요청 알이 존재하지 않음")
     })
-    @PostMapping("/api/v1/eggs/{eggId}/hatch")
+    @PostMapping("/api/v1/incubating-eggs/{incubatingEggId}/hatch")
     public ResponseEntity<SuccessResponse<HatchEggResponse>> hatch(
             @UserId Long userId,
-            @PathVariable Long eggId){
-        HatchEggResponse response = hatchUsecase.execute(userId, eggId);
+            @PathVariable Long incubatingEggId){
+        HatchEggResponse response = hatchUsecase.execute(userId, incubatingEggId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 SuccessResponse.of(
