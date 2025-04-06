@@ -23,6 +23,7 @@ CREATE TABLE `users`
     `img_url`                  VARCHAR(255),
     `total_distance_in_meters` BIGINT NOT NULL DEFAULT 0,
     `total_time_in_seconds`    BIGINT NOT NULL DEFAULT 0,
+    `main_runimo_id`           BIGINT,
     `updated_at`               TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `created_at`               TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `deleted_at`               TIMESTAMP NULL
@@ -136,7 +137,8 @@ CREATE TABLE `runimo`
     `name`          VARCHAR(255),
     `code`          VARCHAR(255),
     `description`   VARCHAR(255),
-    `type`          VARCHAR(255) NOT NULL,
+    `img_url`       varchar(255),
+    `egg_type`      varchar(255) NOT NULL,
     `created_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `deleted_at`    TIMESTAMP NULL

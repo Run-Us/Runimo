@@ -2,7 +2,6 @@ package org.runimo.runimo.runimo.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -23,7 +22,7 @@ public class UserRunimo extends BaseEntity {
     private Long runimoId;
 
     @Builder
-    public UserRunimo(Long id, Long userId, Long runimoId) {
+    private UserRunimo(Long id, Long userId, Long runimoId) {
         this.id = id;
         this.userId = userId;
         this.runimoId = runimoId;

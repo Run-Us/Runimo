@@ -27,6 +27,8 @@ public class User extends BaseEntity {
   private Long totalDistanceInMeters = 0L;
   @Column(name = "total_time_in_seconds", nullable = false)
   private Long totalTimeInSeconds = 0L;
+  @Column(name = "main_runimo_id")
+  private Long mainRunimoId;
 
   @Builder
   public User(String nickname, String imgUrl, Long totalDistanceInMeters, Long totalTimeInSeconds) {
@@ -48,5 +50,9 @@ public class User extends BaseEntity {
   @PrePersist
   public void prePersist() {
     this.publicId = UUID.randomUUID().toString();
+  }
+
+  public void updateMainRunimo(Long runimoId) {
+    this.mainRunimoId = runimoId;
   }
 }

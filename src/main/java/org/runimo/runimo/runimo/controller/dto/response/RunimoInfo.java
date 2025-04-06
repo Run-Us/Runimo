@@ -1,0 +1,24 @@
+package org.runimo.runimo.runimo.controller.dto.response;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+
+public record RunimoInfo(
+        @Schema(description = "러니모 id", example = "0")
+        Long id,
+
+        @Schema(description = "러니모 이름", example = "토끼")
+        String name,
+
+        @Schema(description = "러니모 이미지 url", example = "http://...")
+        String imgUrl,
+
+        @Schema(description = "러니모 code", example = "R-101")
+        String code,
+
+        @Schema(description = "러니모가 태어난 알 속성", example = "마당")
+        String eggType,
+
+        @Schema(description = "러니모 상세설명", example = "마당알에서 태어난 마당 토끼예요.")
+        String description
+) {
+}

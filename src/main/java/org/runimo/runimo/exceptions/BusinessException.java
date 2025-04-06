@@ -32,5 +32,10 @@ public class BusinessException extends RuntimeException {
   public String getName() {
     return this.getClass().getSimpleName();
   }
+
+  @Override
+  public String getMessage() {
+    return errorCode.getClientMessage();
+  }
 }
 
