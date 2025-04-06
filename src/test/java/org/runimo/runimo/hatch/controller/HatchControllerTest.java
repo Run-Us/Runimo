@@ -67,7 +67,7 @@ class HatchControllerTest {
                 .body("payload.name", equalTo("토끼_dummy"))
                 .body("payload.img_url", equalTo("http://dummy"))
                 .body("payload.code", equalTo("R-100"))
-                .body("payload.is_duplicated", equalTo(null));
+                .body("payload.is_duplicated", equalTo(false));
     }
 
     @Test
