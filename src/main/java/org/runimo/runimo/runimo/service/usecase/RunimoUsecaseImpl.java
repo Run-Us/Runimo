@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.runimo.controller.dto.response.GetMyRunimoListResponse;
 import org.runimo.runimo.runimo.controller.dto.response.SetMainRunimoResponse;
 import org.runimo.runimo.runimo.domain.Runimo;
-import org.runimo.runimo.runimo.domain.UserRunimo;
 import org.runimo.runimo.runimo.exception.RunimoException;
 import org.runimo.runimo.runimo.exception.RunimoHttpResponseCode;
 import org.runimo.runimo.runimo.repository.RunimoRepository;
@@ -46,7 +45,8 @@ public class RunimoUsecaseImpl implements RunimoUsecase{
     }
 
     private void validateOwner(Long userId, Long runimoId) {
-        userRunimoRepository.findByUserIdAndRunimoId(userId, runimoId)
-                .orElseThrow(() -> RunimoException.of(RunimoHttpResponseCode.USER_DO_NOT_OWN_RUNIMO));
+        if(!userRunimoRepository.existsByUserIdAndRunimoId(userId, runimoId)){
+            throw RunimoException.of(RunimoHttpResponseCode.USER_DO_NOT_OWN_RUNIMO);
+        }
     }
 }
