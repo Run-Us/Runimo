@@ -1,7 +1,6 @@
 package org.runimo.runimo.hatch.service.usecase;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.runimo.runimo.hatch.controller.dto.response.HatchEggResponse;
 import org.runimo.runimo.hatch.exception.HatchException;
 import org.runimo.runimo.hatch.exception.HatchHttpResponseCode;
@@ -35,7 +34,7 @@ public class HatchUsecaseImpl implements HatchUsecase {
         Runimo runimo = hatchClient.getRunimoFromEgg(incubatingEgg);
 
         // 이미 보유한 러니모인지 확인
-//        Optional<UserRunimo> duplicateRunimo = userRunimoRepository.findFirstByUserIdAndRunimoCode(userId, runimo.getCode());
+        boolean isDuplicatedRunimo = userRunimoRepository.existsByUserIdAndRunimoId(userId, runimo.getId());
 
         // 러니모 저장 -> 나중에 다른 요청으로 빼야 할 듯
         Runimo runimoSaved = runimoRepository.save(runimo);
@@ -49,7 +48,7 @@ public class HatchUsecaseImpl implements HatchUsecase {
                 runimo.getName(),
                 runimo.getImgUrl(),
                 runimo.getCode(),
-                null
+                isDuplicatedRunimo
         );
     }
 
