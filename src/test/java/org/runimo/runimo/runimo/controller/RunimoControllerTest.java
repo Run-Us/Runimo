@@ -87,7 +87,7 @@ class RunimoControllerTest {
                 .contentType(ContentType.JSON)
 
                 .when()
-                .patch("/api/v1/runimos/"+"1"+"/main")
+                .patch("/api/v1/runimos/" + "1" + "/main")
 
                 .then()
                 .log().all()
@@ -108,7 +108,7 @@ class RunimoControllerTest {
                 .contentType(ContentType.JSON)
 
                 .when()
-                .patch("/api/v1/runimos/"+"4"+"/main")
+                .patch("/api/v1/runimos/" + "4" + "/main")
 
                 .then()
                 .log().all()
@@ -129,7 +129,7 @@ class RunimoControllerTest {
                 .contentType(ContentType.JSON)
 
                 .when()
-                .patch("/api/v1/runimos/"+"9999"+"/main")
+                .patch("/api/v1/runimos/" + "9999" + "/main")
 
                 .then()
                 .log().all()

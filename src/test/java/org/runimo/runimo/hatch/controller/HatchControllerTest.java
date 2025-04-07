@@ -57,7 +57,7 @@ class HatchControllerTest {
                 .contentType(ContentType.JSON)
 
                 .when()
-                .post("/api/v1/incubating-eggs/"+"1"+"/hatch")
+                .post("/api/v1/incubating-eggs/" + "1" + "/hatch")
 
                 .then()
                 .log().all()
@@ -81,7 +81,7 @@ class HatchControllerTest {
                 .contentType(ContentType.JSON)
 
                 .when()
-                .post("/api/v1/incubating-eggs/"+"2"+"/hatch")
+                .post("/api/v1/incubating-eggs/" + "2" + "/hatch")
 
                 .then()
                 .log().all()
@@ -102,7 +102,7 @@ class HatchControllerTest {
                 .contentType(ContentType.JSON)
 
                 .when()
-                .post("/api/v1/incubating-eggs/"+"9999"+"/hatch")
+                .post("/api/v1/incubating-eggs/" + "9999" + "/hatch")
 
                 .then()
                 .log().all()
