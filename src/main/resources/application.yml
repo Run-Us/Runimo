@@ -39,6 +39,13 @@ spring:
             authorization-uri: https://kauth.kakao.com/oauth/authorize
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v1/oidc/userinfo
+apple:
+  client-id: ${APPLE_CLIENT_ID}
+  client-secret: ${APPLE_PRIVATE_KEY}
+  redirect-uri: ${APPLE_REDIRECT_URI}
+  team-id: ${APPLE_TEAM_ID}
+  key-id: ${APPLE_KEY_ID}
+
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
@@ -47,6 +54,8 @@ jwt:
   expiration: ${JWT_EXPIRATION:3600000}
   refresh:
     expiration: ${JWT_REFRESH_EXPIRATION:86400000}
+  temp:
+    expiration: ${JWT_REGISTER_EXPIRATION}
 
 logging:
   level:
