@@ -30,17 +30,15 @@ import static org.hamcrest.Matchers.*;
 @ActiveProfiles("test")
 class RewardAcceptanceTest {
 
+  private static final LocalDateTime pivotTime = LocalDateTime.of(2023, 10, 1, 10, 0);
   @LocalServerPort
   private int port;
   @Autowired
   private JwtTokenFactory jwtTokenFactory;
-
   @Autowired
   private CleanUpUtil cleanUpUtil;
   @Autowired
   private ObjectMapper objectMapper;
-
-  private static final LocalDateTime pivotTime = LocalDateTime.of(2023, 10, 1, 10, 0);
 
   @BeforeEach
   void setUp() {

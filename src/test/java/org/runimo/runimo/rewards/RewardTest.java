@@ -4,6 +4,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.runimo.runimo.CleanUpUtil;
+import org.runimo.runimo.auth.jwt.JwtTokenFactory;
+import org.runimo.runimo.auth.service.SignUpUsecaseImpl;
+import org.runimo.runimo.auth.service.dtos.UserSignupCommand;
 import org.runimo.runimo.common.scale.Distance;
 import org.runimo.runimo.common.scale.Pace;
 import org.runimo.runimo.records.service.usecases.RecordCreateUsecase;
@@ -15,9 +18,8 @@ import org.runimo.runimo.rewards.service.dtos.RewardResponse;
 import org.runimo.runimo.user.domain.SocialProvider;
 import org.runimo.runimo.user.domain.User;
 import org.runimo.runimo.user.domain.UserItem;
+import org.runimo.runimo.user.repository.UserRepository;
 import org.runimo.runimo.user.service.UserItemFinder;
-import org.runimo.runimo.user.service.dtos.UserSignupCommand;
-import org.runimo.runimo.user.service.usecases.auth.UserRegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -34,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class RewardTest {
 
   @Autowired
-  private UserRegisterService userRegisterService;
+  private SignUpUsecaseImpl signUpUsecaseImpl;
   @Autowired
   private RewardService rewardService;
 
@@ -46,12 +48,18 @@ class RewardTest {
   private UserItemFinder userItemFinder;
   @Autowired
   private CleanUpUtil cleanUpUtil;
+  @Autowired
+  private JwtTokenFactory jwtTokenFactory;
+  @Autowired
+  private UserRepository userRepository;
 
   @BeforeEach
   void setUp() {
     //given
-    UserSignupCommand command = new UserSignupCommand("test", SocialProvider.KAKAO, "1234");
-    savedUser = userRegisterService.register(command, "1234");
+    String registerToken = jwtTokenFactory.generateRegisterTemporalToken("test-pid", SocialProvider.KAKAO);
+    UserSignupCommand command = new UserSignupCommand(registerToken, "name", "1234");
+    Long useId = signUpUsecaseImpl.register(command).userId();
+    savedUser = userRepository.findById(useId).orElse(null);
   }
 
   @AfterEach
