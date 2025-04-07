@@ -5,7 +5,7 @@ import org.runimo.runimo.user.domain.*;
 import org.runimo.runimo.user.repository.LovePointRepository;
 import org.runimo.runimo.user.repository.OAuthInfoRepository;
 import org.runimo.runimo.user.repository.UserRepository;
-import org.runimo.runimo.user.service.dtos.UserSignupCommand;
+import org.runimo.runimo.user.service.dtos.UserCreateCommand;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +17,7 @@ public class UserCreator {
   private final LovePointRepository lovePointRepository;
 
   @Transactional
-  public User createUser(UserSignupCommand command) {
+  public User createUser(UserCreateCommand command) {
     User user = User.builder()
         .nickname(command.nickname())
         .imgUrl(command.imgUrl())

@@ -1,12 +1,14 @@
 package org.runimo.runimo.exceptions;
 
+import com.auth0.jwt.exceptions.JWTDecodeException;
 import jakarta.persistence.LockTimeoutException;
 import lombok.extern.slf4j.Slf4j;
+import org.runimo.runimo.auth.exceptions.UnRegisteredUserException;
 import org.runimo.runimo.common.response.ErrorResponse;
 import org.runimo.runimo.hatch.exception.HatchException;
 import org.runimo.runimo.runimo.exception.RunimoException;
-import org.runimo.runimo.user.exceptions.SignUpException;
-import org.runimo.runimo.user.exceptions.UserJwtException;
+import org.runimo.runimo.auth.exceptions.SignUpException;
+import org.runimo.runimo.auth.exceptions.UserJwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -37,10 +39,22 @@ public class GlobalExceptionHandler {
     return ResponseEntity.status(e.getHttpStatusCode()).body(ErrorResponse.of(e.getErrorCode()));
   }
 
+
   @ExceptionHandler(UserJwtException.class)
   public ResponseEntity<ErrorResponse> handleUserJwtException(UserJwtException e) {
     log.warn("{} {}", ERROR_LOG_HEADER, e.getMessage(), e);
     return ResponseEntity.status(e.getHttpStatusCode()).body(ErrorResponse.of(e.getErrorCode()));
+  }
+
+  @ExceptionHandler(UnRegisteredUserException.class)
+  public ResponseEntity<RegisterErrorResponse> handleUnRegisteredUserException(UnRegisteredUserException e) {
+    log.warn("{} {}", ERROR_LOG_HEADER, e.getMessage(), e);
+    return ResponseEntity.status(e.getHttpStatusCode()).body(
+        new RegisterErrorResponse(
+            e.getErrorCode().getCode(),
+            e.getMessage(),
+            e.getTemporalRegisterToken()
+        ));
   }
 
   @ExceptionHandler(SignUpException.class)
@@ -114,5 +128,12 @@ public class GlobalExceptionHandler {
   public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException e) {
     log.warn("{} {}", ERROR_LOG_HEADER, e.getMessage(), e);
     return ResponseEntity.badRequest().body(ErrorResponse.of(e.getErrorCode()));
+  }
+
+  @ExceptionHandler(RuntimeException.class)
+  public ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException e) {
+    log.error("{} {}", ERROR_LOG_HEADER, e.getMessage(), e);
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
+        ErrorResponse.of("internal server error", e.getMessage()));
   }
 }

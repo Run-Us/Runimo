@@ -1,4 +1,4 @@
-package org.runimo.runimo.auth.verifier;
+package org.runimo.runimo.auth.service.kakao;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -8,9 +8,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.runimo.runimo.auth.repository.OAuthTokenRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.runimo.runimo.auth.exceptions.UserJwtException;
+import org.runimo.runimo.auth.service.apple.KakaoUserInfo;
 import org.runimo.runimo.user.enums.UserHttpResponseCode;
-import org.runimo.runimo.user.exceptions.UserJwtException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -24,11 +25,11 @@ import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-public class KakaoTokenVerifier implements OidcTokenVerifier {
+public class KakaoTokenVerifier {
 
-  private final OAuthTokenRepository oAuthTokenRepository;
   private final RestTemplate restTemplate = new RestTemplate();
   private final ObjectMapper objectMapper = new ObjectMapper();
   private final Map<String, RSAPublicKey> publicKeys = new HashMap<>();
@@ -51,6 +52,7 @@ public class KakaoTokenVerifier implements OidcTokenVerifier {
         publicKeys.put(kid, publicKey);
       }
     } catch (Exception e) {
+      log.error("Failed to refresh kakao public keys", e);
       throw new RuntimeException("Failed to refresh public keys", e);
     }
   }
@@ -68,8 +70,7 @@ public class KakaoTokenVerifier implements OidcTokenVerifier {
     return (RSAPublicKey) factory.generatePublic(spec);
   }
 
-  @Override
-  public DecodedJWT verifyToken(DecodedJWT token) {
+  public KakaoUserInfo verifyToken(DecodedJWT token) {
     try {
       String nonce = token.getClaim("nonce").asString();
 
@@ -84,13 +85,14 @@ public class KakaoTokenVerifier implements OidcTokenVerifier {
 
       Algorithm algorithm = Algorithm.RSA256(publicKey, null);
 
-      return JWT.require(algorithm)
+      DecodedJWT decodedJWT = JWT.require(algorithm)
           .withIssuer("https://kauth.kakao.com")
           .withAudience(appKey)
           .build()
           .verify(token);
+      return new KakaoUserInfo(decodedJWT.getSubject());
     } catch (JWTVerificationException exception) {
-      throw new UserJwtException(UserHttpResponseCode.JWT_TOKEN_BROKEN,exception.getMessage());
+      throw new UserJwtException(UserHttpResponseCode.JWT_TOKEN_BROKEN, exception.getMessage());
     }
   }
 

@@ -1,4 +1,4 @@
-package org.runimo.runimo.user.service.dtos;
+package org.runimo.runimo.auth.service.dtos;
 
 import org.runimo.runimo.user.domain.User;
 

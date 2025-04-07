@@ -63,7 +63,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   private boolean processToken(String jwtToken, HttpServletResponse response) throws IOException {
     try {
-      String userId = jwtResolver.getUserIdFromAccessToken(jwtToken);
+      String userId = jwtResolver.getUserIdFromJwtToken(jwtToken);
       Authentication authentication = new UsernamePasswordAuthenticationToken(
           userId,
           null,
