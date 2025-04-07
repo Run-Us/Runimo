@@ -24,91 +24,91 @@ import static org.hamcrest.Matchers.equalTo;
 @ActiveProfiles("test")
 class HatchControllerTest {
 
-    @LocalServerPort
-    int port;
+  @LocalServerPort
+  int port;
 
-    @Autowired
-    private JwtTokenFactory jwtTokenFactory;
+  @Autowired
+  private JwtTokenFactory jwtTokenFactory;
 
-    @Autowired
-    private CleanUpUtil cleanUpUtil;
+  @Autowired
+  private CleanUpUtil cleanUpUtil;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+  @Autowired
+  private ObjectMapper objectMapper;
 
-    @BeforeEach
-    void setUp() {
-        RestAssured.port = port;
-    }
+  @BeforeEach
+  void setUp() {
+    RestAssured.port = port;
+  }
 
-    @AfterEach
-    void tearDown() {
-        cleanUpUtil.cleanUpUserInfos();
-    }
+  @AfterEach
+  void tearDown() {
+    cleanUpUtil.cleanUpUserInfos();
+  }
 
-    @Test
-    @Sql(scripts = "/sql/hatch_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    void 사용자의_알_부화_성공() {
-        String token = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
+  @Test
+  @Sql(scripts = "/sql/hatch_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+  void 사용자의_알_부화_성공() {
+    String token = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
 
 
-        given()
-                .header("Authorization", token)
-                .contentType(ContentType.JSON)
+    given()
+        .header("Authorization", token)
+        .contentType(ContentType.JSON)
 
-                .when()
-                .post("/api/v1/incubating-eggs/"+"1"+"/hatch")
+        .when()
+        .post("/api/v1/incubating-eggs/" + "1" + "/hatch")
 
-                .then()
-                .log().all()
-                .statusCode(HttpStatus.CREATED.value())
+        .then()
+        .log().all()
+        .statusCode(HttpStatus.CREATED.value())
 
-                .body("code", equalTo("HSH2011"))
-                .body("payload.name", equalTo("토끼_dummy"))
-                .body("payload.img_url", equalTo("http://dummy"))
-                .body("payload.code", equalTo("R-100"))
-                .body("payload.is_duplicated", equalTo(false));
-    }
+        .body("code", equalTo("HSH2011"))
+        .body("payload.name", equalTo("토끼_dummy"))
+        .body("payload.img_url", equalTo("http://dummy"))
+        .body("payload.code", equalTo("R-100"))
+        .body("payload.is_duplicated", equalTo(false));
+  }
 
-    @Test
-    @Sql(scripts = "/sql/hatch_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    void 사용자의_알_부화_실패_부화가능한_상태가_아님() {
-        String token = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
-        CustomResponseCode responseCode = HatchHttpResponseCode.HATCH_EGG_NOT_READY;
+  @Test
+  @Sql(scripts = "/sql/hatch_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+  void 사용자의_알_부화_실패_부화가능한_상태가_아님() {
+    String token = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
+    CustomResponseCode responseCode = HatchHttpResponseCode.HATCH_EGG_NOT_READY;
 
-        given()
-                .header("Authorization", token)
-                .contentType(ContentType.JSON)
+    given()
+        .header("Authorization", token)
+        .contentType(ContentType.JSON)
 
-                .when()
-                .post("/api/v1/incubating-eggs/"+"2"+"/hatch")
+        .when()
+        .post("/api/v1/incubating-eggs/" + "2" + "/hatch")
 
-                .then()
-                .log().all()
-                .statusCode(responseCode.getHttpStatusCode().value())
+        .then()
+        .log().all()
+        .statusCode(responseCode.getHttpStatusCode().value())
 
-                .body("code", equalTo(responseCode.getCode()))
-                .body("message", equalTo(responseCode.getClientMessage()));
-    }
+        .body("code", equalTo(responseCode.getCode()))
+        .body("message", equalTo(responseCode.getClientMessage()));
+  }
 
-    @Test
-    @Sql(scripts = "/sql/hatch_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    void 사용자의_알_부화_실패_알_존재하지_않음() {
-        String token = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
-        CustomResponseCode responseCode = HatchHttpResponseCode.HATCH_EGG_NOT_FOUND;
+  @Test
+  @Sql(scripts = "/sql/hatch_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+  void 사용자의_알_부화_실패_알_존재하지_않음() {
+    String token = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
+    CustomResponseCode responseCode = HatchHttpResponseCode.HATCH_EGG_NOT_FOUND;
 
-        given()
-                .header("Authorization", token)
-                .contentType(ContentType.JSON)
+    given()
+        .header("Authorization", token)
+        .contentType(ContentType.JSON)
 
-                .when()
-                .post("/api/v1/incubating-eggs/"+"9999"+"/hatch")
+        .when()
+        .post("/api/v1/incubating-eggs/" + "9999" + "/hatch")
 
-                .then()
-                .log().all()
-                .statusCode(responseCode.getHttpStatusCode().value())
+        .then()
+        .log().all()
+        .statusCode(responseCode.getHttpStatusCode().value())
 
-                .body("code", equalTo(responseCode.getCode()))
-                .body("message", equalTo(responseCode.getClientMessage()));
-    }
+        .body("code", equalTo(responseCode.getCode()))
+        .body("message", equalTo(responseCode.getClientMessage()));
+  }
 }

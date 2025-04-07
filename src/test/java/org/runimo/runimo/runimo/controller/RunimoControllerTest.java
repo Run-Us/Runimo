@@ -24,115 +24,115 @@ import static org.hamcrest.Matchers.equalTo;
 @ActiveProfiles("test")
 class RunimoControllerTest {
 
-    @LocalServerPort
-    int port;
+  @LocalServerPort
+  int port;
 
-    @Autowired
-    private JwtTokenFactory jwtTokenFactory;
+  @Autowired
+  private JwtTokenFactory jwtTokenFactory;
 
-    @Autowired
-    private CleanUpUtil cleanUpUtil;
+  @Autowired
+  private CleanUpUtil cleanUpUtil;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+  @Autowired
+  private ObjectMapper objectMapper;
 
-    @BeforeEach
-    void setUp() {
-        RestAssured.port = port;
-    }
+  @BeforeEach
+  void setUp() {
+    RestAssured.port = port;
+  }
 
-    @AfterEach
-    void tearDown() {
-        cleanUpUtil.cleanUpUserInfos();
-    }
-
-
-    @Test
-    @Sql(scripts = "/sql/get_my_runimo_list_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    void 보유_러니모_목록_조회_성공() {
-        String token = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
+  @AfterEach
+  void tearDown() {
+    cleanUpUtil.cleanUpUserInfos();
+  }
 
 
-        given()
-                .header("Authorization", token)
-                .contentType(ContentType.JSON)
-
-                .when()
-                .get("/api/v1/runimos/my")
-
-                .then()
-                .log().all()
-                .statusCode(HttpStatus.OK.value())
-
-                .body("code", equalTo("MSH2001"))
-                .body("payload.my_runimos[0].id", equalTo(1))
-                .body("payload.my_runimos[0].name", equalTo("토끼"))
-                .body("payload.my_runimos[0].img_url", equalTo("http://dummy1"))
-                .body("payload.my_runimos[0].code", equalTo("R-101"))
-                .body("payload.my_runimos[0].egg_type", equalTo("MADANG"))
-                .body("payload.my_runimos[0].description", equalTo("마당 토끼예여"));
-    }
-
-    @Test
-    @Sql(scripts = "/sql/set_main_runimo_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    void 대표_러니모_설정_성공() {
-        String token = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
+  @Test
+  @Sql(scripts = "/sql/get_my_runimo_list_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+  void 보유_러니모_목록_조회_성공() {
+    String token = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
 
 
-        given()
-                .header("Authorization", token)
-                .contentType(ContentType.JSON)
+    given()
+        .header("Authorization", token)
+        .contentType(ContentType.JSON)
 
-                .when()
-                .patch("/api/v1/runimos/"+"1"+"/main")
+        .when()
+        .get("/api/v1/runimos/my")
 
-                .then()
-                .log().all()
-                .statusCode(HttpStatus.OK.value())
+        .then()
+        .log().all()
+        .statusCode(HttpStatus.OK.value())
 
-                .body("code", equalTo("MSH2002"))
-                .body("payload.main_runimo_id", equalTo(1));
-    }
+        .body("code", equalTo("MSH2001"))
+        .body("payload.my_runimos[0].id", equalTo(1))
+        .body("payload.my_runimos[0].name", equalTo("토끼"))
+        .body("payload.my_runimos[0].img_url", equalTo("http://dummy1"))
+        .body("payload.my_runimos[0].code", equalTo("R-101"))
+        .body("payload.my_runimos[0].egg_type", equalTo("MADANG"))
+        .body("payload.my_runimos[0].description", equalTo("마당 토끼예여"));
+  }
 
-    @Test
-    @Sql(scripts = "/sql/set_main_runimo_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    void 대표_러니모_설정_실패_러니모의_소유자_아님() {
-        String token = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
-        CustomResponseCode responseCode = RunimoHttpResponseCode.USER_DO_NOT_OWN_RUNIMO;
+  @Test
+  @Sql(scripts = "/sql/set_main_runimo_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+  void 대표_러니모_설정_성공() {
+    String token = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
 
-        given()
-                .header("Authorization", token)
-                .contentType(ContentType.JSON)
 
-                .when()
-                .patch("/api/v1/runimos/"+"4"+"/main")
+    given()
+        .header("Authorization", token)
+        .contentType(ContentType.JSON)
 
-                .then()
-                .log().all()
-                .statusCode(responseCode.getHttpStatusCode().value())
+        .when()
+        .patch("/api/v1/runimos/" + "1" + "/main")
 
-                .body("code", equalTo(responseCode.getCode()))
-                .body("message", equalTo(responseCode.getClientMessage()));
-    }
+        .then()
+        .log().all()
+        .statusCode(HttpStatus.OK.value())
 
-    @Test
-    @Sql(scripts = "/sql/set_main_runimo_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    void 대표_러니모_설정_실패_러니모_존재하지않음() {
-        String token = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
-        CustomResponseCode responseCode = RunimoHttpResponseCode.RUNIMO_NOT_FOUND;
+        .body("code", equalTo("MSH2002"))
+        .body("payload.main_runimo_id", equalTo(1));
+  }
 
-        given()
-                .header("Authorization", token)
-                .contentType(ContentType.JSON)
+  @Test
+  @Sql(scripts = "/sql/set_main_runimo_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+  void 대표_러니모_설정_실패_러니모의_소유자_아님() {
+    String token = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
+    CustomResponseCode responseCode = RunimoHttpResponseCode.USER_DO_NOT_OWN_RUNIMO;
 
-                .when()
-                .patch("/api/v1/runimos/"+"9999"+"/main")
+    given()
+        .header("Authorization", token)
+        .contentType(ContentType.JSON)
 
-                .then()
-                .log().all()
-                .statusCode(responseCode.getHttpStatusCode().value())
+        .when()
+        .patch("/api/v1/runimos/" + "4" + "/main")
 
-                .body("code", equalTo(responseCode.getCode()))
-                .body("message", equalTo(responseCode.getClientMessage()));
-    }
+        .then()
+        .log().all()
+        .statusCode(responseCode.getHttpStatusCode().value())
+
+        .body("code", equalTo(responseCode.getCode()))
+        .body("message", equalTo(responseCode.getClientMessage()));
+  }
+
+  @Test
+  @Sql(scripts = "/sql/set_main_runimo_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+  void 대표_러니모_설정_실패_러니모_존재하지않음() {
+    String token = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
+    CustomResponseCode responseCode = RunimoHttpResponseCode.RUNIMO_NOT_FOUND;
+
+    given()
+        .header("Authorization", token)
+        .contentType(ContentType.JSON)
+
+        .when()
+        .patch("/api/v1/runimos/" + "9999" + "/main")
+
+        .then()
+        .log().all()
+        .statusCode(responseCode.getHttpStatusCode().value())
+
+        .body("code", equalTo(responseCode.getCode()))
+        .body("message", equalTo(responseCode.getClientMessage()));
+  }
 }

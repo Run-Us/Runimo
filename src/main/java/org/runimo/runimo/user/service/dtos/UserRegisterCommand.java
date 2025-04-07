@@ -2,9 +2,10 @@ package org.runimo.runimo.user.service.dtos;
 
 import org.runimo.runimo.user.domain.SocialProvider;
 
-public record UserSignupCommand(
+public record UserRegisterCommand(
     String nickname,
-    SocialProvider provider,
-    String imgUrl
+    String imgUrl,
+    String providerId,
+    SocialProvider socialProvider
 ) {
 }

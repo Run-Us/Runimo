@@ -17,10 +17,12 @@ public class JwtConfig {
   private long jwtExpiration;
   @Value("${jwt.refresh.expiration}")
   private long jwtRefreshExpiration;
+  @Value("${jwt.temp.expiration}")
+  private long tempJwtExpiration;
 
   @Bean
   public JwtTokenFactory jwtTokenFactory() {
-    return new JwtTokenFactory(jwtSecret, jwtExpiration, jwtRefreshExpiration);
+    return new JwtTokenFactory(jwtSecret, jwtExpiration, jwtRefreshExpiration, tempJwtExpiration);
   }
 
   @Bean

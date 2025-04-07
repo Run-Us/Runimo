@@ -1,10 +1,11 @@
 package org.runimo.runimo.item.domain;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import org.junit.jupiter.api.Test;
 import org.runimo.runimo.user.domain.EggStatus;
 import org.runimo.runimo.user.domain.IncubatingEgg;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class IncubatingEggTest {
 

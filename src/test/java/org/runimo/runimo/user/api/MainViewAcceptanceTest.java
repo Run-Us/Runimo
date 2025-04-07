@@ -14,23 +14,20 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 class MainViewAcceptanceTest {
 
-  @LocalServerPort
-  int port;
-
-  @Autowired
-  private JwtTokenFactory jwtTokenFactory;
-
-  @Autowired
-  private CleanUpUtil cleanUpUtil;
-
   private static final String USER_UUID = "test-user-uuid-1";
   private static final String AUTH_HEADER_PREFIX = "Bearer ";
+  @LocalServerPort
+  int port;
+  @Autowired
+  private JwtTokenFactory jwtTokenFactory;
+  @Autowired
+  private CleanUpUtil cleanUpUtil;
 
   @BeforeEach
   void setUp() {
