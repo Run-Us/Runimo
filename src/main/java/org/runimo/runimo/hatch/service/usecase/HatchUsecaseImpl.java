@@ -6,8 +6,8 @@ import org.runimo.runimo.hatch.exception.HatchException;
 import org.runimo.runimo.hatch.exception.HatchHttpResponseCode;
 import org.runimo.runimo.hatch.service.HatchClient;
 import org.runimo.runimo.runimo.domain.RunimoDefinition;
-import org.runimo.runimo.runimo.domain.UserRunimo;
-import org.runimo.runimo.runimo.repository.UserRunimoRepository;
+import org.runimo.runimo.runimo.domain.Runimo;
+import org.runimo.runimo.runimo.repository.RunimoRepository;
 import org.runimo.runimo.user.domain.IncubatingEgg;
 import org.runimo.runimo.user.repository.IncubatingEggRepository;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class HatchUsecaseImpl implements HatchUsecase {
     private final IncubatingEggRepository incubatingEggRepository;
-    private final UserRunimoRepository userRunimoRepository;
+    private final RunimoRepository runimoRepository;
     private final HatchClient hatchClient;
 
     @Transactional
@@ -31,15 +31,15 @@ public class HatchUsecaseImpl implements HatchUsecase {
         // 부화 - 러니모 획득
         RunimoDefinition runimoDefinition = hatchClient.getRunimoDefFromEgg(incubatingEgg);
         // 이미 보유한 러니모인지 확인
-        boolean isDuplicatedRunimo = userRunimoRepository.existsByUserIdAndRunimoDefinitionId(userId, runimoDefinition.getId());
+        boolean isDuplicatedRunimo = runimoRepository.existsByUserIdAndRunimoDefinitionId(userId, runimoDefinition.getId());
 
         // 러니모 저장 (중복 아닐 경우만)
         if(!isDuplicatedRunimo){
-            UserRunimo userRunimo = UserRunimo.builder()
+            Runimo runimo = Runimo.builder()
                     .userId(userId)
                     .runimoDefinitionId(runimoDefinition.getId())
                     .build();
-            userRunimoRepository.save(userRunimo);
+            runimoRepository.save(runimo);
         }
 
         return new HatchEggResponse(

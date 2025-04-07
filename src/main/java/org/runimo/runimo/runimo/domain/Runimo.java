@@ -8,12 +8,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.runimo.runimo.common.BaseEntity;
+import org.runimo.runimo.runimo.exception.RunimoException;
+import org.runimo.runimo.runimo.exception.RunimoHttpResponseCode;
 
 @Entity
-@Table(name = "user_runimo")
+@Table(name = "runimo")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class UserRunimo extends BaseEntity {
+public class Runimo extends BaseEntity {
 
     @Column(name = "user_id", nullable = false)
     private Long userId;
@@ -22,9 +24,16 @@ public class UserRunimo extends BaseEntity {
     private Long runimoDefinitionId;
 
     @Builder
-    private UserRunimo(Long id, Long userId, Long runimoDefinitionId) {
+    private Runimo(Long id, Long userId, Long runimoDefinitionId) {
         this.id = id;
         this.userId = userId;
         this.runimoDefinitionId = runimoDefinitionId;
+    }
+
+    public void validateOwner(Long userId) {
+        if(!this.userId.equals(userId)){
+            throw RunimoException.of(RunimoHttpResponseCode.USER_DO_NOT_OWN_RUNIMO);
+        }
+
     }
 }
