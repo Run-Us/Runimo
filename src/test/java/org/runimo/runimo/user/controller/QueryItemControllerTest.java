@@ -38,7 +38,8 @@ class QueryItemControllerTest {
 
   @Test
   void 보유한_아이템_조회_성공() throws Exception {
-    String accessToken = jwtTokenFactory.generateAccessToken("test-user-uuid-1");given(myItemQueryUsecase.queryMyAllItems(any()))
+    String accessToken = jwtTokenFactory.generateAccessToken("test-user-uuid-1");
+    given(myItemQueryUsecase.queryMyAllItems(any()))
         .willReturn(new ItemQueryResponse(new ArrayList<>()));
     given(userFinder.findUserByPublicId(any()))
         .willReturn(Optional.of(UserFixtures.getDefaultUser()));
