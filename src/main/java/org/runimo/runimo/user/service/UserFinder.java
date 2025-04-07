@@ -27,6 +27,7 @@ public class UserFinder {
     return userRepository.findById(userId);
   }
 
+  @Transactional(readOnly = true)
   public Optional<LovePoint> findLovePointByUserId(Long userId) {
     return lovePointRepository.findLovePointByUserId(userId);
   }
