@@ -8,6 +8,10 @@ public enum HatchHttpResponseCode implements CustomResponseCode {
 
   HATCH_EGG_NOT_READY("HEH4001", "부화 요청 알이 부화 가능한 상태가 아님", "부화 요청 알이 부화 가능한 상태가 아님", HttpStatus.BAD_REQUEST),
   HATCH_EGG_NOT_FOUND("HEH4041", "부화 요청 알이 존재하지 않음", "부화 요청 알이 존재하지 않음", HttpStatus.NOT_FOUND),
+
+
+  // TODO : 다르게 처리할 방법 고민해보기
+  HATCH_RUNIMO_NOT_FOUND_INTERNAL_ERROR("HEH5001", "[서버 내부 오류] 부화될 러니모 존재하지 않음", "[서버 내부 오류] 부화될 러니모 존재하지 않음", HttpStatus.INTERNAL_SERVER_ERROR),
   ;
 
 

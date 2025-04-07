@@ -5,9 +5,9 @@ DROP TABLE IF EXISTS oauth_account;
 DROP TABLE IF EXISTS running_record;
 DROP TABLE IF EXISTS user_item;
 DROP TABLE IF EXISTS incubator;
-DROP TABLE IF EXISTS user_runimo;
-DROP TABLE IF EXISTS item_activity;
 DROP TABLE IF EXISTS runimo;
+DROP TABLE IF EXISTS item_activity;
+DROP TABLE IF EXISTS runimo_definition;
 DROP TABLE IF EXISTS item;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS user_love_point;
@@ -131,7 +131,7 @@ CREATE TABLE `incubating_egg`
     `deleted_at`                TIMESTAMP NULL
 );
 
-CREATE TABLE `runimo`
+CREATE TABLE `runimo_definition`
 (
     `id`            BIGINT PRIMARY KEY AUTO_INCREMENT,
     `name`          VARCHAR(255),
@@ -144,11 +144,13 @@ CREATE TABLE `runimo`
     `deleted_at`    TIMESTAMP NULL
 );
 
-CREATE TABLE `user_runimo`
+CREATE TABLE `runimo`
 (
     `id`         BIGINT PRIMARY KEY AUTO_INCREMENT,
     `user_id`    BIGINT NOT NULL,
-    `runimo_id`  BIGINT NOT NULL,
+    `runimo_definition_id`  BIGINT NOT NULL,
+    `total_run_count` BIGINT NOT NULL DEFAULT 0,
+    `total_distance_in_meters` BIGINT NOT NULL DEFAULT 0,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `deleted_at` TIMESTAMP NULL
@@ -159,3 +161,11 @@ ALTER TABLE `user_token`
 
 ALTER TABLE `oauth_account`
     ADD FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+
+-- insert static data
+INSERT INTO runimo_definition (id, name, code, description, img_url, egg_type, created_at, updated_at)
+VALUES (1, '토끼', 'R-101', '마당 토끼예여', 'http://dummy1', 'MADANG', NOW(), NOW()),
+       (2, '강아지', 'R-102', '마당 강아지예여', 'http://dummy2', 'MADANG', NOW(), NOW()),
+       (3, '오리', 'R-103', '마당 오리예여', 'http://dummy3', 'MADANG', NOW(), NOW()),
+       (4, '늑대', 'R-104', '주인이 다른 마당 늑대예여', 'http://dummy4', 'MADANG', NOW(), NOW());

@@ -14,8 +14,8 @@ public class CleanUpUtil {
       "running_record",
       "user_love_point",
       "incubating_egg",
+      "runimo_definition",
       "runimo",
-      "user_runimo",
   };
 
   @Autowired
