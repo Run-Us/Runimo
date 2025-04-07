@@ -150,6 +150,8 @@ CREATE TABLE `runimo`
     `id`         BIGINT PRIMARY KEY AUTO_INCREMENT,
     `user_id`    BIGINT NOT NULL,
     `runimo_definition_id`  BIGINT NOT NULL,
+    `total_run_count` BIGINT NOT NULL DEFAULT 0,
+    `total_distance_in_meters` BIGINT NOT NULL DEFAULT 0,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `deleted_at` TIMESTAMP NULL

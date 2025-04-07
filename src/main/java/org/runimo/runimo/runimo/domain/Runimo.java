@@ -23,6 +23,13 @@ public class Runimo extends BaseEntity {
     @Column(name = "runimo_definition_id", nullable = false)
     private Long runimoDefinitionId;
 
+    @Column(name = "total_run_count", nullable = false)
+    private Long totalRunCount = 0L;
+
+    @Column(name = "total_distance_in_meters", nullable = false)
+    private Long totalDistanceInMeters = 0L;
+
+
     @Builder
     private Runimo(Long id, Long userId, Long runimoDefinitionId) {
         this.id = id;
