@@ -19,7 +19,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
   private final JwtAuthenticationFilter jwtAuthenticationFilter;
-  private final AuthenticationFailureHandler customAuthenticationFailureHandler;
 
   @Bean
   @Profile({"prod", "test"})
@@ -31,6 +30,7 @@ public class SecurityConfig {
         )
         .authorizeHttpRequests(authorize -> authorize
             .requestMatchers("/api/v1/auth/**").permitAll()
+            .requestMatchers(("/error")).permitAll()
             .anyRequest().authenticated()
         )
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -49,8 +49,10 @@ public class SecurityConfig {
         .authorizeHttpRequests(authorize -> authorize
             .requestMatchers("/api/v1/auth/**").permitAll()
             .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
+            .requestMatchers(("/error")).permitAll()
             .anyRequest().authenticated()
-        );
+        )
+        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
   }
