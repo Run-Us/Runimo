@@ -27,13 +27,12 @@ import static org.hamcrest.Matchers.*;
 @ActiveProfiles("test")
 class RecordAcceptanceTest {
 
-  @LocalServerPort
-  int port;
-
-  @Autowired
-  private JwtTokenFactory jwtTokenFactory;
   private static final String USER_UUID = "test-user-uuid-1";
   private static final String AUTH_HEADER_PREFIX = "Bearer ";
+  @LocalServerPort
+  int port;
+  @Autowired
+  private JwtTokenFactory jwtTokenFactory;
   @Autowired
   private ObjectMapper objectMapper;
   @Autowired
@@ -133,7 +132,6 @@ class RecordAcceptanceTest {
         .body("payload.segment_pace_list[0].distance", equalTo(1.0f))
         .body("payload.segment_pace_list[0].pace", equalTo(732000));
   }
-
 
 
   @Test

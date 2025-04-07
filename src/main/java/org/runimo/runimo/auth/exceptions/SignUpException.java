@@ -1,4 +1,4 @@
-package org.runimo.runimo.user.exceptions;
+package org.runimo.runimo.auth.exceptions;
 
 import org.runimo.runimo.exceptions.BusinessException;
 import org.runimo.runimo.exceptions.code.CustomResponseCode;

@@ -1,7 +1,6 @@
 package org.runimo.runimo.config;
 
 import com.sun.security.auth.UserPrincipal;
-import org.runimo.runimo.auth.jwt.TokenStatus;
 import org.runimo.runimo.common.cache.InMemoryCache;
 import org.runimo.runimo.common.cache.SpringInMemoryCache;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,7 +32,7 @@ public class CacheConfig {
   }
 
   @Bean
-  public InMemoryCache<String, TokenStatus> tokenStatusCache(TaskScheduler cacheCleanupScheduler) {
+  public InMemoryCache<String, String> refreshTokenCache(TaskScheduler cacheCleanupScheduler) {
     return new SpringInMemoryCache<>(
         cacheCleanupScheduler,
         Duration.ofSeconds(cleanupIntervalSeconds)

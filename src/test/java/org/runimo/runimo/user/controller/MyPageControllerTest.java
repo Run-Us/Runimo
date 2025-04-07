@@ -4,8 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.runimo.runimo.auth.jwt.JwtResolver;
 import org.runimo.runimo.auth.jwt.JwtTokenFactory;
 import org.runimo.runimo.configs.ControllerTest;
-import org.runimo.runimo.user.service.dtos.MyPageViewResponse;
 import org.runimo.runimo.user.service.dtos.LatestRunningRecord;
+import org.runimo.runimo.user.service.dtos.MyPageViewResponse;
 import org.runimo.runimo.user.service.usecases.query.MyPageQueryUsecase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -17,13 +17,12 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import javax.naming.NoPermissionException;
 import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ControllerTest(controllers = {MyPageController.class})
 class MyPageControllerTest {
@@ -53,7 +52,7 @@ class MyPageControllerTest {
         5L,
         new LatestRunningRecord(
             "활기차 모닝런",
-            LocalDateTime.of(2025, 3, 24,10,11),
+            LocalDateTime.of(2025, 3, 24, 10, 11),
             3000L,
             100L,
             6700L
@@ -62,7 +61,7 @@ class MyPageControllerTest {
 
     when(myPageQueryUsecase.execute(any()))
         .thenReturn(response);
-    when(jwtResolver.getUserIdFromAccessToken(any()))
+    when(jwtResolver.getUserIdFromJwtToken(any()))
         .thenReturn("test-user-uuid-1");
     when(userIdResolver.resolveArgument(any(), any(), any(), any()))
         .thenReturn(1L);
@@ -105,14 +104,13 @@ class MyPageControllerTest {
     String accessToken = "Bearer " + jwtTokenFactory.generateAccessToken("non-existent-user");
 
     when(myPageQueryUsecase.execute(any()))
-        .thenThrow(new RuntimeException("User not found"));
+        .thenThrow(new NoSuchElementException("User not found"));
 
     // when & then
-
     mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users/me")
             .header("Authorization", accessToken)
             .contentType(MediaType.APPLICATION_JSON))
         .andDo(print())
-        .andExpect(status().isUnauthorized());
+        .andExpect(status().isNotFound());
   }
 }

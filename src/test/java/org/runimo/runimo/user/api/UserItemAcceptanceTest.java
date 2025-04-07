@@ -9,10 +9,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.runimo.runimo.CleanUpUtil;
+import org.runimo.runimo.auth.controller.request.AuthSignupRequest;
 import org.runimo.runimo.auth.jwt.JwtTokenFactory;
-import org.runimo.runimo.auth.service.OidcService;
-import org.runimo.runimo.user.controller.request.AuthSignupRequest;
+import org.runimo.runimo.auth.service.SignUpUsecaseImpl;
+import org.runimo.runimo.auth.service.dtos.SignupUserResponse;
+import org.runimo.runimo.auth.service.dtos.TokenPair;
 import org.runimo.runimo.user.controller.request.UseItemRequest;
+import org.runimo.runimo.user.domain.SocialProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -39,7 +42,8 @@ class UserItemAcceptanceTest {
   private JwtTokenFactory jwtTokenFactory;
 
   @MockitoBean
-  private OidcService oidcService;
+  private SignUpUsecaseImpl signUpUsecaseImpl;
+
 
   @Autowired
   private CleanUpUtil cleanUpUtil;
@@ -124,18 +128,28 @@ class UserItemAcceptanceTest {
 
   @Test
   @Sql(scripts = "/sql/user_item_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-  void 회원가입후_알_지급_성공() throws JsonProcessingException {
+  void 카카오_회원가입후_알_지급_성공() throws JsonProcessingException {
+    String registerToken = jwtTokenFactory.generateRegisterTemporalToken("test-pid", SocialProvider.KAKAO);
     String token = jwtTokenFactory.generateAccessToken("test-user-uuid-1");
-    when(oidcService.validateOidcTokenAndGetProviderId(any(), any()))
-        .thenReturn("123");
+    when(signUpUsecaseImpl.register(any()))
+        .thenReturn(new SignupUserResponse(
+            1L,
+            "test-user",
+            "https://test-image.com",
+            new TokenPair(token, "token2")
+        ));
 
-    AuthSignupRequest request = new AuthSignupRequest(token, "KAKAO", "1234", "https://example.com/image.jpg");
+    AuthSignupRequest request = new AuthSignupRequest(
+        registerToken,
+        "test-user",
+        "https://test-image.com"
+    );
 
     ValidatableResponse res = given()
         .body(objectMapper.writeValueAsString(request))
         .contentType(ContentType.JSON)
         .when()
-        .post("/api/v1/users/auth/signup")
+        .post("/api/v1/auth/signup")
         .then()
         .log().ifError()
         .statusCode(HttpStatus.CREATED.value());

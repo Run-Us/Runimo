@@ -10,8 +10,8 @@ import org.runimo.runimo.user.domain.SocialProvider;
 import org.runimo.runimo.user.domain.User;
 import org.runimo.runimo.user.service.UserCreator;
 import org.runimo.runimo.user.service.UserItemCreator;
-import org.runimo.runimo.user.service.dtos.UserSignupCommand;
-import org.runimo.runimo.user.service.usecases.auth.UserRegisterService;
+import org.runimo.runimo.user.service.UserRegisterService;
+import org.runimo.runimo.user.service.dtos.UserRegisterCommand;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
@@ -39,17 +39,25 @@ class UserRegisterServiceTest {
   @Test
   void 회원가입_알_지급_테스트() {
     // given
-    UserSignupCommand command = new UserSignupCommand("test", SocialProvider.KAKAO, "1234");
+    String providerId = "providerId";
+    UserRegisterCommand command =
+        new UserRegisterCommand(
+            "test-nickname",
+            "https://test.com",
+            providerId,
+            SocialProvider.KAKAO
+        );
     User mockUser = mock(User.class);
-    when(userCreator.createUser(any(UserSignupCommand.class))).thenReturn(mockUser);
+    when(userCreator.createUser(any())).thenReturn(mockUser);
+
 
     // when
-    User createdUser = userRegisterService.register(command, "1234");
+    User res = userRegisterService.registerUser(command);
 
     // then
-    assertNotNull(createdUser);
-    verify(userCreator, times(1)).createUser(command);
-    verify(userCreator, times(1)).createUserOAuthInfo(mockUser, SocialProvider.KAKAO, "1234");
+    assertNotNull(res);
+    verify(userCreator, times(1)).createUser(any());
+    verify(userCreator, times(1)).createUserOAuthInfo(mockUser, SocialProvider.KAKAO, providerId);
     verify(userCreator, times(1)).createLovePoint(anyLong());
     verify(userItemCreator, times(1)).createAll(anyLong());
     verify(eggGrantService, times(1)).grantGreetingEggToUser(mockUser);

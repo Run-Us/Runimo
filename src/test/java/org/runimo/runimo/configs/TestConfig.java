@@ -10,7 +10,7 @@ public class TestConfig {
 
   @Bean
   public JwtTokenFactory jwtTokenFactory() {
-    return new JwtTokenFactory("testSecret", 1000L, 3600L);
+    return new JwtTokenFactory("testSecret", 1000L, 3600L, 600L);
   }
 
   @Bean

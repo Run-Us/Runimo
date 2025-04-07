@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @TestConfiguration
@@ -19,12 +18,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class TestSecurityConfig {
 
   private final JwtAuthenticationFilter jwtAuthenticationFilter;
-  private final AuthenticationFailureHandler customAuthenticationFailureHandler;
 
-  public TestSecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter,
-                            AuthenticationFailureHandler customAuthenticationFailureHandler) {
+  public TestSecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
     this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-    this.customAuthenticationFailureHandler = customAuthenticationFailureHandler;
   }
 
   @Bean
@@ -34,13 +30,8 @@ public class TestSecurityConfig {
         .sessionManagement(session -> session
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         )
-        .oauth2Login(oAuth2Login -> {
-          oAuth2Login
-              .loginPage("/api/v1/users/auth/login")
-              .failureHandler(customAuthenticationFailureHandler);
-        })
         .authorizeHttpRequests(authorize -> authorize
-            .requestMatchers("/api/v1/users/auth/**").permitAll()
+            .requestMatchers("/api/v1/auth/**").permitAll()
             .anyRequest().authenticated()
         )
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
