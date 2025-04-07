@@ -5,7 +5,7 @@ DROP TABLE IF EXISTS oauth_account;
 DROP TABLE IF EXISTS running_record;
 DROP TABLE IF EXISTS user_item;
 DROP TABLE IF EXISTS incubator;
-DROP TABLE IF EXISTS user_runimo;
+DROP TABLE IF EXISTS runimo;
 DROP TABLE IF EXISTS item_activity;
 DROP TABLE IF EXISTS runimo_definition;
 DROP TABLE IF EXISTS item;
@@ -145,7 +145,7 @@ CREATE TABLE `runimo_definition`
     `deleted_at`    TIMESTAMP NULL
 );
 
-CREATE TABLE `user_runimo`
+CREATE TABLE `runimo`
 (
     `id`         BIGINT PRIMARY KEY AUTO_INCREMENT,
     `user_id`    BIGINT NOT NULL,

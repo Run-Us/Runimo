@@ -21,6 +21,6 @@ VALUES (1, '토끼', 'R-101', '마당 토끼예여', 'http://dummy1', 'MADANG', 
 
 
 -- 사용자-러니모 맵핑
-TRUNCATE TABLE user_runimo;
-INSERT INTO user_runimo (id, user_id, runimo_definition_id, created_at, updated_at)
+TRUNCATE TABLE runimo;
+INSERT INTO runimo (id, user_id, runimo_definition_id, created_at, updated_at)
 VALUES (1, 1, 2, NOW(), NOW());

@@ -19,10 +19,11 @@ import org.springframework.test.context.jdbc.Sql;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-class RunimoDefinitionControllerTest {
+class RunimoControllerTest {
 
     @LocalServerPort
     int port;
@@ -65,12 +66,14 @@ class RunimoDefinitionControllerTest {
                 .statusCode(HttpStatus.OK.value())
 
                 .body("code", equalTo("MSH2001"))
-                .body("payload.my_runimos[0].id", equalTo(1))
-                .body("payload.my_runimos[0].name", equalTo("토끼"))
-                .body("payload.my_runimos[0].img_url", equalTo("http://dummy1"))
-                .body("payload.my_runimos[0].code", equalTo("R-101"))
-                .body("payload.my_runimos[0].egg_type", equalTo("MADANG"))
-                .body("payload.my_runimos[0].description", equalTo("마당 토끼예여"));
+                .body("payload.runimos", hasSize(3))
+
+                .body("payload.runimos[0].id", equalTo(1))
+                .body("payload.runimos[0].name", equalTo("토끼"))
+                .body("payload.runimos[0].img_url", equalTo("http://dummy1"))
+                .body("payload.runimos[0].code", equalTo("R-101"))
+                .body("payload.runimos[0].egg_type", equalTo("MADANG"))
+                .body("payload.runimos[0].description", equalTo("마당 토끼예여"));
     }
 
     @Test
