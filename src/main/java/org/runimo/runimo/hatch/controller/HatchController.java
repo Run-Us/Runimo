@@ -24,7 +24,8 @@ public class HatchController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "[HSH2011] 알 부화 성공"),
             @ApiResponse(responseCode = "400", description = "[HEH4001] 부화 요청 알이 부화 가능한 상태가 아님"),
-            @ApiResponse(responseCode = "404", description = "[HEH4041] 부화 요청 알이 존재하지 않음")
+            @ApiResponse(responseCode = "404", description = "[HEH4041] 부화 요청 알이 존재하지 않음"),
+            @ApiResponse(responseCode = "500", description = "[HEH5001] [서버 내부 오류] 부화될 러니모 존재하지 않음")
     })
     @PostMapping("/api/v1/incubating-eggs/{incubatingEggId}/hatch")
     public ResponseEntity<SuccessResponse<HatchEggResponse>> hatch(

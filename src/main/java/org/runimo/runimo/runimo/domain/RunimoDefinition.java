@@ -9,10 +9,10 @@ import org.runimo.runimo.common.BaseEntity;
 import org.runimo.runimo.item.domain.EggType;
 
 @Entity
-@Table(name = "runimo")
+@Table(name = "runimo_definition")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Runimo extends BaseEntity {
+public class RunimoDefinition extends BaseEntity {
     @Column(name = "name")
     private String name;
 
@@ -30,7 +30,7 @@ public class Runimo extends BaseEntity {
     private EggType type;
 
     @Builder
-    public Runimo(String name, String code, String description, String imgUrl, EggType type) {
+    public RunimoDefinition(String name, String code, String description, String imgUrl, EggType type) {
         this.name = name;
         this.code = code;
         this.description = description;

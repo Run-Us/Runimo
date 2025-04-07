@@ -18,13 +18,13 @@ public class UserRunimo extends BaseEntity {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    @Column(name = "runimo_id", nullable = false)
-    private Long runimoId;
+    @Column(name = "runimo_definition_id", nullable = false)
+    private Long runimoDefinitionId;
 
     @Builder
-    private UserRunimo(Long id, Long userId, Long runimoId) {
+    private UserRunimo(Long id, Long userId, Long runimoDefinitionId) {
         this.id = id;
         this.userId = userId;
-        this.runimoId = runimoId;
+        this.runimoDefinitionId = runimoDefinitionId;
     }
 }

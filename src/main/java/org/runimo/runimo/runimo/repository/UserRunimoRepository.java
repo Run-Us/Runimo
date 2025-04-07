@@ -7,16 +7,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface UserRunimoRepository extends JpaRepository<UserRunimo, Long> {
 
-    boolean existsByUserIdAndRunimoId(Long UserId, Long runimoId);
+    boolean existsByUserIdAndRunimoDefinitionId(Long UserId, Long runimoDefinitionId);
 
     @Query("""
         select new org.runimo.runimo.runimo.service.model.RunimoSimpleModel(r.id, r.name, r.imgUrl, r.code, r.type, r.description)
         from UserRunimo ur
-        join Runimo r on r.id = ur.runimoId
+        join RunimoDefinition r on r.id = ur.runimoDefinitionId
         where ur.userId = :userId
     """)
     List<RunimoSimpleModel> findAllByUserId(@Param("userId") Long userId);

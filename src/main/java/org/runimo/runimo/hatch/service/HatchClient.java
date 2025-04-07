@@ -1,15 +1,25 @@
 package org.runimo.runimo.hatch.service;
 
-import org.runimo.runimo.item.domain.EggType;
-import org.runimo.runimo.runimo.domain.Runimo;
+import lombok.RequiredArgsConstructor;
+import org.runimo.runimo.hatch.exception.HatchException;
+import org.runimo.runimo.hatch.exception.HatchHttpResponseCode;
+import org.runimo.runimo.runimo.domain.RunimoDefinition;
+import org.runimo.runimo.runimo.repository.RunimoDefinitionRepository;
 import org.runimo.runimo.user.domain.IncubatingEgg;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
+@RequiredArgsConstructor
+@Service
 public class HatchClient {
+    public final RunimoDefinitionRepository runimoDefinitionRepository;
 
     // TODO : 로직 구현
-    public Runimo getRunimoFromEgg(IncubatingEgg incubatingEgg) {
-        return new Runimo("토끼_dummy", "R-100", "마당에 사는 토끼 dummy", "http://dummy", EggType.MADANG);
+    public RunimoDefinition getRunimoDefFromEgg(IncubatingEgg incubatingEgg) {
+        String dummyRunimoCode = "R-101";
+
+        RunimoDefinition runimoDefinition = runimoDefinitionRepository.findByCode(dummyRunimoCode)
+                .orElseThrow(() -> HatchException.of(HatchHttpResponseCode.HATCH_RUNIMO_NOT_FOUND_INTERNAL_ERROR));
+
+        return runimoDefinition;
     }
 }

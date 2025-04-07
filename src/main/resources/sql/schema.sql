@@ -7,7 +7,7 @@ DROP TABLE IF EXISTS user_item;
 DROP TABLE IF EXISTS incubator;
 DROP TABLE IF EXISTS user_runimo;
 DROP TABLE IF EXISTS item_activity;
-DROP TABLE IF EXISTS runimo;
+DROP TABLE IF EXISTS runimo_definition;
 DROP TABLE IF EXISTS item;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS user_love_point;
@@ -131,7 +131,7 @@ CREATE TABLE `incubating_egg`
     `deleted_at`                TIMESTAMP NULL
 );
 
-CREATE TABLE `runimo`
+CREATE TABLE `runimo_definition`
 (
     `id`            BIGINT PRIMARY KEY AUTO_INCREMENT,
     `name`          VARCHAR(255),
@@ -148,7 +148,7 @@ CREATE TABLE `user_runimo`
 (
     `id`         BIGINT PRIMARY KEY AUTO_INCREMENT,
     `user_id`    BIGINT NOT NULL,
-    `runimo_id`  BIGINT NOT NULL,
+    `runimo_definition_id`  BIGINT NOT NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `deleted_at` TIMESTAMP NULL
