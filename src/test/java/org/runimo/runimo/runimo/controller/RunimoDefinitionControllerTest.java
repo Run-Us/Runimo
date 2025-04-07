@@ -22,7 +22,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-class RunimoControllerTest {
+class RunimoDefinitionControllerTest {
 
     @LocalServerPort
     int port;
