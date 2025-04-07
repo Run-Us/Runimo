@@ -5,6 +5,6 @@ public record MyPageViewResponse(
     String profileImageUrl,
     Long totalDistanceInMeters,
     Long latestRunDateBefore,
-    LatestRunningRecord latestRunningRecord
+    LatestRunningRecord latestRunningRecordNullable
 ) {
 }

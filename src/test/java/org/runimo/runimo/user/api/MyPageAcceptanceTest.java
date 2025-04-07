@@ -22,7 +22,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-public class MyPageAcceptanceTest {
+class MyPageAcceptanceTest {
 
   @LocalServerPort
   private Integer port;
@@ -61,11 +61,11 @@ public class MyPageAcceptanceTest {
         .body("payload.profile_image_url", equalTo("https://example.com/images/user1.png"))
         .body("payload.total_distance_in_meters", equalTo(10000))
         .body("payload.latest_run_date_before", equalTo(diff))
-        .body("payload.latest_running_record.title", equalTo("record-title-2"))
-        .body("payload.latest_running_record.start_date_time", equalTo("2025-03-29T13:00:00"))
-        .body("payload.latest_running_record.distance_in_meters", equalTo(2345))
-        .body("payload.latest_running_record.duration_in_seconds", equalTo(3600))
-        .body("payload.latest_running_record.average_pace_in_miliseconds", equalTo(6700));
+        .body("payload.latest_running_record_nullable.title", equalTo("record-title-2"))
+        .body("payload.latest_running_record_nullable.start_date_time", equalTo("2025-03-29T13:00:00"))
+        .body("payload.latest_running_record_nullable.distance_in_meters", equalTo(2345))
+        .body("payload.latest_running_record_nullable.duration_in_seconds", equalTo(3600))
+        .body("payload.latest_running_record_nullable.average_pace_in_miliseconds", equalTo(6700));
   }
 
 }

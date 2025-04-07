@@ -77,11 +77,11 @@ class MyPageControllerTest {
         .andExpect(jsonPath("$.payload.profile_image_url").value("https://example.com/images/user1.png"))
         .andExpect(jsonPath("$.payload.total_distance_in_meters").value(2L))
         .andExpect(jsonPath("$.payload.latest_run_date_before").value(5L))
-        .andExpect(jsonPath("$.payload.latest_running_record.title").value("활기차 모닝런"))
-        .andExpect(jsonPath("$.payload.latest_running_record.start_date_time").exists())
-        .andExpect(jsonPath("$.payload.latest_running_record.distance_in_meters").value(3000))
-        .andExpect(jsonPath("$.payload.latest_running_record.duration_in_seconds").value(100))
-        .andExpect(jsonPath("$.payload.latest_running_record.average_pace_in_miliseconds").value(6700));
+        .andExpect(jsonPath("$.payload.latest_running_record_nullable.title").value("활기차 모닝런"))
+        .andExpect(jsonPath("$.payload.latest_running_record_nullable.start_date_time").exists())
+        .andExpect(jsonPath("$.payload.latest_running_record_nullable.distance_in_meters").value(3000))
+        .andExpect(jsonPath("$.payload.latest_running_record_nullable.duration_in_seconds").value(100))
+        .andExpect(jsonPath("$.payload.latest_running_record_nullable.average_pace_in_miliseconds").value(6700));
   }
 
   @Test
