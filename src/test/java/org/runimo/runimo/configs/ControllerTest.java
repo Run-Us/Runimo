@@ -1,5 +1,6 @@
 package org.runimo.runimo.configs;
 
+import org.runimo.runimo.exceptions.GlobalExceptionHandler;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.Import;
@@ -15,7 +16,7 @@ import java.lang.annotation.Target;
 @ActiveProfiles("test")
 @WebMvcTest
 @AutoConfigureMockMvc
-@Import({TestConfig.class, TestWebMvcConfig.class, TestSecurityConfig.class})
+@Import({TestConfig.class, TestWebMvcConfig.class, TestSecurityConfig.class, GlobalExceptionHandler.class})
 public @interface ControllerTest {
   Class<?>[] controllers() default {};
 }
