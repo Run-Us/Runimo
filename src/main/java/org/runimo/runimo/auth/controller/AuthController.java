@@ -1,6 +1,8 @@
 package org.runimo.runimo.auth.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -15,7 +17,9 @@ import org.runimo.runimo.auth.service.TokenRefreshService;
 import org.runimo.runimo.auth.service.dtos.AuthResponse;
 import org.runimo.runimo.auth.service.dtos.SignupUserResponse;
 import org.runimo.runimo.auth.service.dtos.TokenPair;
+import org.runimo.runimo.common.response.ErrorResponse;
 import org.runimo.runimo.common.response.SuccessResponse;
+import org.runimo.runimo.exceptions.RegisterErrorResponse;
 import org.runimo.runimo.user.enums.UserHttpResponseCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,8 +39,12 @@ public class AuthController {
   @Operation(summary = "카카오 소셜 로그인", description = "카카오 OIDC 토큰을 이용하여 로그인합니다.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "로그인 성공"),
-      @ApiResponse(responseCode = "401", description = "인증 실패"),
-      @ApiResponse(responseCode = "404", description = "등록되지 않은 사용자")
+      @ApiResponse(responseCode = "401", description = "인증 실패",
+          content = @Content(mediaType = "application/json",
+              schema = @Schema(implementation = ErrorResponse.class))),
+      @ApiResponse(responseCode = "404", description = "등록되지 않은 사용자",
+          content = @Content(mediaType = "application/json",
+              schema = @Schema(implementation = RegisterErrorResponse.class)))
   })
   @PostMapping("/kakao")
   public ResponseEntity<SuccessResponse<AuthResponse>> kakaoLogin(
@@ -54,8 +62,12 @@ public class AuthController {
   @Operation(summary = "애플 소셜 로그인", description = "애플 OIDC 토큰을 이용하여 로그인합니다.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "로그인 성공"),
-      @ApiResponse(responseCode = "401", description = "인증 실패"),
-      @ApiResponse(responseCode = "404", description = "등록되지 않은 사용자")
+      @ApiResponse(responseCode = "401", description = "인증 실패",
+          content = @Content(mediaType = "application/json",
+              schema = @Schema(implementation = ErrorResponse.class))),
+      @ApiResponse(responseCode = "404", description = "등록되지 않은 사용자",
+      content = @Content(mediaType = "application/json",
+          schema = @Schema(implementation = RegisterErrorResponse.class)))
   })
   @PostMapping("/apple")
   public ResponseEntity<SuccessResponse<AuthResponse>> appleLogin(
@@ -73,7 +85,9 @@ public class AuthController {
   @Operation(summary = "사용자 회원가입 및 로그인", description = "사용자가 OIDC 토큰을 사용하여 회원가입 후 로그인합니다.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "201", description = "회원가입 성공"),
-      @ApiResponse(responseCode = "400", description = "잘못된 요청 데이터"),
+      @ApiResponse(responseCode = "400", description = "잘못된 데이터",
+          content = @Content(mediaType = "application/json",
+              schema = @Schema(implementation = ErrorResponse.class))),
       @ApiResponse(responseCode = "409", description = "이미 존재하는 사용자")
   })
   @PostMapping("/signup")
@@ -92,7 +106,9 @@ public class AuthController {
   @Operation(summary = "토큰 갱신", description = "리프레시 토큰을 사용하여 액세스 토큰을 갱신합니다.")
   @ApiResponses(value = {
       @ApiResponse(responseCode = "200", description = "토큰 갱신 성공"),
-      @ApiResponse(responseCode = "401", description = "유효하지 않은 토큰")
+      @ApiResponse(responseCode = "401", description = "유효하지 않은 토큰",
+      content = @Content(mediaType = "application/json",
+              schema = @Schema(implementation = ErrorResponse.class))),
   })
   @PostMapping("/refresh")
   public ResponseEntity<SuccessResponse<TokenPair>> refreshToken(
