@@ -3,9 +3,9 @@ SET FOREIGN_KEY_CHECKS = 0;
 TRUNCATE TABLE users;
 INSERT INTO users (id, public_id, nickname, img_url, total_distance_in_meters,
                    total_time_in_seconds, created_at,
-                   updated_at)
-VALUES (1, 'test-user-uuid-1', 'Daniel', 'https://example.com/images/user1.png', 3000, 3600, NOW(),
-        NOW());
+                   updated_at, main_runimo_id)
+VALUES (1, 'test-user-uuid-1', 'Daniel', 'https://example.com/images/user1.png', 3000, 3600, NOW(),NOW(),1),
+       (2, 'test-user-uuid-2', 'HEHH', 'https://example.com/images/user2.png', 3000, 3600, NOW(), NOW(), null);
 SET FOREIGN_KEY_CHECKS = 1;
 
 TRUNCATE TABLE item;
@@ -44,8 +44,11 @@ VALUES ( 1, 1, 1, 2, 3456, NOW(), NOW(), null );
 TRUNCATE TABLE user_item;
 INSERT INTO user_item (id, user_id, item_id, quantity, created_at, updated_at)
 VALUES (1001, 1, 1, 2, NOW(), NOW()),
-       (1002, 1, 2, 1, NOW(), NOW());
+       (1002, 1, 2, 1, NOW(), NOW()),
+        (1003, 2, 1, 3, NOW(), NOW()),
+       (1004, 2, 2, 4, NOW(), NOW());
 
 TRUNCATE TABLE user_love_point;
 INSERT INTO user_love_point (id, user_id, amount, created_at, updated_at)
-VALUES (1001, 1, 100, NOW(), NOW());
+VALUES (1001, 1, 100, NOW(), NOW()),
+       (2001, 2, 23, NOW(), NOW());
