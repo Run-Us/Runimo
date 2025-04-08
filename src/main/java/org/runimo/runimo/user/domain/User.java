@@ -29,14 +29,17 @@ public class User extends BaseEntity {
     private Long totalTimeInSeconds = 0L;
     @Column(name = "main_runimo_id")
     private Long mainRunimoId;
+    @Column(name = "gender")
+    private Gender gender;
 
     @Builder
     public User(String nickname, String imgUrl, Long totalDistanceInMeters,
-        Long totalTimeInSeconds) {
+        Long totalTimeInSeconds, Gender gender) {
         this.nickname = nickname;
         this.imgUrl = imgUrl;
         this.totalDistanceInMeters = totalDistanceInMeters != null ? totalDistanceInMeters : 0L;
         this.totalTimeInSeconds = totalTimeInSeconds != null ? totalTimeInSeconds : 0L;
+        this.gender = gender;
     }
 
     public boolean checkUserFirstRun() {
