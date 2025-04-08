@@ -2,10 +2,11 @@ package org.runimo.runimo.user.service.usecases.query;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.runimo.runimo.runimo.service.model.MainRunimoStat;
 import org.runimo.runimo.runimo.service.usecase.RunimoFinder;
+import org.runimo.runimo.user.domain.LovePoint;
 import org.runimo.runimo.user.domain.User;
 import org.runimo.runimo.user.domain.UserItem;
 import org.runimo.runimo.user.service.UserFinder;
@@ -14,6 +15,7 @@ import org.runimo.runimo.user.service.dtos.MainViewResponse;
 import org.runimo.runimo.user.service.dtos.UserMainViewInfo;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class MainViewQueryUsecaseImpl implements MainViewQueryUsecase {
@@ -27,22 +29,41 @@ public class MainViewQueryUsecaseImpl implements MainViewQueryUsecase {
         // 유저 달리기 스탯
         User user = userFinder.findUserById(userId)
             .orElseThrow(NoSuchElementException::new);
-        List<UserItem> userEggs = userItemFinder.findEggsByUserId(userId);
-        Long eggCount = userEggs.stream()
-            .map(UserItem::getQuantity)
-            .collect(Collectors.summarizingLong(Long::longValue))
-            .getSum();
-        MainRunimoStat mainRunimoStat = runimoFinder.findMainRunimoStatByUserId(user.getMainRunimoId())
-            .orElse(null);
-        Long lovePoint = userFinder.findLovePointByUserId(userId)
-            .orElseThrow(NoSuchElementException::new)
-            .getAmount();
+        MainRunimoStat mainRunimoStat = findMainRunimoStatIfRegistered(user.getMainRunimoId());
+        UserMainViewInfo userMainViewInfo = buildUserMainViewInfo(user.getId());
         return new MainViewResponse(
             mainRunimoStat,
-            new UserMainViewInfo(
-                lovePoint,
-                eggCount
-            )
+            userMainViewInfo
         );
+    }
+
+    private MainRunimoStat findMainRunimoStatIfRegistered(Long mainRunimoId) {
+        if(mainRunimoId == null) {
+            return null;
+        }
+        return runimoFinder.findMainRunimoStatByUserId(mainRunimoId)
+            .orElseThrow(NoSuchElementException::new);
+    }
+
+    private UserMainViewInfo buildUserMainViewInfo(Long userId) {
+        long eggCount = calculateUserEggCount(userId);
+        long lovePoint = findUserLovePointOrThrow(userId);
+        return new UserMainViewInfo(lovePoint, eggCount);
+    }
+
+    private long calculateUserEggCount(Long userId) {
+        List<UserItem> userEggs = userItemFinder.findEggsByUserId(userId);
+        return userEggs.stream()
+            .mapToLong(UserItem::getQuantity)
+            .sum();
+    }
+
+    private long findUserLovePointOrThrow(Long userId) {
+        return userFinder.findLovePointByUserId(userId)
+            .map(LovePoint::getAmount)
+            .orElseThrow(() -> {
+                log.error("[ERR] id :{} love_point_not_matched", userId);
+                return new NoSuchElementException();
+            });
     }
 }
