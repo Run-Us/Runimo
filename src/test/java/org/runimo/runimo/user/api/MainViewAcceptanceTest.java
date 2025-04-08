@@ -62,4 +62,23 @@ class MainViewAcceptanceTest {
             .body("payload.user_info.love_point", equalTo(100))
             .body("payload.user_info.total_egg_count", equalTo(3));
     }
+
+    @Test
+    @Sql(scripts = "/sql/main_view_data.sql")
+    void 메인화면_조회시_대표_러니모가_없으면_null_로반환() {
+        String token = AUTH_HEADER_PREFIX + jwtTokenFactory.generateAccessToken("test-user-uuid-2");
+        // when & then
+        given()
+            .header("Authorization", token)
+            .contentType(ContentType.JSON)
+            .when()
+            .get("/api/v1/main")
+            .then()
+            .log().ifValidationFails()
+            .statusCode(200)
+            .body("code", equalTo("MAIN_PAGE_DATA_FETCHED"))
+            .body("payload.main_runimo_stat_nullable", equalTo(null))
+            .body("payload.user_info.love_point", equalTo(23))
+            .body("payload.user_info.total_egg_count", equalTo(7));
+    }
 }
