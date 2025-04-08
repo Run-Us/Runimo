@@ -93,13 +93,14 @@ class IncubatingEggAcceptanceTest {
     @Sql(scripts = "/sql/incubating_egg_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void 부화중인_알에_애정을_부여() throws JsonProcessingException {
         String token = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
-        UseLovePointRequest request = new UseLovePointRequest(1L, 20L);
+        Long incubatingEggId = 1L;
+        UseLovePointRequest request = new UseLovePointRequest(20L);
         given()
             .header("Authorization", token)
             .contentType(ContentType.JSON)
             .body(objectMapper.writeValueAsString(request))
             .when()
-            .patch("/api/v1/users/eggs")
+            .patch("/api/v1/users/eggs/{incubatingEggId}", incubatingEggId)
             .then()
             .log().all()
             .statusCode(200)
@@ -115,6 +116,7 @@ class IncubatingEggAcceptanceTest {
         // given
         String userUuid = "test-user-uuid-1";
         String token = "Bearer " + jwtTokenFactory.generateAccessToken(userUuid);
+        Long incubatingEggId = 1L;
 
         // 사용자의 초기 애정 포인트 조회
         Integer initialLovePoint = given()
@@ -130,7 +132,7 @@ class IncubatingEggAcceptanceTest {
         // when
         // 20포인트의 애정을 부여
         Long useLovePointAmount = 20L;
-        UseLovePointRequest request = new UseLovePointRequest(1L, useLovePointAmount);
+        UseLovePointRequest request = new UseLovePointRequest(useLovePointAmount);
 
         // 알에 애정 부여 요청
         given()
@@ -138,7 +140,7 @@ class IncubatingEggAcceptanceTest {
             .contentType(ContentType.JSON)
             .body(objectMapper.writeValueAsString(request))
             .when()
-            .patch("/api/v1/users/eggs")
+            .patch("/api/v1/users/eggs/{incubatingEggId}", incubatingEggId)
             .then()
             .log().all()
             .statusCode(200)
@@ -164,6 +166,7 @@ class IncubatingEggAcceptanceTest {
         // given
         String userUuid = "test-user-uuid-1";
         String token = "Bearer " + jwtTokenFactory.generateAccessToken(userUuid);
+        Long incubatingEggId = 1L;
 
         // 사용자의 초기 애정 포인트 조회
         given()
@@ -179,7 +182,7 @@ class IncubatingEggAcceptanceTest {
         // when
         // 20포인트의 애정을 부여
         Long useLovePointAmount = 25L;
-        UseLovePointRequest request = new UseLovePointRequest(1L, useLovePointAmount);
+        UseLovePointRequest request = new UseLovePointRequest(useLovePointAmount);
 
         // 알에 애정 부여 요청
         given()
@@ -187,7 +190,7 @@ class IncubatingEggAcceptanceTest {
             .contentType(ContentType.JSON)
             .body(objectMapper.writeValueAsString(request))
             .when()
-            .patch("/api/v1/users/eggs")
+            .patch("/api/v1/users/eggs/{incubatingEggId}", incubatingEggId)
             .then()
             .log().all()
             .statusCode(400);
@@ -199,6 +202,7 @@ class IncubatingEggAcceptanceTest {
         // given
         String userUuid = "test-user-uuid-1";
         String token = "Bearer " + jwtTokenFactory.generateAccessToken(userUuid);
+        Long incubatingEggId = 1L;
 
         // 사용자의 초기 애정 포인트 조회
         Integer initialLovePoint = given()
@@ -214,7 +218,7 @@ class IncubatingEggAcceptanceTest {
         // when
         // 20포인트의 애정을 부여
         Long useLovePointAmount = 25L;
-        UseLovePointRequest request = new UseLovePointRequest(1L, useLovePointAmount);
+        UseLovePointRequest request = new UseLovePointRequest(useLovePointAmount);
 
         // 알에 애정 부여 요청
         given()
@@ -222,7 +226,7 @@ class IncubatingEggAcceptanceTest {
             .contentType(ContentType.JSON)
             .body(objectMapper.writeValueAsString(request))
             .when()
-            .patch("/api/v1/users/eggs")
+            .patch("/api/v1/users/eggs/{incubatingEggId}", incubatingEggId)
             .then()
             .log().all()
             .statusCode(400);
