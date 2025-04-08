@@ -55,11 +55,11 @@ class MainViewAcceptanceTest {
             .log().ifValidationFails()
             .statusCode(200)
             .body("code", equalTo("MAIN_PAGE_DATA_FETCHED"))
-            .body("payload.nickname", equalTo("Daniel"))
-            .body("payload.profile_image_url", equalTo("https://example.com/images/user1.png"))
-            .body("payload.total_running_count", equalTo(2))
-            .body("payload.total_distance_in_meters", equalTo(3000))
-            .body("payload.love_point", equalTo(100))
-            .body("payload.total_egg_count", equalTo(3));
+            .body("payload.main_runimo_stat_nullable.name", equalTo("토끼"))
+            .body("payload.main_runimo_stat_nullable.image_url", equalTo("http://dummy1"))
+            .body("payload.main_runimo_stat_nullable.total_running_count", equalTo(2))
+            .body("payload.main_runimo_stat_nullable.total_distance_in_meters", equalTo(3456))
+            .body("payload.user_info.love_point", equalTo(100))
+            .body("payload.user_info.total_egg_count", equalTo(3));
     }
 }

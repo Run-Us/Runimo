@@ -125,7 +125,7 @@ class IncubatingEggAcceptanceTest {
             .then()
             .statusCode(200)
             .extract()
-            .path("payload.love_point");
+            .path("payload.user_info.love_point");
 
         // when
         // 20포인트의 애정을 부여
@@ -154,7 +154,7 @@ class IncubatingEggAcceptanceTest {
             .then()
             .log().all()
             .statusCode(200)
-            .body("payload.love_point", equalTo(initialLovePoint - useLovePointAmount.intValue()));
+            .body("payload.user_info.love_point", equalTo(initialLovePoint - useLovePointAmount.intValue()));
     }
 
 
