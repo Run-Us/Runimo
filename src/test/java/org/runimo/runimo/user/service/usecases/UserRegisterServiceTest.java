@@ -14,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.runimo.runimo.rewards.service.eggs.EggGrantService;
+import org.runimo.runimo.user.domain.Gender;
 import org.runimo.runimo.user.domain.SocialProvider;
 import org.runimo.runimo.user.domain.User;
 import org.runimo.runimo.user.service.UserCreator;
@@ -48,6 +49,7 @@ class UserRegisterServiceTest {
             new UserRegisterCommand(
                 "test-nickname",
                 "https://test.com",
+                Gender.UNKNOWN,
                 providerId,
                 SocialProvider.KAKAO
             );

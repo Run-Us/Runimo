@@ -25,6 +25,7 @@ public class SignUpUsecaseImpl implements SignUpUsecase {
         User savedUser = userRegisterService.registerUser(new UserRegisterCommand(
             command.nickname(),
             command.imgUrl(),
+            command.gender(),
             payload.providerId(),
             payload.socialProvider())
         );

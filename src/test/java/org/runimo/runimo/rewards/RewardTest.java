@@ -20,6 +20,7 @@ import org.runimo.runimo.records.service.usecases.dtos.RecordSaveResponse;
 import org.runimo.runimo.rewards.service.RewardService;
 import org.runimo.runimo.rewards.service.dtos.RewardClaimCommand;
 import org.runimo.runimo.rewards.service.dtos.RewardResponse;
+import org.runimo.runimo.user.domain.Gender;
 import org.runimo.runimo.user.domain.SocialProvider;
 import org.runimo.runimo.user.domain.User;
 import org.runimo.runimo.user.domain.UserItem;
@@ -57,7 +58,7 @@ class RewardTest {
         //given
         String registerToken = jwtTokenFactory.generateRegisterTemporalToken("test-pid",
             SocialProvider.KAKAO);
-        UserSignupCommand command = new UserSignupCommand(registerToken, "name", "1234");
+        UserSignupCommand command = new UserSignupCommand(registerToken, "name", "1234", Gender.UNKNOWN);
         Long useId = signUpUsecaseImpl.register(command).userId();
         savedUser = userRepository.findById(useId).orElse(null);
     }

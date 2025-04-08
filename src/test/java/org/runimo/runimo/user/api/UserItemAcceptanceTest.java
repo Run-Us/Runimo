@@ -25,6 +25,7 @@ import org.runimo.runimo.auth.service.SignUpUsecaseImpl;
 import org.runimo.runimo.auth.service.dtos.SignupUserResponse;
 import org.runimo.runimo.auth.service.dtos.TokenPair;
 import org.runimo.runimo.user.controller.request.UseItemRequest;
+import org.runimo.runimo.user.domain.Gender;
 import org.runimo.runimo.user.domain.SocialProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -148,7 +149,8 @@ class UserItemAcceptanceTest {
         AuthSignupRequest request = new AuthSignupRequest(
             registerToken,
             "test-user",
-            "https://test-image.com"
+            "https://test-image.com",
+            Gender.FEMALE
         );
 
         ValidatableResponse res = given()

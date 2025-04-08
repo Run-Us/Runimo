@@ -19,7 +19,7 @@ public class UserRegisterService {
     @Transactional
     public User registerUser(UserRegisterCommand command) {
         User savedUser = userCreator.createUser(
-            new UserCreateCommand(command.nickname(), command.imgUrl()));
+            new UserCreateCommand(command.nickname(), command.imgUrl(), command.gender()));
         userCreator.createUserOAuthInfo(savedUser, command.socialProvider(), command.providerId());
         userCreator.createLovePoint(savedUser.getId());
         userItemCreator.createAll(savedUser.getId());
