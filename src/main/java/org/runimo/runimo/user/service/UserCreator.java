@@ -25,6 +25,7 @@ public class UserCreator {
         User user = User.builder()
             .nickname(command.nickname())
             .imgUrl(command.imgUrl())
+            .gender(command.gender())
             .build();
         return userRepository.saveAndFlush(user);
     }
