@@ -14,8 +14,8 @@ public class RunimoFinder {
     private final RunimoRepository runimoRepository;
 
     @Transactional(readOnly = true)
-    public Optional<MainRunimoStat> findMainRunimoStatByUserId(Long userId) {
-        return runimoRepository.findMainRunimoStatByUserId(userId);
+    public Optional<MainRunimoStat> findMainRunimoStatByUserId(Long mainRunimoId) {
+        return runimoRepository.findMainRunimoStatByRunimoId(mainRunimoId);
     }
 
 }

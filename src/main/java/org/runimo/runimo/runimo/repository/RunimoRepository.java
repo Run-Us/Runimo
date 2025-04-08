@@ -25,7 +25,7 @@ public interface RunimoRepository extends JpaRepository<Runimo, Long> {
             select new org.runimo.runimo.runimo.service.model.MainRunimoStat(r.name, r.imgUrl, ur.totalRunCount, ur.totalDistanceInMeters)
                   from Runimo ur
                   join RunimoDefinition r on r.id = ur.runimoDefinitionId
-                  where ur.userId = :userId
+                  where ur.id = :runimoId
         """)
-    Optional<MainRunimoStat> findMainRunimoStatByUserId(Long userId);
+    Optional<MainRunimoStat> findMainRunimoStatByRunimoId(Long runimoId);
 }
