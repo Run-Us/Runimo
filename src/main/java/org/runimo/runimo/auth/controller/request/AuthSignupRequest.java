@@ -16,7 +16,8 @@ public record AuthSignupRequest(
     @Schema(description = "프로필 이미지 URL", example = "https://example.com/image.jpg")
     @URL String imgUrl
 ) {
-  public UserSignupCommand toUserSignupCommand() {
-    return new UserSignupCommand(registerToken, nickname, imgUrl);
-  }
+
+    public UserSignupCommand toUserSignupCommand() {
+        return new UserSignupCommand(registerToken, nickname, imgUrl);
+    }
 }

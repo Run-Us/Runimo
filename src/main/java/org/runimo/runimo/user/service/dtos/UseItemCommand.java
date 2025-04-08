@@ -9,7 +9,8 @@ public record UseItemCommand(
     Long quantity
 ) {
 
-  public static CreateActivityCommand toItemUseActivityCommand(UseItemCommand command) {
-    return new CreateActivityCommand(command.itemId(), command.userId(), command.quantity(), ActivityType.CONSUME);
-  }
+    public static CreateActivityCommand toItemUseActivityCommand(UseItemCommand command) {
+        return new CreateActivityCommand(command.itemId(), command.userId(), command.quantity(),
+            ActivityType.CONSUME);
+    }
 }

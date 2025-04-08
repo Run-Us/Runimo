@@ -5,4 +5,5 @@ public record RegisterEggResponse(
     Long currentLovePointAmount,
     Long requiredLovePointAmount
 ) {
+
 }

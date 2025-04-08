@@ -5,4 +5,5 @@ public record MonthlyStatQuery(
     Integer year,
     Integer month
 ) {
+
 }

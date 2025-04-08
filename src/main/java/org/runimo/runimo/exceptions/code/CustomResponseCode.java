@@ -4,11 +4,11 @@ import org.springframework.http.HttpStatus;
 
 public interface CustomResponseCode {
 
-  String getCode();
+    String getCode();
 
-  String getClientMessage();
+    String getClientMessage();
 
-  String getLogMessage();
+    String getLogMessage();
 
-  HttpStatus getHttpStatusCode();
+    HttpStatus getHttpStatusCode();
 }

@@ -7,4 +7,5 @@ public record MyPageViewResponse(
     Long latestRunDateBefore,
     LatestRunningRecord latestRunningRecordNullable
 ) {
+
 }

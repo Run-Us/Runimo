@@ -6,4 +6,5 @@ public record UserSignupCommand(
     String nickname,
     String imgUrl
 ) {
+
 }

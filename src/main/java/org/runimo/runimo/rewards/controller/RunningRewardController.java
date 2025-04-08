@@ -24,21 +24,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class RunningRewardController {
 
-  private final RewardService rewardService;
+    private final RewardService rewardService;
 
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "성공"),
-      @ApiResponse(responseCode = "400", description = "잘못된 요청"),
-      @ApiResponse(responseCode = "401", description = "인증 실패"),
-      @ApiResponse(responseCode = "403", description = "권한 없음"),
-      @ApiResponse(responseCode = "404", description = "달리기 기록 존재하지 않음.")
-  })
-  @PostMapping
-  public ResponseEntity<SuccessResponse<RewardResponse>> claimRunningReward(
-      @RequestBody RewardClaimRequest request,
-      @UserId Long userId
-  ) {
-    RewardResponse res = rewardService.claimReward(new RewardClaimCommand(userId, request.recordId()));
-    return ResponseEntity.ok(SuccessResponse.of(RewardHttpResponseCode.CLAIM_REWARD_SUCESS, res));
-  }
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "성공"),
+        @ApiResponse(responseCode = "400", description = "잘못된 요청"),
+        @ApiResponse(responseCode = "401", description = "인증 실패"),
+        @ApiResponse(responseCode = "403", description = "권한 없음"),
+        @ApiResponse(responseCode = "404", description = "달리기 기록 존재하지 않음.")
+    })
+    @PostMapping
+    public ResponseEntity<SuccessResponse<RewardResponse>> claimRunningReward(
+        @RequestBody RewardClaimRequest request,
+        @UserId Long userId
+    ) {
+        RewardResponse res = rewardService.claimReward(
+            new RewardClaimCommand(userId, request.recordId()));
+        return ResponseEntity.ok(
+            SuccessResponse.of(RewardHttpResponseCode.CLAIM_REWARD_SUCESS, res));
+    }
 }

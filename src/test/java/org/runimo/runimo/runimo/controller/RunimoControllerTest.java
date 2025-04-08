@@ -1,5 +1,9 @@
 package org.runimo.runimo.runimo.controller;
 
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -16,10 +20,6 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasSize;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -53,27 +53,26 @@ class RunimoControllerTest {
     void 보유_러니모_목록_조회_성공() {
         String token = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
 
-
         given()
-                .header("Authorization", token)
-                .contentType(ContentType.JSON)
+            .header("Authorization", token)
+            .contentType(ContentType.JSON)
 
-                .when()
-                .get("/api/v1/runimos/my")
+            .when()
+            .get("/api/v1/runimos/my")
 
-                .then()
-                .log().all()
-                .statusCode(HttpStatus.OK.value())
+            .then()
+            .log().all()
+            .statusCode(HttpStatus.OK.value())
 
-                .body("code", equalTo("MSH2001"))
-                .body("payload.runimos", hasSize(3))
+            .body("code", equalTo("MSH2001"))
+            .body("payload.runimos", hasSize(3))
 
-                .body("payload.runimos[0].id", equalTo(1))
-                .body("payload.runimos[0].name", equalTo("토끼"))
-                .body("payload.runimos[0].img_url", equalTo("http://dummy1"))
-                .body("payload.runimos[0].code", equalTo("R-101"))
-                .body("payload.runimos[0].egg_type", equalTo("MADANG"))
-                .body("payload.runimos[0].description", equalTo("마당 토끼예여"));
+            .body("payload.runimos[0].id", equalTo(1))
+            .body("payload.runimos[0].name", equalTo("토끼"))
+            .body("payload.runimos[0].img_url", equalTo("http://dummy1"))
+            .body("payload.runimos[0].code", equalTo("R-101"))
+            .body("payload.runimos[0].egg_type", equalTo("MADANG"))
+            .body("payload.runimos[0].description", equalTo("마당 토끼예여"));
     }
 
     @Test
@@ -81,20 +80,19 @@ class RunimoControllerTest {
     void 대표_러니모_설정_성공() {
         String token = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
 
-
         given()
-                .header("Authorization", token)
-                .contentType(ContentType.JSON)
+            .header("Authorization", token)
+            .contentType(ContentType.JSON)
 
-                .when()
-                .patch("/api/v1/runimos/" + "1" + "/main")
+            .when()
+            .patch("/api/v1/runimos/" + "1" + "/main")
 
-                .then()
-                .log().all()
-                .statusCode(HttpStatus.OK.value())
+            .then()
+            .log().all()
+            .statusCode(HttpStatus.OK.value())
 
-                .body("code", equalTo("MSH2002"))
-                .body("payload.main_runimo_id", equalTo(1));
+            .body("code", equalTo("MSH2002"))
+            .body("payload.main_runimo_id", equalTo(1));
     }
 
     @Test
@@ -104,18 +102,18 @@ class RunimoControllerTest {
         CustomResponseCode responseCode = RunimoHttpResponseCode.USER_DO_NOT_OWN_RUNIMO;
 
         given()
-                .header("Authorization", token)
-                .contentType(ContentType.JSON)
+            .header("Authorization", token)
+            .contentType(ContentType.JSON)
 
-                .when()
-                .patch("/api/v1/runimos/" + "4" + "/main")
+            .when()
+            .patch("/api/v1/runimos/" + "4" + "/main")
 
-                .then()
-                .log().all()
-                .statusCode(responseCode.getHttpStatusCode().value())
+            .then()
+            .log().all()
+            .statusCode(responseCode.getHttpStatusCode().value())
 
-                .body("code", equalTo(responseCode.getCode()))
-                .body("message", equalTo(responseCode.getClientMessage()));
+            .body("code", equalTo(responseCode.getCode()))
+            .body("message", equalTo(responseCode.getClientMessage()));
     }
 
     @Test
@@ -125,17 +123,17 @@ class RunimoControllerTest {
         CustomResponseCode responseCode = RunimoHttpResponseCode.RUNIMO_NOT_FOUND;
 
         given()
-                .header("Authorization", token)
-                .contentType(ContentType.JSON)
+            .header("Authorization", token)
+            .contentType(ContentType.JSON)
 
-                .when()
-                .patch("/api/v1/runimos/" + "9999" + "/main")
+            .when()
+            .patch("/api/v1/runimos/" + "9999" + "/main")
 
-                .then()
-                .log().all()
-                .statusCode(responseCode.getHttpStatusCode().value())
+            .then()
+            .log().all()
+            .statusCode(responseCode.getHttpStatusCode().value())
 
-                .body("code", equalTo(responseCode.getCode()))
-                .body("message", equalTo(responseCode.getClientMessage()));
+            .body("code", equalTo(responseCode.getCode()))
+            .body("message", equalTo(responseCode.getClientMessage()));
     }
 }

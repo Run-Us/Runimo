@@ -8,4 +8,5 @@ public record CreateActivityCommand(
     Long quantity,
     ActivityType activityType
 ) {
+
 }

@@ -12,27 +12,27 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class IncubatingEggProcessor {
 
-  private final IncubatingEggRepository incubatingEggRepository;
+    private final IncubatingEggRepository incubatingEggRepository;
 
-  @Transactional
-  public IncubatingEgg create(Long userId, Egg egg) {
-    IncubatingEgg incubatingEgg = IncubatingEgg.builder()
-        .userId(userId)
-        .eggId(egg.getId())
-        .currentLovePointAmount(0L)
-        .hatchRequireAmount(egg.getHatchRequireAmount())
-        .build();
-    return incubatingEggRepository.save(incubatingEgg);
-  }
+    @Transactional
+    public IncubatingEgg create(Long userId, Egg egg) {
+        IncubatingEgg incubatingEgg = IncubatingEgg.builder()
+            .userId(userId)
+            .eggId(egg.getId())
+            .currentLovePointAmount(0L)
+            .hatchRequireAmount(egg.getHatchRequireAmount())
+            .build();
+        return incubatingEggRepository.save(incubatingEgg);
+    }
 
-  @Transactional
-  public IncubatingEgg giveLovePoint(UseLovePointCommand useLovePointCommand) {
-    IncubatingEgg incubatingEgg = incubatingEggRepository.findByUserIdAndEggIdForUpdate(
-        useLovePointCommand.userId(),
-            useLovePointCommand.incubatingEggId())
-        .orElseThrow(() -> new IllegalArgumentException("Incubating egg not found"));
-    incubatingEgg.gainLovePoint(useLovePointCommand.lovePoint());
-    return incubatingEgg;
-  }
+    @Transactional
+    public IncubatingEgg giveLovePoint(UseLovePointCommand useLovePointCommand) {
+        IncubatingEgg incubatingEgg = incubatingEggRepository.findByUserIdAndEggIdForUpdate(
+                useLovePointCommand.userId(),
+                useLovePointCommand.incubatingEggId())
+            .orElseThrow(() -> new IllegalArgumentException("Incubating egg not found"));
+        incubatingEgg.gainLovePoint(useLovePointCommand.lovePoint());
+        return incubatingEgg;
+    }
 
 }

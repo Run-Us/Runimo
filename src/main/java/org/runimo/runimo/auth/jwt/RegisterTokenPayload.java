@@ -6,4 +6,5 @@ public record RegisterTokenPayload(
     String providerId,
     SocialProvider socialProvider
 ) {
+
 }

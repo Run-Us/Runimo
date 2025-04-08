@@ -17,26 +17,26 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Import(CustomAuthenticationFailureHandler.class)
 public class TestSecurityConfig {
 
-  private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-  public TestSecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
-    this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-  }
+    public TestSecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    }
 
-  @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http
-        .csrf(AbstractHttpConfigurer::disable)
-        .sessionManagement(session -> session
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        )
-        .authorizeHttpRequests(authorize -> authorize
-            .requestMatchers("/api/v1/auth/**").permitAll()
-            .anyRequest().authenticated()
-        )
-        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .csrf(AbstractHttpConfigurer::disable)
+            .sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
+            .authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/api/v1/auth/**").permitAll()
+                .anyRequest().authenticated()
+            )
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-    return http.build();
-  }
+        return http.build();
+    }
 }
 

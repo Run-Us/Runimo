@@ -7,4 +7,5 @@ public record KakaoLoginRequest(
     @Schema(description = "카카오 oidc토큰")
     String oidcToken
 ) {
+
 }

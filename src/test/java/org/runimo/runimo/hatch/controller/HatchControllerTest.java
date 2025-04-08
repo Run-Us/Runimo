@@ -1,5 +1,8 @@
 package org.runimo.runimo.hatch.controller;
 
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -16,9 +19,6 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
-
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.equalTo;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
@@ -51,23 +51,22 @@ class HatchControllerTest {
     void 사용자의_알_부화_성공() {
         String token = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
 
-
         given()
-                .header("Authorization", token)
-                .contentType(ContentType.JSON)
+            .header("Authorization", token)
+            .contentType(ContentType.JSON)
 
-                .when()
-                .post("/api/v1/incubating-eggs/" + "1" + "/hatch")
+            .when()
+            .post("/api/v1/incubating-eggs/" + "1" + "/hatch")
 
-                .then()
-                .log().all()
-                .statusCode(HttpStatus.CREATED.value())
+            .then()
+            .log().all()
+            .statusCode(HttpStatus.CREATED.value())
 
-                .body("code", equalTo("HSH2011"))
-                .body("payload.name", equalTo("토끼"))
-                .body("payload.img_url", equalTo("http://dummy1"))
-                .body("payload.code", equalTo("R-101"))
-                .body("payload.is_duplicated", equalTo(false));
+            .body("code", equalTo("HSH2011"))
+            .body("payload.name", equalTo("토끼"))
+            .body("payload.img_url", equalTo("http://dummy1"))
+            .body("payload.code", equalTo("R-101"))
+            .body("payload.is_duplicated", equalTo(false));
     }
 
     @Test
@@ -77,18 +76,18 @@ class HatchControllerTest {
         CustomResponseCode responseCode = HatchHttpResponseCode.HATCH_EGG_NOT_READY;
 
         given()
-                .header("Authorization", token)
-                .contentType(ContentType.JSON)
+            .header("Authorization", token)
+            .contentType(ContentType.JSON)
 
-                .when()
-                .post("/api/v1/incubating-eggs/" + "2" + "/hatch")
+            .when()
+            .post("/api/v1/incubating-eggs/" + "2" + "/hatch")
 
-                .then()
-                .log().all()
-                .statusCode(responseCode.getHttpStatusCode().value())
+            .then()
+            .log().all()
+            .statusCode(responseCode.getHttpStatusCode().value())
 
-                .body("code", equalTo(responseCode.getCode()))
-                .body("message", equalTo(responseCode.getClientMessage()));
+            .body("code", equalTo(responseCode.getCode()))
+            .body("message", equalTo(responseCode.getClientMessage()));
     }
 
     @Test
@@ -98,17 +97,17 @@ class HatchControllerTest {
         CustomResponseCode responseCode = HatchHttpResponseCode.HATCH_EGG_NOT_FOUND;
 
         given()
-                .header("Authorization", token)
-                .contentType(ContentType.JSON)
+            .header("Authorization", token)
+            .contentType(ContentType.JSON)
 
-                .when()
-                .post("/api/v1/incubating-eggs/" + "9999" + "/hatch")
+            .when()
+            .post("/api/v1/incubating-eggs/" + "9999" + "/hatch")
 
-                .then()
-                .log().all()
-                .statusCode(responseCode.getHttpStatusCode().value())
+            .then()
+            .log().all()
+            .statusCode(responseCode.getHttpStatusCode().value())
 
-                .body("code", equalTo(responseCode.getCode()))
-                .body("message", equalTo(responseCode.getClientMessage()));
+            .body("code", equalTo(responseCode.getCode()))
+            .body("message", equalTo(responseCode.getClientMessage()));
     }
 }

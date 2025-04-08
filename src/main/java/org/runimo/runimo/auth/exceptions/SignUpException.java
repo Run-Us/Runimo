@@ -5,11 +5,11 @@ import org.runimo.runimo.exceptions.code.CustomResponseCode;
 
 public class SignUpException extends BusinessException {
 
-  public SignUpException(CustomResponseCode errorCode) {
-    super(errorCode);
-  }
+    public SignUpException(CustomResponseCode errorCode) {
+        super(errorCode);
+    }
 
-  protected SignUpException(CustomResponseCode errorCode, String logMessage) {
-    super(errorCode, logMessage);
-  }
+    protected SignUpException(CustomResponseCode errorCode, String logMessage) {
+        super(errorCode, logMessage);
+    }
 }

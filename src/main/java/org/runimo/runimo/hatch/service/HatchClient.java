@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 @Service
 public class HatchClient {
+
     public final RunimoDefinitionRepository runimoDefinitionRepository;
 
     // TODO : 로직 구현
@@ -18,7 +19,8 @@ public class HatchClient {
         String dummyRunimoCode = "R-101";
 
         RunimoDefinition runimoDefinition = runimoDefinitionRepository.findByCode(dummyRunimoCode)
-                .orElseThrow(() -> HatchException.of(HatchHttpResponseCode.HATCH_RUNIMO_NOT_FOUND_INTERNAL_ERROR));
+            .orElseThrow(() -> HatchException.of(
+                HatchHttpResponseCode.HATCH_RUNIMO_NOT_FOUND_INTERNAL_ERROR));
 
         return runimoDefinition;
     }

@@ -8,10 +8,11 @@ public record SignupUserResponse(
     String imgUrl,
     TokenPair tokenPair
 ) {
-  public SignupUserResponse(final User user, final TokenPair tokenPair) {
-    this(user.getId(),
-        user.getNickname(),
-        user.getImgUrl(),
-        tokenPair);
-  }
+
+    public SignupUserResponse(final User user, final TokenPair tokenPair) {
+        this(user.getId(),
+            user.getNickname(),
+            user.getImgUrl(),
+            tokenPair);
+    }
 }

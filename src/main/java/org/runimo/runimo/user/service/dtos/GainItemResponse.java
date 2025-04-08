@@ -4,4 +4,5 @@ public record GainItemResponse(
     Long itemId,
     Long quantity
 ) {
+
 }

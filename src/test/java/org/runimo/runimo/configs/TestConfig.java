@@ -8,13 +8,13 @@ import org.springframework.context.annotation.Bean;
 @TestConfiguration
 public class TestConfig {
 
-  @Bean
-  public JwtTokenFactory jwtTokenFactory() {
-    return new JwtTokenFactory("testSecret", 100000L, 360000L, 60000L);
-  }
+    @Bean
+    public JwtTokenFactory jwtTokenFactory() {
+        return new JwtTokenFactory("testSecret", 100000L, 360000L, 60000L);
+    }
 
-  @Bean
-  public JwtResolver jwtResolver() {
-    return new JwtResolver("testSecret");
-  }
+    @Bean
+    public JwtResolver jwtResolver() {
+        return new JwtResolver("testSecret");
+    }
 }
