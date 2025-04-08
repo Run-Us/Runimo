@@ -11,11 +11,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class RecordUpdateUsecaseImpl implements RecordUpdateUsecase {
 
-  private final RecordCommandService recordCommandService;
-  private final UserFinder userFinder;
+    private final RecordCommandService recordCommandService;
+    private final UserFinder userFinder;
 
-  @Override
-  public void updateRecord(RecordUpdateCommand command) {
-    recordCommandService.updateRecord(command);
-  }
+    @Override
+    public void updateRecord(RecordUpdateCommand command) {
+        recordCommandService.updateRecord(command);
+    }
 }

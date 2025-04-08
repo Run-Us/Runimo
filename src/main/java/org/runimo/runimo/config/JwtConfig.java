@@ -11,23 +11,24 @@ import org.springframework.context.annotation.Configuration;
 @RequiredArgsConstructor
 public class JwtConfig {
 
-  @Value("${jwt.secret}")
-  private String jwtSecret;
-  @Value("${jwt.expiration}")
-  private long jwtExpiration;
-  @Value("${jwt.refresh.expiration}")
-  private long jwtRefreshExpiration;
-  @Value("${jwt.temp.expiration}")
-  private long tempJwtExpiration;
+    @Value("${jwt.secret}")
+    private String jwtSecret;
+    @Value("${jwt.expiration}")
+    private long jwtExpiration;
+    @Value("${jwt.refresh.expiration}")
+    private long jwtRefreshExpiration;
+    @Value("${jwt.temp.expiration}")
+    private long tempJwtExpiration;
 
-  @Bean
-  public JwtTokenFactory jwtTokenFactory() {
-    return new JwtTokenFactory(jwtSecret, jwtExpiration, jwtRefreshExpiration, tempJwtExpiration);
-  }
+    @Bean
+    public JwtTokenFactory jwtTokenFactory() {
+        return new JwtTokenFactory(jwtSecret, jwtExpiration, jwtRefreshExpiration,
+            tempJwtExpiration);
+    }
 
-  @Bean
-  public JwtResolver jwtResolver() {
-    return new JwtResolver(jwtSecret);
-  }
+    @Bean
+    public JwtResolver jwtResolver() {
+        return new JwtResolver(jwtSecret);
+    }
 
 }

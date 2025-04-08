@@ -10,4 +10,5 @@ public record AppleLoginRequest(
     @Schema(description = "Code Verifier")
     @NotBlank String codeVerifier
 ) {
+
 }

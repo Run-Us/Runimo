@@ -16,4 +16,5 @@ public record HatchEggResponse(
     @Schema(description = "부화 결과 생성된 러니모를 이미 보유중인지", example = "true")
     Boolean isDuplicated
 ) {
+
 }

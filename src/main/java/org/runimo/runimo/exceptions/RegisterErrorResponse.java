@@ -4,14 +4,15 @@ import lombok.Getter;
 
 @Getter
 public class RegisterErrorResponse {
-  private boolean success = false;
-  private String errorCode;
-  private String message;
-  private String temporalRegisterToken;
 
-  public RegisterErrorResponse(String errorCode, String message, String temporalRegisterToken) {
-    this.errorCode = errorCode;
-    this.message = message;
-    this.temporalRegisterToken = temporalRegisterToken;
-  }
+    private final boolean success = false;
+    private final String errorCode;
+    private final String message;
+    private final String temporalRegisterToken;
+
+    public RegisterErrorResponse(String errorCode, String message, String temporalRegisterToken) {
+        this.errorCode = errorCode;
+        this.message = message;
+        this.temporalRegisterToken = temporalRegisterToken;
+    }
 }

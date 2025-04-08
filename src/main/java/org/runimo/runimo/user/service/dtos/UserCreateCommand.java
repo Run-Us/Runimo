@@ -4,4 +4,5 @@ public record UserCreateCommand(
     String nickname,
     String imgUrl
 ) {
+
 }

@@ -9,8 +9,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 class ModelResolverConfig {
 
-  @Bean
-  public ModelResolver modelResolver(ObjectMapper objectMapper) {
-    return new ModelResolver(objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE));
-  }
+    @Bean
+    public ModelResolver modelResolver(ObjectMapper objectMapper) {
+        return new ModelResolver(
+            objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE));
+    }
 }

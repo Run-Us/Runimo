@@ -11,15 +11,15 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserStatService {
 
-  private final UserRepository userStatRepository;
+    private final UserRepository userStatRepository;
 
-  @Transactional
-  public void updateUserStats(User user, RecordCreateCommand command) {
-    user.updateRunningStats(
-        command.totalDistanceInMeters(),
-        command.totalDurationInSeconds()
-    );
-    userStatRepository.save(user);
-  }
+    @Transactional
+    public void updateUserStats(User user, RecordCreateCommand command) {
+        user.updateRunningStats(
+            command.totalDistanceInMeters(),
+            command.totalDurationInSeconds()
+        );
+        userStatRepository.save(user);
+    }
 
 }

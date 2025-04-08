@@ -18,25 +18,26 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 public class HatchController {
+
     private final HatchUsecase hatchUsecase;
 
     @Operation(summary = "알 부화", description = "알을 부화합니다.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "[HSH2011] 알 부화 성공"),
-            @ApiResponse(responseCode = "400", description = "[HEH4001] 부화 요청 알이 부화 가능한 상태가 아님"),
-            @ApiResponse(responseCode = "404", description = "[HEH4041] 부화 요청 알이 존재하지 않음"),
-            @ApiResponse(responseCode = "500", description = "[HEH5001] [서버 내부 오류] 부화될 러니모 존재하지 않음")
+        @ApiResponse(responseCode = "201", description = "[HSH2011] 알 부화 성공"),
+        @ApiResponse(responseCode = "400", description = "[HEH4001] 부화 요청 알이 부화 가능한 상태가 아님"),
+        @ApiResponse(responseCode = "404", description = "[HEH4041] 부화 요청 알이 존재하지 않음"),
+        @ApiResponse(responseCode = "500", description = "[HEH5001] [서버 내부 오류] 부화될 러니모 존재하지 않음")
     })
     @PostMapping("/api/v1/incubating-eggs/{incubatingEggId}/hatch")
     public ResponseEntity<SuccessResponse<HatchEggResponse>> hatch(
-            @UserId Long userId,
-            @PathVariable Long incubatingEggId){
+        @UserId Long userId,
+        @PathVariable Long incubatingEggId) {
         HatchEggResponse response = hatchUsecase.execute(userId, incubatingEggId);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                SuccessResponse.of(
-                        HatchHttpResponseCode.HATCH_EGG_SUCCESS,
-                        response)
+            SuccessResponse.of(
+                HatchHttpResponseCode.HATCH_EGG_SUCCESS,
+                response)
         );
     }
 

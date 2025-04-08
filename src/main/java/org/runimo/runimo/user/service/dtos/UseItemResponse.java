@@ -4,4 +4,5 @@ public record UseItemResponse(
     Long itemId,
     Long quantity
 ) {
+
 }

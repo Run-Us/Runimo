@@ -1,6 +1,10 @@
 package org.runimo.runimo.runimo.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,6 +17,7 @@ import org.runimo.runimo.item.domain.EggType;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class RunimoDefinition extends BaseEntity {
+
     @Column(name = "name")
     private String name;
 
@@ -30,7 +35,8 @@ public class RunimoDefinition extends BaseEntity {
     private EggType type;
 
     @Builder
-    public RunimoDefinition(String name, String code, String description, String imgUrl, EggType type) {
+    public RunimoDefinition(String name, String code, String description, String imgUrl,
+        EggType type) {
         this.name = name;
         this.code = code;
         this.description = description;

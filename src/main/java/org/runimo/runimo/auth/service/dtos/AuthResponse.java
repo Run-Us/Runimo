@@ -9,10 +9,10 @@ public record AuthResponse(
     String refreshToken
 ) {
 
-  public AuthResponse(final User user, final TokenPair tokenPair) {
-    this(user.getNickname(),
-        user.getImgUrl(),
-        tokenPair.accessToken(),
-        tokenPair.refreshToken());
-  }
+    public AuthResponse(final User user, final TokenPair tokenPair) {
+        this(user.getNickname(),
+            user.getImgUrl(),
+            tokenPair.accessToken(),
+            tokenPair.refreshToken());
+    }
 }

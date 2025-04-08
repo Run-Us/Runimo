@@ -5,4 +5,5 @@ import java.util.List;
 public record ItemQueryResponse(
     List<InventoryItem> items
 ) {
+
 }

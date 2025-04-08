@@ -9,4 +9,5 @@ public record UseItemRequest(
     @Schema(description = "수량", example = "1")
     Long quantity
 ) {
+
 }

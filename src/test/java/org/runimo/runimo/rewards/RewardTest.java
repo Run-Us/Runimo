@@ -1,5 +1,10 @@
 package org.runimo.runimo.rewards;
 
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.time.LocalDateTime;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,71 +30,67 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 @ActiveProfiles("test")
 @SpringBootTest
 class RewardTest {
 
-  @Autowired
-  private SignUpUsecaseImpl signUpUsecaseImpl;
-  @Autowired
-  private RewardService rewardService;
+    @Autowired
+    private SignUpUsecaseImpl signUpUsecaseImpl;
+    @Autowired
+    private RewardService rewardService;
 
-  @Autowired
-  private RecordCreateUsecase recordCreateUsecase;
+    @Autowired
+    private RecordCreateUsecase recordCreateUsecase;
 
-  private User savedUser;
-  @Autowired
-  private UserItemFinder userItemFinder;
-  @Autowired
-  private CleanUpUtil cleanUpUtil;
-  @Autowired
-  private JwtTokenFactory jwtTokenFactory;
-  @Autowired
-  private UserRepository userRepository;
+    private User savedUser;
+    @Autowired
+    private UserItemFinder userItemFinder;
+    @Autowired
+    private CleanUpUtil cleanUpUtil;
+    @Autowired
+    private JwtTokenFactory jwtTokenFactory;
+    @Autowired
+    private UserRepository userRepository;
 
-  @BeforeEach
-  void setUp() {
-    //given
-    String registerToken = jwtTokenFactory.generateRegisterTemporalToken("test-pid", SocialProvider.KAKAO);
-    UserSignupCommand command = new UserSignupCommand(registerToken, "name", "1234");
-    Long useId = signUpUsecaseImpl.register(command).userId();
-    savedUser = userRepository.findById(useId).orElse(null);
-  }
+    @BeforeEach
+    void setUp() {
+        //given
+        String registerToken = jwtTokenFactory.generateRegisterTemporalToken("test-pid",
+            SocialProvider.KAKAO);
+        UserSignupCommand command = new UserSignupCommand(registerToken, "name", "1234");
+        Long useId = signUpUsecaseImpl.register(command).userId();
+        savedUser = userRepository.findById(useId).orElse(null);
+    }
 
-  @AfterEach
-  void tearDown() {
-    cleanUpUtil.cleanUpUserInfos();
-  }
+    @AfterEach
+    void tearDown() {
+        cleanUpUtil.cleanUpUserInfos();
+    }
 
-  @Test
-  @Sql(scripts = "/sql/egg_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-  void 보상_요청_테스트() {
-    RecordCreateCommand recordCreateCommand = new RecordCreateCommand(
-        savedUser.getId(),
-        LocalDateTime.now(),
-        LocalDateTime.now().plusHours(1),
-        new Pace(1909L),
-        new Distance(10000L),
-        List.of()
-    );
-    RecordSaveResponse response = recordCreateUsecase.execute(recordCreateCommand);
-    RewardClaimCommand rewardClaimCommand = new RewardClaimCommand(savedUser.getId(), response.savedId());
-    RewardResponse rewardResponse = rewardService.claimReward(rewardClaimCommand);
-
-    UserItem savedItem = userItemFinder.
-        findEggByUserIdAndEggType(
+    @Test
+    @Sql(scripts = "/sql/egg_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void 보상_요청_테스트() {
+        RecordCreateCommand recordCreateCommand = new RecordCreateCommand(
             savedUser.getId(),
-            rewardResponse.eggType())
-        .get();
+            LocalDateTime.now(),
+            LocalDateTime.now().plusHours(1),
+            new Pace(1909L),
+            new Distance(10000L),
+            List.of()
+        );
+        RecordSaveResponse response = recordCreateUsecase.execute(recordCreateCommand);
+        RewardClaimCommand rewardClaimCommand = new RewardClaimCommand(savedUser.getId(),
+            response.savedId());
+        RewardResponse rewardResponse = rewardService.claimReward(rewardClaimCommand);
 
-    assertNotNull(rewardResponse.eggCode());
-    assertNotNull(savedItem);
-    assertNotEquals(0, savedItem.getQuantity());
-  }
+        UserItem savedItem = userItemFinder.
+            findEggByUserIdAndEggType(
+                savedUser.getId(),
+                rewardResponse.eggType())
+            .get();
+
+        assertNotNull(rewardResponse.eggCode());
+        assertNotNull(savedItem);
+        assertNotEquals(0, savedItem.getQuantity());
+    }
 }

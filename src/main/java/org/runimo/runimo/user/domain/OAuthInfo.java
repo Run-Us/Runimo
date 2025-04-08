@@ -1,6 +1,13 @@
 package org.runimo.runimo.user.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -14,28 +21,28 @@ import org.runimo.runimo.common.BaseEntity;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OAuthInfo extends BaseEntity {
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", nullable = false)
-  private User user;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-  @Enumerated(EnumType.STRING)
-  @Column(name = "provider", nullable = false)
-  private SocialProvider provider;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "provider", nullable = false)
+    private SocialProvider provider;
 
-  @Column(name = "provider_id", nullable = false)
-  private String providerId;
+    @Column(name = "provider_id", nullable = false)
+    private String providerId;
 
-  /***
-   * OAuthInfo Constructor
-   * @param user OAuth연동할 유저 엔티티
-   * @param provider 소셜 로그인 제공자
-   * @param providerId 소셜 로그인 이메일 / guid
-   */
-  @Builder
-  public OAuthInfo(
-      @NotNull User user, @NotNull SocialProvider provider, @NotNull String providerId) {
-    this.user = user;
-    this.provider = provider;
-    this.providerId = providerId;
-  }
+    /***
+     * OAuthInfo Constructor
+     * @param user OAuth연동할 유저 엔티티
+     * @param provider 소셜 로그인 제공자
+     * @param providerId 소셜 로그인 이메일 / guid
+     */
+    @Builder
+    public OAuthInfo(
+        @NotNull User user, @NotNull SocialProvider provider, @NotNull String providerId) {
+        this.user = user;
+        this.provider = provider;
+        this.providerId = providerId;
+    }
 }

@@ -1,5 +1,13 @@
 package org.runimo.runimo.user.service.usecases;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -13,53 +21,49 @@ import org.runimo.runimo.user.service.UserItemCreator;
 import org.runimo.runimo.user.service.UserRegisterService;
 import org.runimo.runimo.user.service.dtos.UserRegisterCommand;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
-
 class UserRegisterServiceTest {
 
-  @Mock
-  private UserCreator userCreator;
+    @Mock
+    private UserCreator userCreator;
 
-  @Mock
-  private UserItemCreator userItemCreator;
+    @Mock
+    private UserItemCreator userItemCreator;
 
-  @Mock
-  private EggGrantService eggGrantService;
+    @Mock
+    private EggGrantService eggGrantService;
 
-  @InjectMocks
-  private UserRegisterService userRegisterService;
+    @InjectMocks
+    private UserRegisterService userRegisterService;
 
-  @BeforeEach
-  void setUp() {
-    MockitoAnnotations.openMocks(this);
-  }
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
 
-  @Test
-  void 회원가입_알_지급_테스트() {
-    // given
-    String providerId = "providerId";
-    UserRegisterCommand command =
-        new UserRegisterCommand(
-            "test-nickname",
-            "https://test.com",
-            providerId,
-            SocialProvider.KAKAO
-        );
-    User mockUser = mock(User.class);
-    when(userCreator.createUser(any())).thenReturn(mockUser);
+    @Test
+    void 회원가입_알_지급_테스트() {
+        // given
+        String providerId = "providerId";
+        UserRegisterCommand command =
+            new UserRegisterCommand(
+                "test-nickname",
+                "https://test.com",
+                providerId,
+                SocialProvider.KAKAO
+            );
+        User mockUser = mock(User.class);
+        when(userCreator.createUser(any())).thenReturn(mockUser);
 
+        // when
+        User res = userRegisterService.registerUser(command);
 
-    // when
-    User res = userRegisterService.registerUser(command);
-
-    // then
-    assertNotNull(res);
-    verify(userCreator, times(1)).createUser(any());
-    verify(userCreator, times(1)).createUserOAuthInfo(mockUser, SocialProvider.KAKAO, providerId);
-    verify(userCreator, times(1)).createLovePoint(anyLong());
-    verify(userItemCreator, times(1)).createAll(anyLong());
-    verify(eggGrantService, times(1)).grantGreetingEggToUser(mockUser);
-  }
+        // then
+        assertNotNull(res);
+        verify(userCreator, times(1)).createUser(any());
+        verify(userCreator, times(1)).createUserOAuthInfo(mockUser, SocialProvider.KAKAO,
+            providerId);
+        verify(userCreator, times(1)).createLovePoint(anyLong());
+        verify(userItemCreator, times(1)).createAll(anyLong());
+        verify(eggGrantService, times(1)).grantGreetingEggToUser(mockUser);
+    }
 }

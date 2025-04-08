@@ -10,14 +10,14 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class OidcService {
 
-  private final AppleLoginHandler appleLoginHandler;
-  private final KakaoLoginHandler kakaoLoginHandler;
+    private final AppleLoginHandler appleLoginHandler;
+    private final KakaoLoginHandler kakaoLoginHandler;
 
-  public AuthResponse kakaoLogin(String idToken) {
-    return kakaoLoginHandler.validateAndLogin(idToken);
-  }
+    public AuthResponse kakaoLogin(String idToken) {
+        return kakaoLoginHandler.validateAndLogin(idToken);
+    }
 
-  public AuthResponse appleLogin(String authCode, String codeVerifier) {
-    return appleLoginHandler.validateAndLogin(authCode, codeVerifier);
-  }
+    public AuthResponse appleLogin(String authCode, String codeVerifier) {
+        return appleLoginHandler.validateAndLogin(authCode, codeVerifier);
+    }
 }

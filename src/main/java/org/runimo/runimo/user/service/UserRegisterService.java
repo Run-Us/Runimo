@@ -12,17 +12,18 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserRegisterService {
 
-  private final UserCreator userCreator;
-  private final UserItemCreator userItemCreator;
-  private final EggGrantService eggGrantService;
+    private final UserCreator userCreator;
+    private final UserItemCreator userItemCreator;
+    private final EggGrantService eggGrantService;
 
-  @Transactional
-  public User registerUser(UserRegisterCommand command) {
-    User savedUser = userCreator.createUser(new UserCreateCommand(command.nickname(), command.imgUrl()));
-    userCreator.createUserOAuthInfo(savedUser, command.socialProvider(), command.providerId());
-    userCreator.createLovePoint(savedUser.getId());
-    userItemCreator.createAll(savedUser.getId());
-    eggGrantService.grantGreetingEggToUser(savedUser);
-    return savedUser;
-  }
+    @Transactional
+    public User registerUser(UserRegisterCommand command) {
+        User savedUser = userCreator.createUser(
+            new UserCreateCommand(command.nickname(), command.imgUrl()));
+        userCreator.createUserOAuthInfo(savedUser, command.socialProvider(), command.providerId());
+        userCreator.createLovePoint(savedUser.getId());
+        userItemCreator.createAll(savedUser.getId());
+        eggGrantService.grantGreetingEggToUser(savedUser);
+        return savedUser;
+    }
 }

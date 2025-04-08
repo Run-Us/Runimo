@@ -5,4 +5,6 @@ import java.io.Serializable;
 public record SegmentPace(
     double distance,
     long pace
-) implements Serializable {}
+) implements Serializable {
+
+}

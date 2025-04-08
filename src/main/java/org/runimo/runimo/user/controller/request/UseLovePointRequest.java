@@ -16,4 +16,5 @@ public record UseLovePointRequest(
     @Schema(description = "사용할 사랑의 포인트", example = "100")
     Long lovePointAmount
 ) {
+
 }

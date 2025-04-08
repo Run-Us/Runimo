@@ -21,29 +21,30 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class AppleLoginHandler {
 
-  private final AppleTokenVerifier appleTokenVerifier;
-  private final JwtTokenFactory jwtTokenFactory;
-  private final OAuthInfoRepository oAuthInfoRepository;
+    private final AppleTokenVerifier appleTokenVerifier;
+    private final JwtTokenFactory jwtTokenFactory;
+    private final OAuthInfoRepository oAuthInfoRepository;
 
-  @Transactional(readOnly = true)
-  public AuthResponse validateAndLogin(final String authCode, final String verifier) {
-    String rawToken = appleTokenVerifier.getAccessTokenFromAuthCode(authCode, verifier);
-    DecodedJWT decodedJWT;
-    try {
-      decodedJWT = JWT.decode(rawToken);
-    } catch (JWTDecodeException e) {
-      throw UserJwtException.of(UserHttpResponseCode.LOGIN_FAIL_INVALID);
+    @Transactional(readOnly = true)
+    public AuthResponse validateAndLogin(final String authCode, final String verifier) {
+        String rawToken = appleTokenVerifier.getAccessTokenFromAuthCode(authCode, verifier);
+        DecodedJWT decodedJWT;
+        try {
+            decodedJWT = JWT.decode(rawToken);
+        } catch (JWTDecodeException e) {
+            throw UserJwtException.of(UserHttpResponseCode.LOGIN_FAIL_INVALID);
+        }
+        AppleUserInfo userInfo = appleTokenVerifier.verifyToken(decodedJWT);
+        OAuthInfo savedUser = oAuthInfoRepository.findByProviderAndProviderId(
+                SocialProvider.APPLE,
+                userInfo.getProviderId())
+            .orElseThrow(() ->
+                UnRegisteredUserException.of(
+                    UserHttpResponseCode.LOGIN_FAIL_NOT_SIGN_IN,
+                    jwtTokenFactory.generateRegisterTemporalToken(userInfo.getProviderId(),
+                        SocialProvider.APPLE))
+            );
+        TokenPair tokenPair = jwtTokenFactory.generateTokenPair(savedUser.getUser());
+        return new AuthResponse(savedUser.getUser(), tokenPair);
     }
-    AppleUserInfo userInfo = appleTokenVerifier.verifyToken(decodedJWT);
-    OAuthInfo savedUser = oAuthInfoRepository.findByProviderAndProviderId(
-            SocialProvider.APPLE,
-            userInfo.getProviderId())
-        .orElseThrow(() ->
-            UnRegisteredUserException.of(
-                UserHttpResponseCode.LOGIN_FAIL_NOT_SIGN_IN,
-                jwtTokenFactory.generateRegisterTemporalToken(userInfo.getProviderId(), SocialProvider.APPLE))
-        );
-    TokenPair tokenPair = jwtTokenFactory.generateTokenPair(savedUser.getUser());
-    return new AuthResponse(savedUser.getUser(), tokenPair);
-  }
 }

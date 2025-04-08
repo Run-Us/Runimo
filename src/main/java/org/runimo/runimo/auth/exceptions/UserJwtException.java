@@ -4,15 +4,16 @@ import org.runimo.runimo.exceptions.BusinessException;
 import org.runimo.runimo.exceptions.code.CustomResponseCode;
 
 public class UserJwtException extends BusinessException {
-  protected UserJwtException(CustomResponseCode errorCode) {
-    super(errorCode);
-  }
 
-  public UserJwtException(CustomResponseCode errorCode, String logMessage) {
-    super(errorCode, logMessage);
-  }
+    protected UserJwtException(CustomResponseCode errorCode) {
+        super(errorCode);
+    }
 
-  public static UserJwtException of(CustomResponseCode errorCode) {
-    return new UserJwtException(errorCode, errorCode.getLogMessage());
-  }
+    public UserJwtException(CustomResponseCode errorCode, String logMessage) {
+        super(errorCode, logMessage);
+    }
+
+    public static UserJwtException of(CustomResponseCode errorCode) {
+        return new UserJwtException(errorCode, errorCode.getLogMessage());
+    }
 }

@@ -6,4 +6,5 @@ public record InventoryItem(
     Long amount,
     String imgUrl
 ) {
+
 }

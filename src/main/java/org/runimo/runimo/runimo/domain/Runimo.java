@@ -24,10 +24,10 @@ public class Runimo extends BaseEntity {
     private Long runimoDefinitionId;
 
     @Column(name = "total_run_count", nullable = false)
-    private Long totalRunCount = 0L;
+    private final Long totalRunCount = 0L;
 
     @Column(name = "total_distance_in_meters", nullable = false)
-    private Long totalDistanceInMeters = 0L;
+    private final Long totalDistanceInMeters = 0L;
 
 
     @Builder
@@ -38,7 +38,7 @@ public class Runimo extends BaseEntity {
     }
 
     public void validateOwner(Long userId) {
-        if(!this.userId.equals(userId)){
+        if (!this.userId.equals(userId)) {
             throw RunimoException.of(RunimoHttpResponseCode.USER_DO_NOT_OWN_RUNIMO);
         }
 

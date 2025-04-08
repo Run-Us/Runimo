@@ -4,4 +4,5 @@ public record RegisterEggCommand(
     Long userId,
     Long itemId
 ) {
+
 }

@@ -4,6 +4,7 @@ import org.runimo.runimo.exceptions.BusinessException;
 import org.runimo.runimo.exceptions.code.CustomResponseCode;
 
 public class HatchException extends BusinessException {
+
     protected HatchException(CustomResponseCode errorCode) {
         super(errorCode);
     }

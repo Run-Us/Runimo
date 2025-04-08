@@ -2,9 +2,8 @@ package org.runimo.runimo.records.controller.requests;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.runimo.runimo.records.service.usecases.dtos.RecordUpdateCommand;
-
 import java.time.LocalDateTime;
+import org.runimo.runimo.records.service.usecases.dtos.RecordUpdateCommand;
 
 @Schema(description = "사용자 달리기 기록 수정 요청 DTO")
 public record RecordUpdateRequest(
@@ -19,14 +18,15 @@ public record RecordUpdateRequest(
     @Schema(description = "평균 페이스 (밀리초)", example = "300000")
     Long averagePaceInMilliSeconds
 ) {
-  public static RecordUpdateCommand toCommand(Long userId, RecordUpdateRequest request) {
-    return RecordUpdateCommand.builder()
-        .editorId(userId)
-        .title(request.title)
-        .startedAt(request.startedAt)
-        .endAt(request.endAt)
-        .totalDistanceInMeters(request.totalDistanceInMeters)
-        .averagePaceInMilliSeconds(request.averagePaceInMilliSeconds)
-        .build();
-  }
+
+    public static RecordUpdateCommand toCommand(Long userId, RecordUpdateRequest request) {
+        return RecordUpdateCommand.builder()
+            .editorId(userId)
+            .title(request.title)
+            .startedAt(request.startedAt)
+            .endAt(request.endAt)
+            .totalDistanceInMeters(request.totalDistanceInMeters)
+            .averagePaceInMilliSeconds(request.averagePaceInMilliSeconds)
+            .build();
+    }
 }

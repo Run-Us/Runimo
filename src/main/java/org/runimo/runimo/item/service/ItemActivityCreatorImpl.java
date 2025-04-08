@@ -11,17 +11,17 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class ItemActivityCreatorImpl implements ItemActivityCreator {
 
-  private final ItemActivityRepository itemActivityRepository;
+    private final ItemActivityRepository itemActivityRepository;
 
-  @Override
-  @Transactional
-  public void createItemActivity(CreateActivityCommand command) {
-    ItemActivity activity = ItemActivity.builder()
-        .userId(command.userId())
-        .itemId(command.itemId())
-        .quantity(command.quantity())
-        .type(command.activityType())
-        .build();
-    itemActivityRepository.save(activity);
-  }
+    @Override
+    @Transactional
+    public void createItemActivity(CreateActivityCommand command) {
+        ItemActivity activity = ItemActivity.builder()
+            .userId(command.userId())
+            .itemId(command.itemId())
+            .quantity(command.quantity())
+            .type(command.activityType())
+            .build();
+        itemActivityRepository.save(activity);
+    }
 }
