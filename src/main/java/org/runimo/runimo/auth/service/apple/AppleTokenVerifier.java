@@ -153,14 +153,14 @@ public class AppleTokenVerifier {
       long expMillis = nowMillis + 180L * 24 * 60 * 60 * 1000; // 180일
 
       // 개인 키 포맷팅 및 디코딩
-      String formattedKey = "-----BEGIN PRIVATE KEY-----\n" + applePrivateKey.replace("\\\\n", "\n")
-          .trim() + "\n-----END PRIVATE KEY-----";
+      String privateKeyContent = applePrivateKey.replace("\\n", "").trim();
+      String formattedKey = "-----BEGIN PRIVATE KEY-----\n" + privateKeyContent + "\n-----END PRIVATE KEY-----";
 
       byte[] decodedKey = Base64.getDecoder().decode(
           formattedKey
               .replace("-----BEGIN PRIVATE KEY-----", "")
               .replace("-----END PRIVATE KEY-----", "")
-              .replace("\\s", "")
+              .replaceAll("\\s", "") // 모든 공백 문자 제거
       );
 
       // 개인 키 생성
