@@ -40,8 +40,8 @@ public class UserItem extends BaseEntity {
     }
 
     private void validateQuantity(Long quantity) {
-      if (quantity < 0) {
-        throw new IllegalArgumentException("quantity must be greater than zero");
-      }
+        if (quantity < 0) {
+            throw new IllegalArgumentException("quantity must be greater than zero");
+        }
     }
 }

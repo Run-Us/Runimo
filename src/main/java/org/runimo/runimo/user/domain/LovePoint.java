@@ -32,9 +32,9 @@ public class LovePoint extends BaseEntity {
     }
 
     public void subtract(long amount) {
-      if (this.amount < amount) {
-        throw new IllegalStateException("Not enough love points");
-      }
+        if (this.amount < amount) {
+            throw new IllegalStateException("Not enough love points");
+        }
         this.amount -= amount;
     }
 }
