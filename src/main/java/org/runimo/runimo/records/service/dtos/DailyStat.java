@@ -7,5 +7,6 @@ public record DailyStat(
     LocalDate date,
     Long distance
 ) {
+
 }
 

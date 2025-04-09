@@ -4,5 +4,5 @@ import org.runimo.runimo.user.service.dtos.MainViewResponse;
 
 public interface MainViewQueryUsecase {
 
-  MainViewResponse execute(Long userId);
+    MainViewResponse execute(Long userId);
 }

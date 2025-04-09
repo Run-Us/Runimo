@@ -1,40 +1,43 @@
 package org.runimo.runimo.runimo.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.runimo.runimo.common.BaseEntity;
-import org.runimo.runimo.item.domain.EggType;
+import org.runimo.runimo.runimo.exception.RunimoException;
+import org.runimo.runimo.runimo.exception.RunimoHttpResponseCode;
 
 @Entity
 @Table(name = "runimo")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 public class Runimo extends BaseEntity {
-    @Column(name = "name")
-    private String name;
 
-    @Column(name = "code", nullable = false)
-    private String code;
+    @Column(name = "total_run_count", nullable = false)
+    private Long totalRunCount = 0L;
+    @Column(name = "total_distance_in_meters", nullable = false)
+    private Long totalDistanceInMeters = 0L;
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
+    @Column(name = "runimo_definition_id", nullable = false)
+    private Long runimoDefinitionId;
 
-    @Column(name = "description")
-    private String description;
-
-    @Column(name = "img_url")
-    private String imgUrl;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "egg_type", nullable = false)
-    private EggType type;
 
     @Builder
-    public Runimo(String name, String code, String description, String imgUrl, EggType type) {
-        this.name = name;
-        this.code = code;
-        this.description = description;
-        this.imgUrl = imgUrl;
-        this.type = type;
+    private Runimo(Long id, Long userId, Long runimoDefinitionId) {
+        this.id = id;
+        this.userId = userId;
+        this.runimoDefinitionId = runimoDefinitionId;
+    }
+
+    public void validateOwner(Long userId) {
+        if (!this.userId.equals(userId)) {
+            throw RunimoException.of(RunimoHttpResponseCode.USER_DO_NOT_OWN_RUNIMO);
+        }
+
     }
 }

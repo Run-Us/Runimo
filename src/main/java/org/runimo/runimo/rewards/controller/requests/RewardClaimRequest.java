@@ -6,4 +6,5 @@ import io.swagger.v3.oas.annotations.media.Schema;
 public record RewardClaimRequest(
     @Schema(description = "보상을 요청하는 달리기 기록 ID", example = "1") Long recordId
 ) {
+
 }

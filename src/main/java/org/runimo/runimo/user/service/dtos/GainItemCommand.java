@@ -5,4 +5,5 @@ public record GainItemCommand(
     Long itemId,
     Long quantity
 ) {
+
 }

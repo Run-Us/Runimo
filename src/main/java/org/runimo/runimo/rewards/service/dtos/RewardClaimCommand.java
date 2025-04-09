@@ -4,4 +4,5 @@ public record RewardClaimCommand(
     Long userId,
     Long recordId
 ) {
+
 }

@@ -1,6 +1,13 @@
 package org.runimo.runimo.item.domain;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorColumn;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
+import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,27 +22,28 @@ import org.runimo.runimo.common.BaseEntity;
 @Getter
 public abstract class Item extends BaseEntity {
 
-  @Column(name = "item_code", nullable = false, unique = true)
-  @NaturalId
-  private String itemCode;
+    @Column(name = "item_code", nullable = false, unique = true)
+    @NaturalId
+    private String itemCode;
 
-  @Column(name = "name", nullable = false)
-  private String name;
-  @Column(name = "description")
-  private String description;
+    @Column(name = "name", nullable = false)
+    private String name;
+    @Column(name = "description")
+    private String description;
 
-  @Column(name = "img_url")
-  private String imgUrl;
+    @Column(name = "img_url")
+    private String imgUrl;
 
-  @Column(name = "item_type", nullable = false)
-  @Enumerated(EnumType.STRING)
-  private ItemType itemType;
+    @Column(name = "item_type", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private ItemType itemType;
 
-  protected Item(String itemCode, String name, String description, String imgUrl, ItemType itemType) {
-    this.itemCode = itemCode;
-    this.name = name;
-    this.description = description;
-    this.imgUrl = imgUrl;
-    this.itemType = itemType;
-  }
+    protected Item(String itemCode, String name, String description, String imgUrl,
+        ItemType itemType) {
+        this.itemCode = itemCode;
+        this.name = name;
+        this.description = description;
+        this.imgUrl = imgUrl;
+        this.itemType = itemType;
+    }
 }

@@ -13,25 +13,27 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserItemProcessor {
 
-  private final UserItemFinder userItemFinder;
-  private final UserItemRepository userItemRepository;
-  private final ItemActivityCreator itemActivityCreator;
+    private final UserItemFinder userItemFinder;
+    private final UserItemRepository userItemRepository;
+    private final ItemActivityCreator itemActivityCreator;
 
-  @Transactional
-  public void updateItemQuantity(Long userId, Long itemId, Long amount) {
-    UserItem userItem = userItemFinder.findByUserIdAndItemIdWithXLock(userId, itemId)
-        .orElseThrow(IllegalStateException::new);
-    userItem.gainItem(amount);
-    itemActivityCreator.createItemActivity(new CreateActivityCommand(itemId, userId, amount, ActivityType.CONSUME));
-    userItemRepository.save(userItem);
-  }
+    @Transactional
+    public void updateItemQuantity(Long userId, Long itemId, Long amount) {
+        UserItem userItem = userItemFinder.findByUserIdAndItemIdWithXLock(userId, itemId)
+            .orElseThrow(IllegalStateException::new);
+        userItem.gainItem(amount);
+        itemActivityCreator.createItemActivity(
+            new CreateActivityCommand(itemId, userId, amount, ActivityType.CONSUME));
+        userItemRepository.save(userItem);
+    }
 
-  @Transactional
-  public void useItem(Long userId, Long itemId, Long amount) {
-    UserItem userItem = userItemFinder.findByUserIdAndItemIdWithXLock(userId, itemId)
-        .orElseThrow(IllegalStateException::new);
-    userItem.useItem(amount);
-    itemActivityCreator.createItemActivity(new CreateActivityCommand(itemId, userId, amount, ActivityType.CONSUME));
-    userItemRepository.save(userItem);
-  }
+    @Transactional
+    public void useItem(Long userId, Long itemId, Long amount) {
+        UserItem userItem = userItemFinder.findByUserIdAndItemIdWithXLock(userId, itemId)
+            .orElseThrow(IllegalStateException::new);
+        userItem.useItem(amount);
+        itemActivityCreator.createItemActivity(
+            new CreateActivityCommand(itemId, userId, amount, ActivityType.CONSUME));
+        userItemRepository.save(userItem);
+    }
 }

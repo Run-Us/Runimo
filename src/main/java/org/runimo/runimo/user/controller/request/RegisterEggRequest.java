@@ -13,4 +13,5 @@ public record RegisterEggRequest(
     @Schema(description = "부화할 알 ID (보유중인 알)", example = "1")
     Long itemId
 ) {
+
 }

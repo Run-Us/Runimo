@@ -1,11 +1,14 @@
 package org.runimo.runimo.user.service.dtos;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+import org.runimo.runimo.runimo.service.model.MainRunimoStat;
+
+@Schema(description = "메인화면 응답")
 public record MainViewResponse(
-    String nickname,
-    String profileImageUrl,
-    Long lovePoint,
-    Long totalDistanceInMeters,
-    Long totalRunningCount,
-    Long totalEggCount
+    @Schema(description = "대표 러니모 정보 - 등록안하면 Null")
+    MainRunimoStat mainRunimoStatNullable,
+    @Schema(description = "사용자 정보")
+    UserMainViewInfo userInfo
 ) {
+
 }

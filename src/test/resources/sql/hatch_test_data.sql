@@ -12,3 +12,15 @@ TRUNCATE TABLE incubating_egg;
 INSERT INTO incubating_egg (id, user_id, egg_id, current_love_point_amount, hatch_require_amount, egg_status, created_at, updated_at)
 VALUES (1, 1, 1, 100, 100, 'INCUBATED', NOW(), NOW()),
        (2, 1, 2, 50, 100, 'INCUBATING', NOW(), NOW());
+
+-- 러니모
+TRUNCATE TABLE runimo_definition;
+INSERT INTO runimo_definition (id, name, code, description, img_url, egg_type, created_at, updated_at)
+VALUES (1, '토끼', 'R-101', '마당 토끼예여', 'http://dummy1', 'MADANG', NOW(), NOW()),
+       (2, '강아지', 'R-102', '이미 소유하고 있는 마당 강아지예여', 'http://dummy2', 'MADANG', NOW(), NOW());
+
+
+-- 사용자-러니모 맵핑
+TRUNCATE TABLE runimo;
+INSERT INTO runimo (id, user_id, runimo_definition_id, created_at, updated_at)
+VALUES (1, 1, 2, NOW(), NOW());

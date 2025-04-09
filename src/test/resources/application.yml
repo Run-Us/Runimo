@@ -55,6 +55,15 @@ jwt:
   expiration: ${JWT_EXPIRATION:3600000}
   refresh:
     expiration: ${JWT_REFRESH_EXPIRATION:86400000}
+  temp:
+    expiration: ${JWT_REGISTER_EXPIRATION}
+
+apple:
+  client-id: ${APPLE_CLIENT_ID}
+  client-secret: ${APPLE_PRIVATE_KEY}
+  redirect-uri: ${APPLE_REDIRECT_URI}
+  team-id: ${APPLE_TEAM_ID}
+  key-id: ${APPLE_KEY_ID}
 
 logging:
   level:

@@ -1,10 +1,9 @@
 package org.runimo.runimo.records.controller.requests;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import org.runimo.runimo.records.service.usecases.dtos.SegmentPace;
-
 import java.time.LocalDateTime;
 import java.util.List;
+import org.runimo.runimo.records.service.usecases.dtos.SegmentPace;
 
 @Schema(description = "사용자 달리기 기록 저장 요청 DTO")
 public record RecordSaveRequest(
@@ -19,4 +18,5 @@ public record RecordSaveRequest(
     @Schema(description = "세그먼트 페이스 리스트")
     List<SegmentPace> segmentPaces
 ) {
+
 }

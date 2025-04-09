@@ -20,6 +20,6 @@ jobs:
         uses: sarisia/actions-status-discord@v1
         with:
           title: 📢 Schema.sql Changed 📢
-          webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          webhook: ${{ secrets.DISCORD_URL }}
           color: 00FF00
           text: '데이터 스키마가 변경되었어요. 변경된 내용을 확인해주세요.'

@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @TestConfiguration
@@ -18,34 +17,26 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Import(CustomAuthenticationFailureHandler.class)
 public class TestSecurityConfig {
 
-  private final JwtAuthenticationFilter jwtAuthenticationFilter;
-  private final AuthenticationFailureHandler customAuthenticationFailureHandler;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
-  public TestSecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter,
-                            AuthenticationFailureHandler customAuthenticationFailureHandler) {
-    this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-    this.customAuthenticationFailureHandler = customAuthenticationFailureHandler;
-  }
+    public TestSecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    }
 
-  @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http
-        .csrf(AbstractHttpConfigurer::disable)
-        .sessionManagement(session -> session
-            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-        )
-        .oauth2Login(oAuth2Login -> {
-          oAuth2Login
-              .loginPage("/api/v1/users/auth/login")
-              .failureHandler(customAuthenticationFailureHandler);
-        })
-        .authorizeHttpRequests(authorize -> authorize
-            .requestMatchers("/api/v1/users/auth/**").permitAll()
-            .anyRequest().authenticated()
-        )
-        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .csrf(AbstractHttpConfigurer::disable)
+            .sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
+            .authorizeHttpRequests(authorize -> authorize
+                .requestMatchers("/api/v1/auth/**").permitAll()
+                .anyRequest().authenticated()
+            )
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
-    return http.build();
-  }
+        return http.build();
+    }
 }
 

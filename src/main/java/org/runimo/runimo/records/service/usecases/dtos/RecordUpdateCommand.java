@@ -1,8 +1,7 @@
 package org.runimo.runimo.records.service.usecases.dtos;
 
-import lombok.Builder;
-
 import java.time.LocalDateTime;
+import lombok.Builder;
 
 @Builder
 public record RecordUpdateCommand(
@@ -14,4 +13,5 @@ public record RecordUpdateCommand(
     Long totalDistanceInMeters,
     Long averagePaceInMilliSeconds
 ) {
+
 }

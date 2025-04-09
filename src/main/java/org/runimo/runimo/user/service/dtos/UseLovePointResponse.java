@@ -6,4 +6,5 @@ public record UseLovePointResponse(
     Long requiredLovePointAmount,
     Boolean eggHatchable
 ) {
+
 }

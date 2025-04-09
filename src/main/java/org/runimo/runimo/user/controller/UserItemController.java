@@ -12,10 +12,14 @@ import org.runimo.runimo.user.enums.UserHttpResponseCode;
 import org.runimo.runimo.user.service.dtos.ItemQueryResponse;
 import org.runimo.runimo.user.service.dtos.UseItemCommand;
 import org.runimo.runimo.user.service.dtos.UseItemResponse;
-import org.runimo.runimo.user.service.usecases.query.MyItemQueryUsecase;
 import org.runimo.runimo.user.service.usecases.items.UseItemUsecase;
+import org.runimo.runimo.user.service.usecases.query.MyItemQueryUsecase;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "USER ITEM", description = "사용자 아이템 관련 API")
 @RestController
@@ -23,44 +27,45 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class UserItemController {
 
-  private final MyItemQueryUsecase myItemQueryUsecase;
-  private final UseItemUsecase useItemUsecase;
+    private final MyItemQueryUsecase myItemQueryUsecase;
+    private final UseItemUsecase useItemUsecase;
 
-  @Operation(summary = "내가 보유한 아이템 조회", description = "내 아이템을 조회합니다.")
-  @ApiResponses(
-      value = {
-          @ApiResponse(responseCode = "200", description = "아이템 조회 성공"),
-          @ApiResponse(responseCode = "401", description = "인증 실패"),
-          @ApiResponse(responseCode = "403", description = "권한 없음"),
-      }
-  )
-  @GetMapping
-  public ResponseEntity<SuccessResponse<ItemQueryResponse>> queryItems(
-      @UserId Long userId
-  ) {
-    ItemQueryResponse response = myItemQueryUsecase.queryMyAllItems(userId);
-    return ResponseEntity.ok(SuccessResponse.of(UserHttpResponseCode.MY_PAGE_DATA_FETCHED, response));
-  }
+    @Operation(summary = "내가 보유한 아이템 조회", description = "내 아이템을 조회합니다.")
+    @ApiResponses(
+        value = {
+            @ApiResponse(responseCode = "200", description = "아이템 조회 성공"),
+            @ApiResponse(responseCode = "401", description = "인증 실패"),
+            @ApiResponse(responseCode = "403", description = "권한 없음"),
+        }
+    )
+    @GetMapping
+    public ResponseEntity<SuccessResponse<ItemQueryResponse>> queryItems(
+        @UserId Long userId
+    ) {
+        ItemQueryResponse response = myItemQueryUsecase.queryMyAllItems(userId);
+        return ResponseEntity.ok(
+            SuccessResponse.of(UserHttpResponseCode.MY_PAGE_DATA_FETCHED, response));
+    }
 
-  @Operation(summary = "아이템 사용", description = "사용자가 아이템을 사용합니다.")
-  @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "아이템 사용 성공"),
-      @ApiResponse(responseCode = "400", description = "잘못된 요청 데이터"),
-      @ApiResponse(responseCode = "401", description = "인증 실패"),
-      @ApiResponse(responseCode = "404", description = "아이템 없음")
-  })
-  @PostMapping("/use")
-  public ResponseEntity<SuccessResponse<UseItemResponse>> useItem(
-      @UserId Long userId,
-      @Valid @RequestBody UseItemRequest request
-  ) {
-    UseItemResponse useItemResponse = useItemUsecase.useItem(
-        new UseItemCommand(userId, request.itemId(), request.quantity())
-    );
-    return ResponseEntity.ok().body(
-        SuccessResponse.of(
-            UserHttpResponseCode.USE_ITEM_SUCCESS,
-            useItemResponse
-        ));
-  }
+    @Operation(summary = "아이템 사용", description = "사용자가 아이템을 사용합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "아이템 사용 성공"),
+        @ApiResponse(responseCode = "400", description = "잘못된 요청 데이터"),
+        @ApiResponse(responseCode = "401", description = "인증 실패"),
+        @ApiResponse(responseCode = "404", description = "아이템 없음")
+    })
+    @PostMapping("/use")
+    public ResponseEntity<SuccessResponse<UseItemResponse>> useItem(
+        @UserId Long userId,
+        @Valid @RequestBody UseItemRequest request
+    ) {
+        UseItemResponse useItemResponse = useItemUsecase.useItem(
+            new UseItemCommand(userId, request.itemId(), request.quantity())
+        );
+        return ResponseEntity.ok().body(
+            SuccessResponse.of(
+                UserHttpResponseCode.USE_ITEM_SUCCESS,
+                useItemResponse
+            ));
+    }
 }

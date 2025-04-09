@@ -14,24 +14,27 @@ import org.runimo.runimo.common.BaseEntity;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class LovePoint extends BaseEntity {
-  public static final LovePoint EMPTY = new LovePoint(null, 0L);
-  @Column(name = "user_id", nullable = false)
-  private Long userId;
-  @Column(name = "amount", nullable = false)
-  private Long amount;
 
-  @Builder
-  public LovePoint(Long userId, Long amount) {
-    this.userId = userId;
-    this.amount = amount;
-  }
+    public static final LovePoint EMPTY = new LovePoint(null, 0L);
+    @Column(name = "user_id", nullable = false)
+    private Long userId;
+    @Column(name = "amount", nullable = false)
+    private Long amount;
 
-  public void add(long amount) {
-    this.amount += amount;
-  }
+    @Builder
+    public LovePoint(Long userId, Long amount) {
+        this.userId = userId;
+        this.amount = amount;
+    }
 
-  public void subtract(long amount) {
-    if (this.amount < amount) throw new IllegalStateException("Not enough love points");
-    this.amount -= amount;
-  }
+    public void add(long amount) {
+        this.amount += amount;
+    }
+
+    public void subtract(long amount) {
+        if (this.amount < amount) {
+            throw new IllegalStateException("Not enough love points");
+        }
+        this.amount -= amount;
+    }
 }

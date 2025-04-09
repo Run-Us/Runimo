@@ -1,7 +1,31 @@
 package org.runimo.runimo.runimo.repository;
 
+import java.util.List;
+import java.util.Optional;
 import org.runimo.runimo.runimo.domain.Runimo;
+import org.runimo.runimo.runimo.service.model.MainRunimoStat;
+import org.runimo.runimo.runimo.service.model.RunimoSimpleModel;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface RunimoRepository extends JpaRepository<Runimo, Long> {
+
+    boolean existsByUserIdAndRunimoDefinitionId(Long UserId, Long runimoDefinitionId);
+
+    @Query("""
+            select new org.runimo.runimo.runimo.service.model.RunimoSimpleModel(r.id, r.name, r.imgUrl, r.code, r.type, r.description)
+            from Runimo ur
+            join RunimoDefinition r on r.id = ur.runimoDefinitionId
+            where ur.userId = :userId
+        """)
+    List<RunimoSimpleModel> findAllByUserId(@Param("userId") Long userId);
+
+    @Query("""
+            select new org.runimo.runimo.runimo.service.model.MainRunimoStat(r.name, r.imgUrl, ur.totalRunCount, ur.totalDistanceInMeters)
+                  from Runimo ur
+                  join RunimoDefinition r on r.id = ur.runimoDefinitionId
+                  where ur.id = :runimoId
+        """)
+    Optional<MainRunimoStat> findMainRunimoStatByRunimoId(Long runimoId);
 }

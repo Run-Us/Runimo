@@ -9,4 +9,5 @@ public record LatestRunningRecord(
     Long durationInSeconds,
     Long averagePaceInMiliseconds
 ) {
+
 }

@@ -1,5 +1,8 @@
 package org.runimo.runimo.user.api;
 
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
+
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.AfterEach;
@@ -13,56 +16,69 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.*;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 class MainViewAcceptanceTest {
 
-  @LocalServerPort
-  int port;
+    private static final String USER_UUID = "test-user-uuid-1";
+    private static final String AUTH_HEADER_PREFIX = "Bearer ";
+    @LocalServerPort
+    int port;
+    @Autowired
+    private JwtTokenFactory jwtTokenFactory;
+    @Autowired
+    private CleanUpUtil cleanUpUtil;
 
-  @Autowired
-  private JwtTokenFactory jwtTokenFactory;
+    @BeforeEach
+    void setUp() {
+        RestAssured.port = port;
+    }
 
-  @Autowired
-  private CleanUpUtil cleanUpUtil;
+    @AfterEach
+    void tearDown() {
+        cleanUpUtil.cleanUpUserInfos();
+    }
 
-  private static final String USER_UUID = "test-user-uuid-1";
-  private static final String AUTH_HEADER_PREFIX = "Bearer ";
+    @Test
+    @Sql(scripts = "/sql/main_view_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void 메인화면_조회_성공시_정확한_정보를_반환한다() {
+        // given
+        String token = AUTH_HEADER_PREFIX + jwtTokenFactory.generateAccessToken(USER_UUID);
 
-  @BeforeEach
-  void setUp() {
-    RestAssured.port = port;
-  }
+        // when & then
+        given()
+            .header("Authorization", token)
+            .contentType(ContentType.JSON)
+            .when()
+            .get("/api/v1/main")
+            .then()
+            .log().ifValidationFails()
+            .statusCode(200)
+            .body("code", equalTo("MAIN_PAGE_DATA_FETCHED"))
+            .body("payload.main_runimo_stat_nullable.name", equalTo("토끼"))
+            .body("payload.main_runimo_stat_nullable.image_url", equalTo("http://dummy1"))
+            .body("payload.main_runimo_stat_nullable.total_running_count", equalTo(2))
+            .body("payload.main_runimo_stat_nullable.total_distance_in_meters", equalTo(3456))
+            .body("payload.user_info.love_point", equalTo(100))
+            .body("payload.user_info.total_egg_count", equalTo(3));
+    }
 
-  @AfterEach
-  void tearDown() {
-    cleanUpUtil.cleanUpUserInfos();
-  }
-
-  @Test
-  @Sql(scripts = "/sql/main_view_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-  void 메인화면_조회_성공시_정확한_정보를_반환한다() {
-    // given
-    String token = AUTH_HEADER_PREFIX + jwtTokenFactory.generateAccessToken(USER_UUID);
-
-    // when & then
-    given()
-        .header("Authorization", token)
-        .contentType(ContentType.JSON)
-        .when()
-        .get("/api/v1/main")
-        .then()
-        .log().ifValidationFails()
-        .statusCode(200)
-        .body("code", equalTo("MAIN_PAGE_DATA_FETCHED"))
-        .body("payload.nickname", equalTo("Daniel"))
-        .body("payload.profile_image_url", equalTo("https://example.com/images/user1.png"))
-        .body("payload.total_running_count", equalTo(2))
-        .body("payload.total_distance_in_meters", equalTo(3000))
-        .body("payload.love_point", equalTo(100))
-        .body("payload.total_egg_count", equalTo(3));
-  }
+    @Test
+    @Sql(scripts = "/sql/main_view_data.sql")
+    void 메인화면_조회시_대표_러니모가_없으면_null_로반환() {
+        String token = AUTH_HEADER_PREFIX + jwtTokenFactory.generateAccessToken("test-user-uuid-2");
+        // when & then
+        given()
+            .header("Authorization", token)
+            .contentType(ContentType.JSON)
+            .when()
+            .get("/api/v1/main")
+            .then()
+            .log().ifValidationFails()
+            .statusCode(200)
+            .body("code", equalTo("MAIN_PAGE_DATA_FETCHED"))
+            .body("payload.main_runimo_stat_nullable", equalTo(null))
+            .body("payload.user_info.love_point", equalTo(23))
+            .body("payload.user_info.total_egg_count", equalTo(7));
+    }
 }
