@@ -32,22 +32,17 @@ public class IncubatingEgg extends BaseEntity {
 
     @Column(name = "egg_status", nullable = false)
     @Enumerated(EnumType.STRING)
-    private EggStatus status;
+    private EggStatus status = EggStatus.INCUBATING;
 
     @Builder
     public IncubatingEgg(Long userId, Long eggId, Long currentLovePointAmount,
         Long hatchRequireAmount, EggStatus status) {
-        validateCreation(status, currentLovePointAmount, hatchRequireAmount);
+        validateCreation(currentLovePointAmount, hatchRequireAmount);
         this.userId = userId;
         this.eggId = eggId;
         this.currentLovePointAmount = currentLovePointAmount;
         this.hatchRequireAmount = hatchRequireAmount;
         this.status = status;
-    }
-
-    public void startIncubation() {
-        validateStateTransition(EggStatus.WAITING, "부화 대기중인 알에만 부화 시작가능");
-        this.status = EggStatus.INCUBATING;
     }
 
     public void gainLovePoint(final Long amount) {
@@ -69,18 +64,16 @@ public class IncubatingEgg extends BaseEntity {
         this.status = EggStatus.HATCHED;
     }
 
-    private void validateCreation(final EggStatus status, final Long currentLovePointAmount,
+    private void validateCreation(final Long currentLovePointAmount,
         final Long hatchRequireAmount) {
-        if (status == EggStatus.WAITING && currentLovePointAmount != 0) {
-            throw new IllegalArgumentException(
-                "부화 대기중인 알은 애정 포인트가 0이어야 합니다. 현재: " + currentLovePointAmount);
+        if(currentLovePointAmount < 0) {
+            throw new IllegalArgumentException("보유한 애정 포인트는 0보다 작을 수 없습니다.");
         }
         if (hatchRequireAmount <= 0) {
             throw new IllegalArgumentException(
                 "부화에 필요한 애정 포인트는 0보다 커야 합니다. 현재: " + hatchRequireAmount);
         }
     }
-
 
     private void validateStateTransition(final EggStatus expected, final String message) {
         if (status != expected) {
