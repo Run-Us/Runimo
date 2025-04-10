@@ -41,15 +41,17 @@ public class HatchUsecaseImpl implements HatchUsecase {
             runimoDefinition.getId());
 
         // 러니모 저장 (중복 아닐 경우만)
+        Long runimoId = null;
         if (!isDuplicatedRunimo) {
             Runimo runimo = Runimo.builder()
                 .userId(userId)
                 .runimoDefinitionId(runimoDefinition.getId())
                 .build();
-            runimoRepository.save(runimo);
+            runimoId = runimoRepository.save(runimo).getId();
         }
 
         return new HatchEggResponse(
+            runimoId,
             runimoDefinition.getName(),
             runimoDefinition.getImgUrl(),
             runimoDefinition.getCode(),
