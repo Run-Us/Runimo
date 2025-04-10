@@ -3,6 +3,8 @@ package org.runimo.runimo.runimo.service.usecase;
 import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
+import org.runimo.runimo.hatch.exception.HatchException;
+import org.runimo.runimo.hatch.exception.HatchHttpResponseCode;
 import org.runimo.runimo.runimo.controller.dto.response.GetMyRunimoListResponse;
 import org.runimo.runimo.runimo.controller.dto.response.GetRunimoTypeListResponse;
 import org.runimo.runimo.runimo.controller.dto.response.SetMainRunimoResponse;
@@ -26,7 +28,12 @@ public class RunimoUsecaseImpl implements RunimoUsecase {
 
     public GetMyRunimoListResponse getMyRunimoList(Long userId) {
         List<RunimoSimpleModel> runimos = runimoRepository.findAllByUserId(userId);
-        return new GetMyRunimoListResponse(RunimoSimpleModel.toDtoList(runimos));
+
+        User user = userFinder.findUserById(userId).orElseThrow(() -> HatchException.of(
+            HatchHttpResponseCode.HATCH_USER_NOT_FOUND));
+
+        return new GetMyRunimoListResponse(
+            RunimoSimpleModel.toDtoList(runimos, user.getMainRunimoId()));
     }
 
     @Transactional
