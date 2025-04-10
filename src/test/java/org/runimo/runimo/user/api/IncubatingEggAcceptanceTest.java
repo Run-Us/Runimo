@@ -3,6 +3,7 @@ package org.runimo.runimo.user.api;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.notNullValue;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -242,5 +243,58 @@ class IncubatingEggAcceptanceTest {
             .log().all()
             .statusCode(200)
             .body("payload.love_point", equalTo(initialLovePoint));
+    }
+
+    @Test
+    @Sql(scripts = "/sql/user_item_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void 알_등록_후_조회() throws JsonProcessingException {
+        String token = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
+
+        Integer eggId =
+            given()
+            .header("Authorization", token)
+            .contentType(ContentType.JSON)
+
+            .when()
+            .get("/api/v1/users/eggs")
+
+            .then()
+            .log().ifError()
+            .statusCode(200)
+            .body("payload.items", notNullValue())
+            .extract()
+            .path("payload.items[0].item_id");
+
+
+        RegisterEggRequest request = new RegisterEggRequest((long)eggId);
+
+        given()
+            .header("Authorization", token)
+            .contentType(ContentType.JSON)
+            .body(objectMapper.writeValueAsString(request))
+
+            .when()
+            .post("/api/v1/users/eggs")
+
+            .then()
+            .statusCode(201)
+            .log().ifError()
+            .body("payload.incubating_egg_id", notNullValue())
+            .body("payload.current_love_point_amount", equalTo(0));
+
+        given()
+            .header("Authorization", token)
+            .contentType(ContentType.JSON)
+
+            .when()
+            .get("/api/v1/users/eggs/incubators")
+            .then()
+            .log().all()
+            .statusCode(200)
+            .body("payload.incubating_eggs", notNullValue())
+            .body("payload.incubating_eggs[0].name", notNullValue());
+
+
+
     }
 }

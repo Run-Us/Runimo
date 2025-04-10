@@ -10,41 +10,6 @@ import org.runimo.runimo.user.domain.IncubatingEgg;
 class IncubatingEggTest {
 
     @Test
-    void startIncubation_성공() {
-        // given
-        IncubatingEgg incubatingEgg = IncubatingEgg.builder()
-            .userId(1L)
-            .eggId(100L)
-            .currentLovePointAmount(0L)
-            .hatchRequireAmount(10L)
-            .status(EggStatus.WAITING)
-            .build();
-
-        assertEquals(EggStatus.WAITING, incubatingEgg.getStatus());
-
-        // when
-        incubatingEgg.startIncubation();
-
-        // then
-        assertEquals(EggStatus.INCUBATING, incubatingEgg.getStatus());
-    }
-
-    @Test
-    void startIncubation_실패_이미_부화중() {
-        // given
-        IncubatingEgg incubatingEgg = IncubatingEgg.builder()
-            .userId(1L)
-            .eggId(100L)
-            .currentLovePointAmount(2L)
-            .hatchRequireAmount(10L)
-            .status(EggStatus.INCUBATING)
-            .build();
-
-        // when & then
-        assertThrows(IllegalStateException.class, incubatingEgg::startIncubation);
-    }
-
-    @Test
     void gainLovePoint_성공() {
         // given
         IncubatingEgg incubatingEgg = IncubatingEgg.builder()
@@ -123,21 +88,6 @@ class IncubatingEggTest {
             .currentLovePointAmount(5L)
             .hatchRequireAmount(10L)
             .status(EggStatus.INCUBATING)
-            .build();
-
-        // when & then
-        assertThrows(IllegalStateException.class, incubatingEgg::hatch);
-    }
-
-    @Test
-    void hatch_실패_부화_대기중인_알() {
-        // given
-        IncubatingEgg incubatingEgg = IncubatingEgg.builder()
-            .userId(1L)
-            .eggId(100L)
-            .currentLovePointAmount(0L)
-            .hatchRequireAmount(10L)
-            .status(EggStatus.WAITING)
             .build();
 
         // when & then
