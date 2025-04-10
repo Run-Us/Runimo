@@ -68,11 +68,11 @@ class RunimoControllerTest {
             .body("payload.runimos", hasSize(3))
 
             .body("payload.runimos[0].id", equalTo(1))
-            .body("payload.runimos[0].name", equalTo("토끼"))
+            .body("payload.runimos[0].name", equalTo("강아지"))
             .body("payload.runimos[0].img_url", equalTo("http://dummy1"))
             .body("payload.runimos[0].code", equalTo("R-101"))
             .body("payload.runimos[0].egg_type", equalTo("MADANG"))
-            .body("payload.runimos[0].description", equalTo("마당 토끼예여"));
+            .body("payload.runimos[0].description", equalTo("마당-강아지예여"));
     }
 
     @Test

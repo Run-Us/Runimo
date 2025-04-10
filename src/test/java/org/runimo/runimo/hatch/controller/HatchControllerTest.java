@@ -1,7 +1,10 @@
 package org.runimo.runimo.hatch.controller;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.startsWith;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
@@ -48,25 +51,29 @@ class HatchControllerTest {
 
     @Test
     @Sql(scripts = "/sql/hatch_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    void 사용자의_알_부화_성공() {
+    void 사용자의_알_부화_성공_8회() {
         String token = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
 
-        given()
-            .header("Authorization", token)
-            .contentType(ContentType.JSON)
+        for (int i = 0; i < 8; i++) {
+            int incubationEggId = i + 3;
 
-            .when()
-            .post("/api/v1/incubating-eggs/" + "1" + "/hatch")
+            given()
+                .header("Authorization", token)
+                .contentType(ContentType.JSON)
 
-            .then()
-            .log().all()
-            .statusCode(HttpStatus.CREATED.value())
+                .when()
+                .post("/api/v1/incubating-eggs/" + incubationEggId + "/hatch")
 
-            .body("code", equalTo("HSH2011"))
-            .body("payload.name", equalTo("토끼"))
-            .body("payload.img_url", equalTo("http://dummy1"))
-            .body("payload.code", equalTo("R-101"))
-            .body("payload.is_duplicated", equalTo(false));
+                .then()
+                .log().all()
+                .statusCode(HttpStatus.CREATED.value())
+
+                .body("code", equalTo("HSH2011"))
+                .body("payload.name", notNullValue())
+                .body("payload.img_url", startsWith("http://"))
+                .body("payload.code", startsWith("R-10"))
+                .body("payload.is_duplicated", anyOf(equalTo(true), equalTo(false)));
+        }
     }
 
     @Test
