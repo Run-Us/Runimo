@@ -58,7 +58,7 @@ class RunimoControllerTest {
             .contentType(ContentType.JSON)
 
             .when()
-            .get("/api/v1/runimos/my")
+            .get("/api/v1/users/me/runimos")
 
             .then()
             .log().all()
@@ -68,11 +68,17 @@ class RunimoControllerTest {
             .body("payload.runimos", hasSize(3))
 
             .body("payload.runimos[0].id", equalTo(1))
-            .body("payload.runimos[0].name", equalTo("강아지"))
-            .body("payload.runimos[0].img_url", equalTo("http://dummy1"))
             .body("payload.runimos[0].code", equalTo("R-101"))
-            .body("payload.runimos[0].egg_type", equalTo("MADANG"))
-            .body("payload.runimos[0].description", equalTo("마당-강아지예여"));
+            .body("payload.runimos[0].total_run_count", equalTo(3))
+            .body("payload.runimos[0].total_distance_in_meters", equalTo(1000))
+            .body("payload.runimos[0].is_main_runimo", equalTo(true))
+            .body("payload.runimos[1].is_main_runimo", equalTo(false));
+//            .body("payload.runimos[0].id", equalTo(1))
+//            .body("payload.runimos[0].name", equalTo("강아지"))
+//            .body("payload.runimos[0].img_url", equalTo("http://dummy1"))
+//            .body("payload.runimos[0].code", equalTo("R-101"))
+//            .body("payload.runimos[0].egg_type", equalTo("MADANG"))
+//            .body("payload.runimos[0].description", equalTo("마당-강아지예여"));
     }
 
     @Test
