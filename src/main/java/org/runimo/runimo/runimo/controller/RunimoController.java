@@ -28,7 +28,7 @@ public class RunimoController {
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "[MSH2001] 나의 보유 러니모 목록 조회 성공")
     })
-    @GetMapping("/api/v1/runimos/my")
+    @GetMapping("/api/v1/users/me/runimos")
     public ResponseEntity<SuccessResponse<GetMyRunimoListResponse>> getMyRunimoList(
         @UserId Long userId) {
         GetMyRunimoListResponse response = runimoUsecase.getMyRunimoList(userId);
