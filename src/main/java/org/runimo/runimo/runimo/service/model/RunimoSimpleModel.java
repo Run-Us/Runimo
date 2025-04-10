@@ -1,31 +1,23 @@
 package org.runimo.runimo.runimo.service.model;
 
 import java.util.List;
-import org.runimo.runimo.item.domain.EggType;
 import org.runimo.runimo.runimo.controller.dto.response.RunimoInfo;
 
 public record RunimoSimpleModel(
     Long id,
-    String name,
-    String imgUrl,
     String code,
-    String eggType,
-    String description
+    Long totalRunCount,
+    Long totalDistanceInMeters,
+    Boolean isMainRunimo
 ) {
 
-    public RunimoSimpleModel(Long id, String name, String imgUrl, String code, String eggType,
-        String description) {
+    public RunimoSimpleModel(Long id, String code, Long totalRunCount, Long totalDistanceInMeters,
+        Boolean isMainRunimo) {
         this.id = id;
-        this.name = name;
-        this.imgUrl = imgUrl;
         this.code = code;
-        this.eggType = eggType;
-        this.description = description;
-    }
-
-    public RunimoSimpleModel(Long id, String name, String imgUrl, String code, EggType eggType,
-        String description) {
-        this(id, name, imgUrl, code, eggType.name(), description);
+        this.totalRunCount = totalRunCount;
+        this.totalDistanceInMeters = totalDistanceInMeters;
+        this.isMainRunimo = isMainRunimo;
     }
 
     public static List<RunimoInfo> toDtoList(List<RunimoSimpleModel> modelList) {
@@ -33,6 +25,6 @@ public record RunimoSimpleModel(
     }
 
     private RunimoInfo toDto() {
-        return new RunimoInfo(id, name, imgUrl, code, eggType, description);
+        return new RunimoInfo(id, code, totalRunCount, totalDistanceInMeters, isMainRunimo);
     }
 }
