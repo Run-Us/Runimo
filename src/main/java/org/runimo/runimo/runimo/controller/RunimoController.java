@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.common.response.SuccessResponse;
 import org.runimo.runimo.runimo.controller.dto.response.GetMyRunimoListResponse;
+import org.runimo.runimo.runimo.controller.dto.response.GetRunimoTypeListResponse;
 import org.runimo.runimo.runimo.controller.dto.response.SetMainRunimoResponse;
 import org.runimo.runimo.runimo.exception.RunimoHttpResponseCode;
 import org.runimo.runimo.runimo.service.usecase.RunimoUsecase;
@@ -36,6 +37,21 @@ public class RunimoController {
         return ResponseEntity.ok().body(
             SuccessResponse.of(
                 RunimoHttpResponseCode.GET_MY_RUNIMO_LIST_SUCCESS,
+                response)
+        );
+    }
+
+    @Operation(summary = "전체 러니모 종류 조회", description = "전체 러니모 종류를 조회합니다.")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "[MSH2003] 전체 러니모 종류 조회 성공")
+    })
+    @GetMapping("/api/v1/runimos/types/all")
+    public ResponseEntity<SuccessResponse<GetRunimoTypeListResponse>> getRunimoTypeList() {
+        GetRunimoTypeListResponse response = runimoUsecase.getRunimoTypeList();
+
+        return ResponseEntity.ok().body(
+            SuccessResponse.of(
+                RunimoHttpResponseCode.GET_ALL_RUNIMO_TYPE_LIST_SUCCESS,
                 response)
         );
     }
