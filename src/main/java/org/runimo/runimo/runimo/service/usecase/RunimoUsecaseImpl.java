@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.runimo.controller.dto.response.GetMyRunimoListResponse;
+import org.runimo.runimo.runimo.controller.dto.response.GetRunimoTypeListResponse;
 import org.runimo.runimo.runimo.controller.dto.response.SetMainRunimoResponse;
 import org.runimo.runimo.runimo.domain.Runimo;
 import org.runimo.runimo.runimo.exception.RunimoException;
 import org.runimo.runimo.runimo.exception.RunimoHttpResponseCode;
-import org.runimo.runimo.runimo.repository.RunimoDefinitionRepository;
 import org.runimo.runimo.runimo.repository.RunimoRepository;
 import org.runimo.runimo.runimo.service.model.RunimoSimpleModel;
 import org.runimo.runimo.user.domain.User;
@@ -21,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class RunimoUsecaseImpl implements RunimoUsecase {
 
-    private final RunimoDefinitionRepository runimoDefinitionRepository;
     private final RunimoRepository runimoRepository;
     private final UserFinder userFinder;
 
@@ -42,6 +41,11 @@ public class RunimoUsecaseImpl implements RunimoUsecase {
         user.updateMainRunimo(runimoId);
 
         return new SetMainRunimoResponse(runimoId);
+    }
+
+    @Override
+    public GetRunimoTypeListResponse getRunimoTypeList() {
+        return null;
     }
 
 }
