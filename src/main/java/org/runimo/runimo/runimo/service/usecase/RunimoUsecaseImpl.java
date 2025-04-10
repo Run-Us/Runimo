@@ -11,8 +11,10 @@ import org.runimo.runimo.runimo.controller.dto.response.SetMainRunimoResponse;
 import org.runimo.runimo.runimo.domain.Runimo;
 import org.runimo.runimo.runimo.exception.RunimoException;
 import org.runimo.runimo.runimo.exception.RunimoHttpResponseCode;
+import org.runimo.runimo.runimo.repository.RunimoDefinitionRepository;
 import org.runimo.runimo.runimo.repository.RunimoRepository;
 import org.runimo.runimo.runimo.service.model.RunimoSimpleModel;
+import org.runimo.runimo.runimo.service.model.RunimoTypeSimpleModel;
 import org.runimo.runimo.user.domain.User;
 import org.runimo.runimo.user.service.UserFinder;
 import org.springframework.stereotype.Service;
@@ -25,15 +27,16 @@ public class RunimoUsecaseImpl implements RunimoUsecase {
 
     private final RunimoRepository runimoRepository;
     private final UserFinder userFinder;
+    private final RunimoDefinitionRepository runimoDefinitionRepository;
 
     public GetMyRunimoListResponse getMyRunimoList(Long userId) {
-        List<RunimoSimpleModel> runimos = runimoRepository.findAllByUserId(userId);
+        List<RunimoSimpleModel> models = runimoRepository.findAllByUserId(userId);
 
         User user = userFinder.findUserById(userId).orElseThrow(() -> HatchException.of(
             HatchHttpResponseCode.HATCH_USER_NOT_FOUND));
 
         return new GetMyRunimoListResponse(
-            RunimoSimpleModel.toDtoList(runimos, user.getMainRunimoId()));
+            RunimoSimpleModel.toDtoList(models, user.getMainRunimoId()));
     }
 
     @Transactional
@@ -52,7 +55,8 @@ public class RunimoUsecaseImpl implements RunimoUsecase {
 
     @Override
     public GetRunimoTypeListResponse getRunimoTypeList() {
-        return null;
+        List<RunimoTypeSimpleModel> models = runimoDefinitionRepository.findAllToSimpleModel();
+        return new GetRunimoTypeListResponse(RunimoTypeSimpleModel.toDtoList(models));
     }
 
 }

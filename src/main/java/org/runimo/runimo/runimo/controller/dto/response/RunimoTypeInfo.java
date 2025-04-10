@@ -12,7 +12,7 @@ public record RunimoTypeInfo(
     @Schema(description = "러니모 code", example = "R-101")
     String code,
 
-    @Schema(description = "러니모가 태어난 알 속성", example = "마당")
+    @Schema(description = "러니모가 태어난 알 속성", example = "MADANG")
     String eggType,
 
     @Schema(description = "러니모 상세설명", example = "마당알에서 태어난 마당 토끼예요.")
