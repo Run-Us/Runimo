@@ -1,4 +1,4 @@
-package org.runimo.runimo.runimo.domain;
+package org.runimo.runimo.runimo.domain.runimo_type;
 
 public interface RunimoType {
 
