@@ -38,11 +38,17 @@ public class IncubatingEgg extends BaseEntity {
     public IncubatingEgg(Long userId, Long eggId, Long currentLovePointAmount,
         Long hatchRequireAmount, EggStatus status) {
         validateCreation(currentLovePointAmount, hatchRequireAmount);
+        Objects.requireNonNull(userId);
+        Objects.requireNonNull(eggId);
+        Objects.requireNonNull(currentLovePointAmount);
+        Objects.requireNonNull(hatchRequireAmount);
         this.userId = userId;
         this.eggId = eggId;
         this.currentLovePointAmount = currentLovePointAmount;
         this.hatchRequireAmount = hatchRequireAmount;
-        this.status = status;
+        if(status != null) {
+            this.status = status;
+        }
     }
 
     public void gainLovePoint(final Long amount) {
