@@ -12,8 +12,10 @@ public enum HatchHttpResponseCode implements CustomResponseCode {
 
 
     // TODO : 다르게 처리할 방법 고민해보기
-    HATCH_RUNIMO_NOT_FOUND_INTERNAL_ERROR("HEH5001", "[서버 내부 오류] 부화될 러니모 존재하지 않음",
+    HATCH_RUNIMO_NOT_FOUND_INTERNAL_ERROR("HEH5001", "[서버 내부 오류] 부화될 러니모가 존재하지 않음",
         "[서버 내부 오류] 부화될 러니모 존재하지 않음", HttpStatus.INTERNAL_SERVER_ERROR),
+    HATCH_EGG_TYPE_NOT_FOUND_INTERNAL_ERROR("HEH5002", "[서버 내부 오류] 부화될 알 종류가 존재하지 않음",
+        "[서버 내부 오류] 부화될 알 종류가 존재하지 않음", HttpStatus.INTERNAL_SERVER_ERROR),
     ;
 
 
