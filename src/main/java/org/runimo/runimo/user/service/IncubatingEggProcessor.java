@@ -2,6 +2,7 @@ package org.runimo.runimo.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.item.domain.Egg;
+import org.runimo.runimo.user.domain.EggStatus;
 import org.runimo.runimo.user.domain.IncubatingEgg;
 import org.runimo.runimo.user.repository.IncubatingEggRepository;
 import org.runimo.runimo.user.service.dtos.UseLovePointCommand;
@@ -21,6 +22,7 @@ public class IncubatingEggProcessor {
             .eggId(egg.getId())
             .currentLovePointAmount(0L)
             .hatchRequireAmount(egg.getHatchRequireAmount())
+            .status(EggStatus.INCUBATING)
             .build();
         return incubatingEggRepository.save(incubatingEgg);
     }

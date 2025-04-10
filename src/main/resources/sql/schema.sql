@@ -166,7 +166,16 @@ ALTER TABLE `oauth_account`
 
 -- insert static data
 INSERT INTO runimo_definition (id, name, code, description, img_url, egg_type, created_at, updated_at)
-VALUES (1, '토끼', 'R-101', '마당 토끼예여', 'http://dummy1', 'MADANG', NOW(), NOW()),
-       (2, '강아지', 'R-102', '마당 강아지예여', 'http://dummy2', 'MADANG', NOW(), NOW()),
-       (3, '오리', 'R-103', '마당 오리예여', 'http://dummy3', 'MADANG', NOW(), NOW()),
-       (4, '늑대', 'R-104', '주인이 다른 마당 늑대예여', 'http://dummy4', 'MADANG', NOW(), NOW());
+VALUES (1, '강아지', 'R-101', '마당-강아지예여', 'http://dummy1', 'MADANG', NOW(), NOW()),
+       (2, '고양이', 'R-102', '마당-고양이예여', 'http://dummy2', 'MADANG', NOW(), NOW()),
+       (3, '토끼', 'R-103', '마당-토끼예여', 'http://dummy2', 'MADANG', NOW(), NOW()),
+       (4, '오리', 'R-104', '마당-오리예여', 'http://dummy2', 'MADANG', NOW(), NOW()),
+       (5, '늑대 강아지', 'R-105', '늑대 강아지예여', 'http://dummy2', 'FOREST', NOW(), NOW()),
+       (6, '숲 고양이', 'R-106', '숲 고양이예여', 'http://dummy2', 'FOREST', NOW(), NOW()),
+       (7, '나뭇잎 토끼', 'R-107', '나뭇잎 토끼예여', 'http://dummy2', 'FOREST', NOW(), NOW()),
+       (8, '숲 오리', 'R-108', '숲 오리예여', 'http://dummy2', 'FOREST', NOW(), NOW());
+
+INSERT INTO item (id, name, item_code, description, item_type, img_url, dtype, egg_type, hatch_require_amount, created_at, updated_at)
+VALUES (1, '마당', 'A100', '기본 알', 'USABLE', 'https://example.com/images/egg1.png', 'EGG', 'MADANG', 0L, NOW(), NOW()),
+       (2, '숲', 'A101', '두번째 단계 알', 'USABLE', 'https://example.com/images/egg2.png', 'EGG', 'FOREST', 30000L, NOW(), NOW()),
+       (3, '초원', 'A102', '세번째 단계 알', 'USABLE', 'https://example.com/images/egg3.png', 'EGG', 'GRASSLAND', 50000L, NOW(), NOW());
