@@ -14,18 +14,18 @@ public interface RunimoRepository extends JpaRepository<Runimo, Long> {
     boolean existsByUserIdAndRunimoDefinitionId(Long UserId, Long runimoDefinitionId);
 
     @Query("""
-            select new org.runimo.runimo.runimo.service.model.RunimoSimpleModel(r.id, r.name, r.imgUrl, r.code, r.type, r.description)
-            from Runimo ur
-            join RunimoDefinition r on r.id = ur.runimoDefinitionId
-            where ur.userId = :userId
+            select new org.runimo.runimo.runimo.service.model.RunimoSimpleModel(r.id, rd.name, rd.imgUrl, rd.code, rd.type, rd.description)
+            from Runimo r
+            join RunimoDefinition rd on rd.id = r.runimoDefinitionId
+            where r.userId = :userId
         """)
     List<RunimoSimpleModel> findAllByUserId(@Param("userId") Long userId);
 
     @Query("""
-            select new org.runimo.runimo.runimo.service.model.MainRunimoStat(r.name, r.imgUrl, ur.totalRunCount, ur.totalDistanceInMeters)
-                  from Runimo ur
-                  join RunimoDefinition r on r.id = ur.runimoDefinitionId
-                  where ur.id = :runimoId
+            select new org.runimo.runimo.runimo.service.model.MainRunimoStat(rd.name, rd.imgUrl, r.totalRunCount, r.totalDistanceInMeters)
+                  from Runimo r
+                  join RunimoDefinition rd on rd.id = r.runimoDefinitionId
+                  where r.id = :runimoId
         """)
     Optional<MainRunimoStat> findMainRunimoStatByRunimoId(Long runimoId);
 }

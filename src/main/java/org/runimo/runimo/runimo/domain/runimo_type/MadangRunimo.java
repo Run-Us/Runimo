@@ -1,13 +1,13 @@
-package org.runimo.runimo.runimo.domain;
+package org.runimo.runimo.runimo.domain.runimo_type;
 
 import lombok.Getter;
 
 @Getter
 public enum MadangRunimo implements RunimoType {
-    RABBIT("R-101", "토끼"),
-    DOG("R-102", "강아지"),
-    DUCK("R-103", "오리"),
-    WOLF("R-104", "늑대"),
+    DOG("R-101", "강아지"),
+    CAT("R-102", "고양이"),
+    RABBIT("R-103", "토끼"),
+    DUCK("R-104", "오리"),
     ;
 
     private final String code;
