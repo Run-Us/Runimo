@@ -13,11 +13,13 @@ import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
 import org.runimo.runimo.common.BaseEntity;
 
 @Entity
 @Table(name = "oauth_account")
 @Getter
+@SQLDelete(sql = "UPDATE oauth_account o SET o.deleted_at = CURRENT_TIMESTAMP where id = ?")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class OAuthInfo extends BaseEntity {
 

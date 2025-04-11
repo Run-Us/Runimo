@@ -4,16 +4,19 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import java.util.UUID;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLDelete;
 import org.runimo.runimo.common.BaseEntity;
 
 @Entity
 @Table(name = "users")
 @Getter
+@SQLDelete(sql = "UPDATE users SET deleted_at = CURRENT_TIMESTAMP WHERE users.id = ?")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User extends BaseEntity {
 
@@ -58,5 +61,12 @@ public class User extends BaseEntity {
 
     public void updateMainRunimo(Long runimoId) {
         this.mainRunimoId = runimoId;
+    }
+
+    public void withdraw() {
+        if (deletedAt != null) {
+            throw new IllegalStateException("User is already deleted");
+        }
+        this.deletedAt = LocalDateTime.now();
     }
 }
