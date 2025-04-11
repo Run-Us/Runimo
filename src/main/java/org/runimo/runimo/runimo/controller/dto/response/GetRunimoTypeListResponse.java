@@ -5,7 +5,7 @@ import java.util.List;
 
 @Schema(description = "전체 러니모 종류 조회 응답")
 public record GetRunimoTypeListResponse(
-    List<RunimoTypeInfo> runimoTypes
+    List<RunimoTypeGroup> runimoGroups
 ) {
 
 }
