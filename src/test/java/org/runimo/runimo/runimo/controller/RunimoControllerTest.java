@@ -58,7 +58,7 @@ class RunimoControllerTest {
             .contentType(ContentType.JSON)
 
             .when()
-            .get("/api/v1/runimos/my")
+            .get("/api/v1/users/me/runimos")
 
             .then()
             .log().all()
@@ -68,11 +68,42 @@ class RunimoControllerTest {
             .body("payload.runimos", hasSize(3))
 
             .body("payload.runimos[0].id", equalTo(1))
-            .body("payload.runimos[0].name", equalTo("강아지"))
-            .body("payload.runimos[0].img_url", equalTo("http://dummy1"))
             .body("payload.runimos[0].code", equalTo("R-101"))
-            .body("payload.runimos[0].egg_type", equalTo("MADANG"))
-            .body("payload.runimos[0].description", equalTo("마당-강아지예여"));
+            .body("payload.runimos[0].total_run_count", equalTo(3))
+            .body("payload.runimos[0].total_distance_in_meters", equalTo(1000))
+            .body("payload.runimos[0].is_main_runimo", equalTo(true))
+            .body("payload.runimos[1].is_main_runimo", equalTo(false));
+    }
+
+    @Test
+    @Sql(scripts = "/sql/get_all_runimo_type_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void 전체_러니모_종류_조회_성공() {
+        String token = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
+
+        given()
+            .header("Authorization", token)
+            .contentType(ContentType.JSON)
+
+            .when()
+            .get("/api/v1/runimos/types/all")
+
+            .then()
+            .log().all()
+            .statusCode(HttpStatus.OK.value())
+
+            .body("code", equalTo("MSH2003"))
+            .body("payload.runimo_groups", hasSize(3))
+
+            .body("payload.runimo_groups[0].egg_type", equalTo("마당"))
+            .body("payload.runimo_groups[0].runimo_types", hasSize(4))
+            .body("payload.runimo_groups[1].egg_type", equalTo("숲"))
+            .body("payload.runimo_groups[1].runimo_types", hasSize(4))
+
+            .body("payload.runimo_groups[0].runimo_types[0].name", equalTo("강아지"))
+            .body("payload.runimo_groups[0].runimo_types[0].img_url", equalTo("http://dummy1"))
+            .body("payload.runimo_groups[0].runimo_types[0].code", equalTo("R-101"))
+            .body("payload.runimo_groups[0].runimo_types[0].description", equalTo("마당-강아지예여"))
+        ;
     }
 
     @Test

@@ -14,7 +14,7 @@ public interface RunimoRepository extends JpaRepository<Runimo, Long> {
     boolean existsByUserIdAndRunimoDefinitionId(Long UserId, Long runimoDefinitionId);
 
     @Query("""
-            select new org.runimo.runimo.runimo.service.model.RunimoSimpleModel(r.id, rd.name, rd.imgUrl, rd.code, rd.type, rd.description)
+            select new org.runimo.runimo.runimo.service.model.RunimoSimpleModel(r.id, rd.code, r.totalRunCount, r.totalDistanceInMeters)
             from Runimo r
             join RunimoDefinition rd on rd.id = r.runimoDefinitionId
             where r.userId = :userId
