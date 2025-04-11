@@ -14,7 +14,7 @@ public record RunimoTypeSimpleModel(
 
     public RunimoTypeSimpleModel(String name, String imgUrl, String code, EggType eggType,
         String description) {
-        this(name, imgUrl, code, eggType.name(), description);
+        this(name, imgUrl, code, eggType.getName(), description);
     }
 
     public static List<RunimoTypeInfo> toDtoList(List<RunimoTypeSimpleModel> modelList) {
