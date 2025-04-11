@@ -92,13 +92,18 @@ class RunimoControllerTest {
             .statusCode(HttpStatus.OK.value())
 
             .body("code", equalTo("MSH2003"))
-            .body("payload.runimo_types", hasSize(8))
+            .body("payload.runimo_groups", hasSize(3))
 
-            .body("payload.runimo_types[0].name", equalTo("강아지"))
-            .body("payload.runimo_types[0].img_url", equalTo("http://dummy1"))
-            .body("payload.runimo_types[0].code", equalTo("R-101"))
-            .body("payload.runimo_types[0].egg_type", equalTo("마당"))
-            .body("payload.runimo_types[0].description", equalTo("마당-강아지예여"));
+            .body("payload.runimo_groups[0].egg_type", equalTo("마당"))
+            .body("payload.runimo_groups[0].runimo_types", hasSize(4))
+            .body("payload.runimo_groups[1].egg_type", equalTo("숲"))
+            .body("payload.runimo_groups[1].runimo_types", hasSize(4))
+
+            .body("payload.runimo_groups[0].runimo_types[0].name", equalTo("강아지"))
+            .body("payload.runimo_groups[0].runimo_types[0].img_url", equalTo("http://dummy1"))
+            .body("payload.runimo_groups[0].runimo_types[0].code", equalTo("R-101"))
+            .body("payload.runimo_groups[0].runimo_types[0].description", equalTo("마당-강아지예여"))
+        ;
     }
 
     @Test
