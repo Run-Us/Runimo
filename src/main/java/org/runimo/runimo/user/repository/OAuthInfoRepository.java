@@ -11,8 +11,17 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OAuthInfoRepository extends JpaRepository<OAuthInfo, Long> {
 
-    @Query("SELECT o FROM OAuthInfo o WHERE o.provider = :provider AND o.providerId = :providerId")
+    @Query("""
+          SELECT o FROM OAuthInfo o
+                  WHERE o.deletedAt is null AND o.provider = :provider AND o.providerId = :providerId
+        """)
     Optional<OAuthInfo> findByProviderAndProviderId(SocialProvider provider, String providerId);
 
     SocialProvider user(User user);
+
+    @Query("""
+        select o from OAuthInfo o 
+                where o.deletedAt is null AND o.user.id = :userId
+        """)
+    Optional<OAuthInfo> findByUserId(Long userId);
 }
