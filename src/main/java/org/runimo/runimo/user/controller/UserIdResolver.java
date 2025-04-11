@@ -1,8 +1,9 @@
 package org.runimo.runimo.user.controller;
 
-import javax.naming.NoPermissionException;
 import lombok.RequiredArgsConstructor;
+import org.runimo.runimo.auth.exceptions.UserJwtException;
 import org.runimo.runimo.user.domain.User;
+import org.runimo.runimo.user.enums.UserHttpResponseCode;
 import org.runimo.runimo.user.service.UserFinder;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.Authentication;
@@ -32,7 +33,7 @@ public class UserIdResolver implements HandlerMethodArgumentResolver {
             throw new SecurityException("No authentication found");
         }
         User user = userFinder.findUserByPublicId(authentication.getName())
-            .orElseThrow(NoPermissionException::new);
+            .orElseThrow(() -> UserJwtException.of(UserHttpResponseCode.LOGIN_FAIL_NOT_SIGN_IN));
         return user.getId();
     }
 }
