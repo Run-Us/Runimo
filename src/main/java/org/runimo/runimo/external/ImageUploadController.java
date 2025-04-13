@@ -36,7 +36,7 @@ public class ImageUploadController {
         return ResponseEntity.status(201)
             .body(SuccessResponse.of(
                 ExternalResponseCode.PRESIGNED_URL_FETCHED,
-                presignedUrl.toString()
+                presignedUrl.toExternalForm()
             ));
     }
 

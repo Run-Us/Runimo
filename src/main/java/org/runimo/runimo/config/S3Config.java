@@ -1,12 +1,11 @@
 package org.runimo.runimo.config;
 
-import com.amazonaws.auth.AWSStaticCredentialsProvider;
-import com.amazonaws.auth.BasicAWSCredentials;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 
 @Configuration
 public class S3Config {
@@ -21,12 +20,12 @@ public class S3Config {
     private String region;
 
     @Bean
-    public AmazonS3 amazonS3Client() {
-        return AmazonS3Client.builder()
-            .withRegion(region)
-            .withCredentials(new AWSStaticCredentialsProvider(
-                new BasicAWSCredentials(accessKey, secretKey)
-            ))
+    public S3Presigner amazonS3Client() {
+        return S3Presigner.builder()
+            .region(Region.of(region))
+            .credentialsProvider(
+                () -> software.amazon.awssdk.auth.credentials.AwsBasicCredentials.create(accessKey, secretKey)
+            )
             .build();
     }
 }
