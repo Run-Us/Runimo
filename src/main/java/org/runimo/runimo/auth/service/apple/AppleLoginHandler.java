@@ -63,7 +63,7 @@ public class AppleLoginHandler {
     private void saveAppleRefreshToken(OAuthInfo savedUser, TokenPair appleToken) {
         AppleUserToken appleUserToken = appleUserTokenRepository
             .findByUserId(savedUser.getUser().getId())
-            .orElse(createEncryptedRefreshToken(savedUser.getId(), appleToken.refreshToken()));
+            .orElse(createEncryptedRefreshToken(savedUser.getUser().getId(), appleToken.refreshToken()));
         appleUserTokenRepository.save(appleUserToken);
     }
 
