@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.auth.exceptions.UnRegisteredUserException;
 import org.runimo.runimo.auth.exceptions.UserJwtException;
 import org.runimo.runimo.auth.jwt.JwtTokenFactory;
+import org.runimo.runimo.auth.service.EncryptUtil;
 import org.runimo.runimo.auth.service.dtos.AuthResponse;
 import org.runimo.runimo.auth.service.dtos.TokenPair;
 import org.runimo.runimo.auth.service.kakao.AppleUserInfo;
@@ -27,6 +28,7 @@ public class AppleLoginHandler {
     private final JwtTokenFactory jwtTokenFactory;
     private final OAuthInfoRepository oAuthInfoRepository;
     private final AppleUserTokenRepository appleUserTokenRepository;
+    private final EncryptUtil encryptUtil;
 
     @Transactional
     public AuthResponse validateAndLogin(final String authCode, final String verifier) {
@@ -61,8 +63,17 @@ public class AppleLoginHandler {
     private void saveAppleRefreshToken(OAuthInfo savedUser, TokenPair appleToken) {
         AppleUserToken appleUserToken = appleUserTokenRepository
             .findByUserId(savedUser.getUser().getId())
-            .orElseGet(() ->
-                new AppleUserToken(savedUser.getUser().getId(), appleToken.refreshToken()));
+            .orElse(createEncryptedRefreshToken(savedUser.getId(), appleToken.refreshToken()));
         appleUserTokenRepository.save(appleUserToken);
+    }
+
+    private AppleUserToken createEncryptedRefreshToken(Long userId, String refreshToken) {
+        try {
+            return new AppleUserToken(
+                userId,
+                encryptUtil.encrypt(refreshToken));
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to encrypt refresh token", e);
+        }
     }
 }
