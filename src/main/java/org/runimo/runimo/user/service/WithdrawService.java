@@ -2,8 +2,12 @@ package org.runimo.runimo.user.service;
 
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
+import org.runimo.runimo.auth.service.apple.AppleTokenVerifier;
+import org.runimo.runimo.user.domain.AppleUserToken;
 import org.runimo.runimo.user.domain.OAuthInfo;
+import org.runimo.runimo.user.domain.SocialProvider;
 import org.runimo.runimo.user.domain.User;
+import org.runimo.runimo.user.repository.AppleUserTokenRepository;
 import org.runimo.runimo.user.repository.OAuthInfoRepository;
 import org.runimo.runimo.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -15,13 +19,26 @@ public class WithdrawService {
 
     private final OAuthInfoRepository oAuthInfoRepository;
     private final UserRepository userRepository;
+    private final AppleTokenVerifier appleTokenVerifier;
+    private final AppleUserTokenRepository appleUserTokenRepository;
 
     @Transactional
     public void withdraw(Long userId) {
         OAuthInfo oAuthInfo = oAuthInfoRepository.findByUserId(userId)
             .orElseThrow(NoSuchElementException::new);
         User user = oAuthInfo.getUser();
+        if (oAuthInfo.getProvider() == SocialProvider.APPLE) {
+            withdrawAppleUser(user);
+        }
         oAuthInfoRepository.delete(oAuthInfo);
         userRepository.delete(user);
+    }
+
+    private void withdrawAppleUser(User user) {
+        AppleUserToken appleUserToken = appleUserTokenRepository
+            .findByUserId(user.getId())
+            .orElseThrow(NoSuchElementException::new);
+        appleTokenVerifier.revoke(appleUserToken.getRefreshToken());
+        appleUserTokenRepository.delete(appleUserToken);
     }
 }
