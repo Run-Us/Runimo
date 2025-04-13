@@ -7,10 +7,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
-import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
-import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
+import software.amazon.awssdk.services.s3.presigner.model.PresignedPutObjectRequest;
+import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
 
 @Slf4j
 @Service
@@ -24,20 +24,19 @@ public class S3Service {
     public URL generatePresignedUrl(String fileName) {
         String objectKey = "uploads/" + UUID.randomUUID() + "_" + fileName;
 
-        GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
-            .signatureDuration(Duration.ofMinutes(10))  // The URL will expire in 10 minutes.
-            .getObjectRequest(createGetObjectRequest(bucketName, objectKey))
+        PutObjectPresignRequest presignRequest = PutObjectPresignRequest.builder()
+            .signatureDuration(Duration.ofMinutes(10))  // The URL expires in 10 minutes.
+            .putObjectRequest(createPutObjectRequest(bucketName, objectKey))
             .build();
 
-        PresignedGetObjectRequest presignedRequest = s3Presigner.presignGetObject(presignRequest);
+        PresignedPutObjectRequest presignedRequest = s3Presigner.presignPutObject(presignRequest);
         log.info("Presigned URL: [{}]", presignedRequest.url().toString());
         log.debug("HTTP method: [{}]", presignedRequest.httpRequest().method());
         return presignedRequest.url();
-
     }
 
-    private GetObjectRequest createGetObjectRequest(String bucketName, String objectKey) {
-        return GetObjectRequest.builder()
+    private PutObjectRequest createPutObjectRequest(String bucketName, String objectKey) {
+        return PutObjectRequest.builder()
             .bucket(bucketName)
             .key(objectKey)
             .build();
