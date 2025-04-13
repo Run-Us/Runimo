@@ -7,6 +7,7 @@ import org.runimo.runimo.auth.exceptions.SignUpException;
 import org.runimo.runimo.auth.exceptions.UnRegisteredUserException;
 import org.runimo.runimo.auth.exceptions.UserJwtException;
 import org.runimo.runimo.common.response.ErrorResponse;
+import org.runimo.runimo.external.ExternalServiceException;
 import org.runimo.runimo.hatch.exception.HatchException;
 import org.runimo.runimo.runimo.exception.RunimoException;
 import org.springframework.http.HttpStatus;
@@ -127,6 +128,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponse> handleIllegalStateException(IllegalStateException e) {
         log.warn("{} {}", ERROR_LOG_HEADER, e.getMessage(), e);
         return ResponseEntity.badRequest().body(ErrorResponse.of("잘못된 요청입니다.", e.getMessage()));
+    }
+
+    @ExceptionHandler(ExternalServiceException.class)
+    public ResponseEntity<ErrorResponse> handleExternalServiceException(
+        ExternalServiceException e) {
+        log.error("{} {}", ERROR_LOG_HEADER, e.getMessage(), e);
+        return ResponseEntity.status(e.getHttpStatusCode())
+            .body(ErrorResponse.of(e.getErrorCode()));
     }
 
     // Root 서비스 에러 처리

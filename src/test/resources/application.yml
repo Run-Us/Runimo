@@ -58,6 +58,16 @@ jwt:
   temp:
     expiration: ${JWT_REGISTER_EXPIRATION}
 
+cloud:
+  aws:
+    credentials:
+      access-key: ${AWS_ACCESS_KEY}
+      secret-key: ${AWS_SECRET_KEY}
+    region:
+      static: ${AWS_REGION}
+    s3:
+      bucket: ${AWS_S3_BUCKET_NAME}
+
 apple:
   client-id: ${APPLE_CLIENT_ID}
   client-secret: ${APPLE_PRIVATE_KEY}
