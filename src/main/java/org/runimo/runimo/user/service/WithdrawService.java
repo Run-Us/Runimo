@@ -40,14 +40,14 @@ public class WithdrawService {
         AppleUserToken appleUserToken = appleUserTokenRepository
             .findByUserId(user.getId())
             .orElseThrow(NoSuchElementException::new);
-        String decodedIdToken = getDecryptedToken(appleUserToken.getRefreshToken());
-        appleTokenVerifier.revoke(decodedIdToken);
+        String decodedRefreshToken = getDecryptedToken(appleUserToken.getRefreshToken());
+        appleTokenVerifier.revoke(decodedRefreshToken);
         appleUserTokenRepository.delete(appleUserToken);
     }
 
-    private String getDecryptedToken(String encryptedIdToken) {
+    private String getDecryptedToken(String encryptedRefreshToken) {
         try {
-            return encryptUtil.decrypt(encryptedIdToken);
+            return encryptUtil.decrypt(encryptedRefreshToken);
         } catch (Exception e) {
             throw new RuntimeException("Failed to decrypt ID token", e);
         }
