@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.runimo.runimo.auth.exceptions.UserJwtException;
 import org.runimo.runimo.auth.jwt.JwtTokenFactory;
+import org.runimo.runimo.auth.service.dtos.TokenPair;
 import org.runimo.runimo.auth.service.kakao.AppleUserInfo;
 import org.runimo.runimo.user.enums.UserHttpResponseCode;
 import org.springframework.beans.factory.annotation.Value;
@@ -92,7 +93,7 @@ public class AppleTokenVerifier {
         return (RSAPublicKey) factory.generatePublic(spec);
     }
 
-    public String getAccessTokenFromAuthCode(String authCode, String codeVerifier) {
+    public TokenPair getAccessTokenFromAuthCode(String authCode, String codeVerifier) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
@@ -111,7 +112,7 @@ public class AppleTokenVerifier {
 
         try {
             JsonNode node = objectMapper.readTree(response.getBody());
-            return node.get("id_token").asText();
+            return new TokenPair(node.get("id_token").asText(), node.get("refresh_token").asText());
         } catch (Exception e) {
             log.error("Failed to verify Apple access token", e);
             throw UserJwtException.of(UserHttpResponseCode.TOKEN_INVALID);
