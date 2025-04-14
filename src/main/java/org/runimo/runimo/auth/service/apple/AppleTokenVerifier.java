@@ -41,27 +41,21 @@ import org.springframework.web.client.RestTemplate;
 @RequiredArgsConstructor
 public class AppleTokenVerifier {
 
+    private static final String REVOKE_URL = "https://appleid.apple.com/auth/revoke";
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();
     private final Map<String, RSAPublicKey> publicKeys = new HashMap<>();
     private final JwtTokenFactory jwtTokenFactory;
-
     @Value("${apple.client-id}")
     private String clientId;
-
     @Value("${apple.redirect-uri}")
     private String redirectUri;
-
     @Value("${apple.team-id}")
     private String appleTeamId;
-
     @Value("${apple.key-id}")
     private String appleKeyId;
-
     @Value("${apple.client-secret}")
     private String applePrivateKey;
-
-    private static final String REVOKE_URL = "https://appleid.apple.com/auth/revoke";
 
     @Scheduled(fixedRate = 3600000)
     public void refreshPublicKeys() {
@@ -95,7 +89,7 @@ public class AppleTokenVerifier {
         return (RSAPublicKey) factory.generatePublic(spec);
     }
 
-    public TokenPair getAccessTokenFromAuthCode(String authCode, String codeVerifier) {
+    public TokenPair getAppleTokenPairFromAuthCode(String authCode, String codeVerifier) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
@@ -146,7 +140,7 @@ public class AppleTokenVerifier {
         }
     }
 
-    public AppleUserInfo verifyToken(DecodedJWT token) {
+    public AppleUserInfo verifyTokenAndExtractUserInfo(DecodedJWT token) {
         try {
             RSAPublicKey publicKey = publicKeys.get(token.getKeyId());
             if (publicKey == null) {

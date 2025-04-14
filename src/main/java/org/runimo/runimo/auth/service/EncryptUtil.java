@@ -12,22 +12,26 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class EncryptUtil {
 
+    private static final String CIPHER_TRANS = "AES/CBC/PKCS5Padding";
+    private static final String ALGORITHM = "AES";
     @Value("${runimo.security.secret-key}")
     private String secretKey;
     @Value("${runimo.security.iv}")
     private String iv;
-    private static final String CIPHER_TRANS = "AES/CBC/PKCS5Padding";
-    private static final String ALGORITHM = "AES";
 
-    public String encrypt(String plainText) throws Exception {
-        Cipher cipher = Cipher.getInstance(CIPHER_TRANS);
-        SecretKeySpec keySpec = new SecretKeySpec(secretKey.getBytes(), ALGORITHM);
-        IvParameterSpec ivSpec = new IvParameterSpec(iv.getBytes());
+    public String encrypt(String plainText) {
+        try {
+            Cipher cipher = Cipher.getInstance(CIPHER_TRANS);
+            SecretKeySpec keySpec = new SecretKeySpec(secretKey.getBytes(), ALGORITHM);
+            IvParameterSpec ivSpec = new IvParameterSpec(iv.getBytes());
 
-        cipher.init(Cipher.ENCRYPT_MODE, keySpec, ivSpec);
-        byte[] encrypted = cipher.doFinal(plainText.getBytes());
+            cipher.init(Cipher.ENCRYPT_MODE, keySpec, ivSpec);
+            byte[] encrypted = cipher.doFinal(plainText.getBytes());
 
-        return Base64.getEncoder().encodeToString(encrypted);
+            return Base64.getEncoder().encodeToString(encrypted);
+        } catch (Exception e) {
+            throw new RuntimeException("Error during encryption", e);
+        }
     }
 
     public String decrypt(String cipherText) throws Exception {
