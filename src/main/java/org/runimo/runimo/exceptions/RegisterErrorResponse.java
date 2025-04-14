@@ -1,18 +1,16 @@
 package org.runimo.runimo.exceptions;
 
 import lombok.Getter;
+import org.runimo.runimo.common.response.Response;
+import org.runimo.runimo.exceptions.code.CustomResponseCode;
 
 @Getter
-public class RegisterErrorResponse {
+public class RegisterErrorResponse extends Response {
 
-    private final boolean success = false;
-    private final String errorCode;
-    private final String message;
     private final String temporalRegisterToken;
 
-    public RegisterErrorResponse(String errorCode, String message, String temporalRegisterToken) {
-        this.errorCode = errorCode;
-        this.message = message;
+    public RegisterErrorResponse(CustomResponseCode errorCode, String temporalRegisterToken) {
+        super(false, errorCode.getClientMessage(), errorCode.getCode());
         this.temporalRegisterToken = temporalRegisterToken;
     }
 }
