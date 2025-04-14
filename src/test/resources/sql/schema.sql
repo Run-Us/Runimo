@@ -1,5 +1,6 @@
 SET FOREIGN_KEY_CHECKS = 0;
 
+DROP TABLE IF EXISTS apple_user_token;
 DROP TABLE IF EXISTS user_token;
 DROP TABLE IF EXISTS oauth_account;
 DROP TABLE IF EXISTS running_record;
@@ -60,6 +61,18 @@ CREATE TABLE `oauth_account`
     `created_at`  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at`  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `deleted_at`  TIMESTAMP NULL,
+    FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+);
+
+
+CREATE TABLE `apple_user_token`
+(
+    `id`           BIGINT PRIMARY KEY AUTO_INCREMENT,
+    `user_id`      BIGINT       NOT NULL,
+    `refresh_token` VARCHAR(255) NOT NULL,
+    `created_at`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at`   TIMESTAMP    NULL,
     FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 );
 

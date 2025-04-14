@@ -6,6 +6,11 @@ server:
     accept-count: 100
     max-connections: 8912
     max-keep-alive-requests: 200
+runimo:
+  security:
+    secret-key: ${AES_KEY}
+    iv: ${AES_IV}
+
 spring:
   config:
     import:

@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.runimo.runimo.auth.exceptions.UserJwtException;
 import org.runimo.runimo.auth.jwt.JwtTokenFactory;
+import org.runimo.runimo.auth.service.dtos.TokenPair;
 import org.runimo.runimo.auth.service.kakao.AppleUserInfo;
 import org.runimo.runimo.user.enums.UserHttpResponseCode;
 import org.springframework.beans.factory.annotation.Value;
@@ -60,6 +61,8 @@ public class AppleTokenVerifier {
     @Value("${apple.client-secret}")
     private String applePrivateKey;
 
+    private static final String REVOKE_URL = "https://appleid.apple.com/auth/revoke";
+
     @Scheduled(fixedRate = 3600000)
     public void refreshPublicKeys() {
         String jwksUrl = "https://appleid.apple.com/auth/keys";
@@ -92,7 +95,7 @@ public class AppleTokenVerifier {
         return (RSAPublicKey) factory.generatePublic(spec);
     }
 
-    public String getAccessTokenFromAuthCode(String authCode, String codeVerifier) {
+    public TokenPair getAccessTokenFromAuthCode(String authCode, String codeVerifier) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 
@@ -111,10 +114,35 @@ public class AppleTokenVerifier {
 
         try {
             JsonNode node = objectMapper.readTree(response.getBody());
-            return node.get("id_token").asText();
+            return new TokenPair(node.get("id_token").asText(), node.get("refresh_token").asText());
         } catch (Exception e) {
             log.error("Failed to verify Apple access token", e);
             throw UserJwtException.of(UserHttpResponseCode.TOKEN_INVALID);
+        }
+    }
+
+    public void revoke(final String appleRefreshToken) {
+        String clientSecret = generateAppleClientSecret(); // JWT 생성
+
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        params.add("client_id", clientId);
+        params.add("client_secret", clientSecret);
+        params.add("token", appleRefreshToken);
+        params.add("token_type_hint", "refresh_token");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+
+        HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(params, headers);
+        try {
+            ResponseEntity<String> response = restTemplate.postForEntity(REVOKE_URL, entity,
+                String.class);
+            if (!response.getStatusCode().is2xxSuccessful()) {
+                throw new RuntimeException("Failed to revoke Apple refresh token");
+            }
+        } catch (Exception e) {
+            log.error("Failed to revoke Apple refresh token", e);
+            throw new RuntimeException("Failed to revoke Apple refresh token", e);
         }
     }
 
