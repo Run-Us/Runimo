@@ -50,15 +50,20 @@ public class AppleLoginHandler {
             userInfo.getProviderId());
 
         if (oAuthInfo.isEmpty()) {
-            String signupToken = createTemporalSignupToken(userInfo, appleTokens);
-            return AuthResult.signupNeeded(AuthStatus.SIGNUP_NEEDED, signupToken);
+            SignupToken signupToken = createTemporalSignupToken(userInfo, appleTokens);
+            String clientToken = jwtTokenFactory.generateSignupTemporalToken(
+                userInfo.getProviderId(),
+                SocialProvider.APPLE,
+                signupToken.getToken()
+            );
+            return AuthResult.signupNeeded(AuthStatus.SIGNUP_NEEDED, clientToken);
         }
 
         TokenPair tokenPair = jwtTokenFactory.generateTokenPair(oAuthInfo.get().getUser());
         return AuthResult.success(AuthStatus.LOGIN_SUCCESS, oAuthInfo.get().getUser(), tokenPair);
     }
 
-    public String createTemporalSignupToken(AppleUserInfo appleUserInfo, TokenPair appleTokens) {
+    public SignupToken createTemporalSignupToken(AppleUserInfo appleUserInfo, TokenPair appleTokens) {
         String temporalTokenId = UUID.randomUUID().toString();
         String encryptedRefreshToken = encryptUtil.encrypt(appleTokens.refreshToken());
         SignupToken signupToken = new SignupToken(
@@ -67,12 +72,7 @@ public class AppleLoginHandler {
             encryptedRefreshToken,
             SocialProvider.APPLE
         );
-        signupTokenRepository.save(signupToken);
-        return jwtTokenFactory.generateSignupTemporalToken(
-            appleUserInfo.getProviderId(),
-            SocialProvider.APPLE,
-            temporalTokenId
-        );
+        return signupTokenRepository.save(signupToken);
     }
 
     private DecodedJWT decodeJwtOrThrow(String jwt) {
