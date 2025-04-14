@@ -6,16 +6,20 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.runimo.runimo.auth.exceptions.UnRegisteredUserException;
+import org.runimo.runimo.auth.controller.request.KakaoLoginRequest;
 import org.runimo.runimo.auth.exceptions.UserJwtException;
 import org.runimo.runimo.auth.jwt.JwtResolver;
 import org.runimo.runimo.auth.service.OidcService;
 import org.runimo.runimo.auth.service.SignUpUsecase;
 import org.runimo.runimo.auth.service.TokenRefreshService;
-import org.runimo.runimo.auth.service.dtos.AuthResponse;
+import org.runimo.runimo.auth.service.dtos.AuthResult;
+import org.runimo.runimo.auth.service.dtos.AuthStatus;
+import org.runimo.runimo.auth.service.dtos.TokenPair;
 import org.runimo.runimo.configs.ControllerTest;
+import org.runimo.runimo.user.UserFixtures;
 import org.runimo.runimo.user.enums.UserHttpResponseCode;
 import org.runimo.runimo.user.service.UserFinder;
 import org.runimo.runimo.user.service.UserRegisterService;
@@ -48,6 +52,9 @@ class AuthControllerTest {
     @MockitoBean
     private JwtResolver jwtResolver;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @Test
     void 카카오_로그인_INVALID_401응답() throws Exception {
         // given
@@ -66,16 +73,18 @@ class AuthControllerTest {
     @Test
     void 카카오_로그인_미등록_사용자_404응답() throws Exception {
         // given
-        given(oidcService.kakaoLogin(any())).willThrow(
-            UnRegisteredUserException.of(UserHttpResponseCode.LOGIN_FAIL_NOT_SIGN_IN, "temp-token")
+        KakaoLoginRequest request = new KakaoLoginRequest("valid-token");
+
+        given(oidcService.kakaoLogin(any())).willReturn(
+            AuthResult.signupNeeded(AuthStatus.SIGNUP_NEEDED, "signup-token")
         );
 
         // when & then
         mockMvc.perform(post("/api/v1/auth/kakao")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"oidcToken\":\"valid-token\"}"))
+                .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isNotFound())
-            .andExpect(jsonPath("$.error_code").value(
+            .andExpect(jsonPath("$.code").value(
                 UserHttpResponseCode.LOGIN_FAIL_NOT_SIGN_IN.getCode()))
             .andExpect(jsonPath("$.message").value(
                 UserHttpResponseCode.LOGIN_FAIL_NOT_SIGN_IN.getClientMessage()));
@@ -84,9 +93,14 @@ class AuthControllerTest {
     @Test
     void 카카오_로그인_성공_200응답() throws Exception {
         // given
-        AuthResponse authResponse = new AuthResponse("test-nickname", "imgurl", "access-token",
-            "refresh-token");
-        given(oidcService.kakaoLogin(any())).willReturn(authResponse);
+        AuthResult authResult = AuthResult.success(
+            AuthStatus.LOGIN_SUCCESS,
+            UserFixtures.getDefaultUser(),
+            new TokenPair(
+                "access-token",
+                "refresh-token")
+        );
+        given(oidcService.kakaoLogin(any())).willReturn(authResult);
 
         // when & then
         mockMvc.perform(post("/api/v1/auth/kakao")
@@ -94,8 +108,8 @@ class AuthControllerTest {
                 .content("{\"oidcToken\":\"valid-token\"}"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.code").value(UserHttpResponseCode.LOGIN_SUCCESS.getCode()))
-            .andExpect(jsonPath("$.payload.nickname").value("test-nickname"))
-            .andExpect(jsonPath("$.payload.img_url").value("imgurl"))
+            .andExpect(jsonPath("$.payload.nickname").value("test"))
+            .andExpect(jsonPath("$.payload.img_url").value("test"))
             .andExpect(jsonPath("$.payload.access_token").value("access-token"))
             .andExpect(jsonPath("$.payload.refresh_token").value("refresh-token"));
     }
