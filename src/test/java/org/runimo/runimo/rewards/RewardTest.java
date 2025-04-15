@@ -5,11 +5,14 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.runimo.runimo.CleanUpUtil;
+import org.runimo.runimo.auth.domain.SignupToken;
 import org.runimo.runimo.auth.jwt.JwtTokenFactory;
+import org.runimo.runimo.auth.repository.SignupTokenRepository;
 import org.runimo.runimo.auth.service.SignUpUsecaseImpl;
 import org.runimo.runimo.auth.service.dtos.UserSignupCommand;
 import org.runimo.runimo.common.scale.Distance;
@@ -52,12 +55,25 @@ class RewardTest {
     private JwtTokenFactory jwtTokenFactory;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private SignupTokenRepository signupTokenRepository;
 
     @BeforeEach
     void setUp() {
         //given
-        String registerToken = jwtTokenFactory.generateRegisterTemporalToken("test-pid",
-            SocialProvider.KAKAO);
+        String key = UUID.randomUUID().toString();
+
+        String registerToken = jwtTokenFactory.generateSignupTemporalToken(
+            "test-pid",
+            SocialProvider.KAKAO,
+            key
+        );
+        signupTokenRepository.save(new SignupToken(
+            key,
+            "test-pid",
+            null,
+            SocialProvider.KAKAO
+        ));
         UserSignupCommand command = new UserSignupCommand(registerToken, "name", "1234", Gender.UNKNOWN);
         Long useId = signUpUsecaseImpl.register(command).userId();
         savedUser = userRepository.findById(useId).orElse(null);

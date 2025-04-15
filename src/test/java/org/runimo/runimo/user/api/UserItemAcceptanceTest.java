@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
+import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -135,8 +136,8 @@ class UserItemAcceptanceTest {
     @Test
     @Sql(scripts = "/sql/user_item_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void 카카오_회원가입후_알_지급_성공() throws JsonProcessingException {
-        String registerToken = jwtTokenFactory.generateRegisterTemporalToken("test-pid",
-            SocialProvider.KAKAO);
+        String registerToken = jwtTokenFactory.generateSignupTemporalToken("test-pid",
+            SocialProvider.KAKAO, UUID.randomUUID().toString());
         String token = jwtTokenFactory.generateAccessToken("test-user-uuid-1");
         when(signUpUsecaseImpl.register(any()))
             .thenReturn(new SignupUserResponse(

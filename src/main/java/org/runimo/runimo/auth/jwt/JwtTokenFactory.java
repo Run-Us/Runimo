@@ -3,7 +3,6 @@ package org.runimo.runimo.auth.jwt;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import java.util.Date;
-import java.util.UUID;
 import org.runimo.runimo.auth.service.dtos.TokenPair;
 import org.runimo.runimo.user.domain.SocialProvider;
 import org.runimo.runimo.user.domain.User;
@@ -50,11 +49,12 @@ public class JwtTokenFactory {
             .sign(Algorithm.HMAC256(jwtSecret));
     }
 
-    public String generateRegisterTemporalToken(String providerId, SocialProvider socialProvider) {
+    public String generateSignupTemporalToken(String providerId, SocialProvider socialProvider,
+        String key) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + tempJwtExpiration);
         return JWT.create()
-            .withSubject(UUID.randomUUID().toString())
+            .withSubject(key)
             .withIssuedAt(now)
             .withExpiresAt(expiryDate)
             .withIssuer(ISSUER)

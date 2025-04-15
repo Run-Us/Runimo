@@ -48,18 +48,6 @@ public class GlobalExceptionHandler {
             .body(ErrorResponse.of(e.getErrorCode()));
     }
 
-    @ExceptionHandler(UnRegisteredUserException.class)
-    public ResponseEntity<RegisterErrorResponse> handleUnRegisteredUserException(
-        UnRegisteredUserException e) {
-        log.warn("{} {}", ERROR_LOG_HEADER, e.getMessage(), e);
-        return ResponseEntity.status(e.getHttpStatusCode()).body(
-            new RegisterErrorResponse(
-                e.getErrorCode().getCode(),
-                e.getMessage(),
-                e.getTemporalRegisterToken()
-            ));
-    }
-
     @ExceptionHandler(SignUpException.class)
     public ResponseEntity<ErrorResponse> handleSignUpException(SignUpException e) {
         log.warn("{} {}", ERROR_LOG_HEADER, e.getMessage(), e);

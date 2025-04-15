@@ -1,5 +1,6 @@
 SET FOREIGN_KEY_CHECKS = 0;
 
+DROP TABLE IF EXISTS signup_token;
 DROP TABLE IF EXISTS apple_user_token;
 DROP TABLE IF EXISTS user_token;
 DROP TABLE IF EXISTS oauth_account;
@@ -42,17 +43,6 @@ CREATE TABLE `user_token`
     FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 );
 
-CREATE TABLE `apple_user_token`
-(
-    `id`            BIGINT PRIMARY KEY AUTO_INCREMENT,
-    `user_id`      BIGINT       NOT NULL,
-    `refresh_token` VARCHAR(255) NOT NULL,
-    `created_at`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `updated_at`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `deleted_at`   TIMESTAMP    NULL,
-    FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
-);
-
 CREATE TABLE `user_love_point`
 (
     `id`         BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -74,6 +64,28 @@ CREATE TABLE `oauth_account`
     `deleted_at`  TIMESTAMP NULL,
     FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 );
+
+
+CREATE TABLE `apple_user_token`
+(
+    `id`           BIGINT PRIMARY KEY AUTO_INCREMENT,
+    `user_id`      BIGINT       NOT NULL,
+    `refresh_token` VARCHAR(255) NOT NULL,
+    `created_at`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at`   TIMESTAMP    NULL,
+    FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+);
+
+CREATE TABLE `signup_token`
+(
+    `token`       VARCHAR(255) PRIMARY KEY NOT NULL UNIQUE ,
+    `provider_id` VARCHAR(255) NOT NULL,
+    `refresh_token` VARCHAR(255),
+    `provider` VARCHAR(255),
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 
 CREATE TABLE `running_record`
 (
@@ -174,7 +186,6 @@ ALTER TABLE `user_token`
 
 ALTER TABLE `oauth_account`
     ADD FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
-
 
 -- insert static data
 INSERT INTO runimo_definition (id, name, code, description, img_url, egg_type, created_at, updated_at)

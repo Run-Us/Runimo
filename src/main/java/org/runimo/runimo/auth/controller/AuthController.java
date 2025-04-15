@@ -15,10 +15,12 @@ import org.runimo.runimo.auth.controller.request.KakaoLoginRequest;
 import org.runimo.runimo.auth.service.OidcService;
 import org.runimo.runimo.auth.service.SignUpUsecase;
 import org.runimo.runimo.auth.service.TokenRefreshService;
-import org.runimo.runimo.auth.service.dtos.AuthResponse;
+import org.runimo.runimo.auth.service.dtos.AuthResult;
+import org.runimo.runimo.auth.service.dtos.AuthStatus;
 import org.runimo.runimo.auth.service.dtos.SignupUserResponse;
 import org.runimo.runimo.auth.service.dtos.TokenPair;
 import org.runimo.runimo.common.response.ErrorResponse;
+import org.runimo.runimo.common.response.Response;
 import org.runimo.runimo.common.response.SuccessResponse;
 import org.runimo.runimo.exceptions.RegisterErrorResponse;
 import org.runimo.runimo.user.enums.UserHttpResponseCode;
@@ -50,16 +52,11 @@ public class AuthController {
                 schema = @Schema(implementation = RegisterErrorResponse.class)))
     })
     @PostMapping("/kakao")
-    public ResponseEntity<SuccessResponse<AuthResponse>> kakaoLogin(
+    public ResponseEntity<Response> kakaoLogin(
         @RequestBody KakaoLoginRequest request
     ) {
-        AuthResponse res = oidcService.kakaoLogin(request.oidcToken());
-        return ResponseEntity.ok().body(
-            SuccessResponse.of(
-                UserHttpResponseCode.LOGIN_SUCCESS,
-                res
-            )
-        );
+        AuthResult res = oidcService.kakaoLogin(request.oidcToken());
+        return buildAuthResponse(res);
     }
 
     @Operation(summary = "애플 소셜 로그인", description = "애플 OIDC 토큰을 이용하여 로그인합니다.")
@@ -73,16 +70,11 @@ public class AuthController {
                 schema = @Schema(implementation = RegisterErrorResponse.class)))
     })
     @PostMapping("/apple")
-    public ResponseEntity<SuccessResponse<AuthResponse>> appleLogin(
+    public ResponseEntity<Response> appleLogin(
         @RequestBody final AppleLoginRequest request
     ) {
-        AuthResponse res = oidcService.appleLogin(request.authCode(), request.codeVerifier());
-        return ResponseEntity.ok().body(
-            SuccessResponse.of(
-                UserHttpResponseCode.LOGIN_SUCCESS,
-                res
-            )
-        );
+        AuthResult res = oidcService.appleLogin(request.authCode(), request.codeVerifier());
+        return buildAuthResponse(res);
     }
 
     @Operation(summary = "사용자 회원가입 및 로그인", description = "사용자가 OIDC 토큰을 사용하여 회원가입 후 로그인합니다.")
@@ -123,6 +115,23 @@ public class AuthController {
                 UserHttpResponseCode.REFRESH_SUCCESS,
                 newTokens
             )
+        );
+    }
+
+
+    /**
+     * 로그인 결과에 따라 적절한 응답을 생성합니다. 회원가입이 필요하면 404 응답을 반환하고, 로그인 성공 시 200 응답을 반환합니다.
+     */
+    private ResponseEntity<Response> buildAuthResponse(AuthResult res) {
+        if (res.status() == AuthStatus.SIGNUP_NEEDED) {
+            return ResponseEntity.status(404)
+                .body(new RegisterErrorResponse(UserHttpResponseCode.LOGIN_FAIL_NOT_SIGN_IN,
+                    res.registerToken()));
+        }
+        return ResponseEntity.ok(
+            SuccessResponse.of(UserHttpResponseCode.LOGIN_SUCCESS,
+                new AuthResponse(res.nickname(), res.imgUrl(), res.accessToken(),
+                    res.refreshToken()))
         );
     }
 }

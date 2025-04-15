@@ -26,7 +26,7 @@ public class JwtResolver {
         return jwt.getSubject();
     }
 
-    public RegisterTokenPayload getRegisterTokenPayload(String token)
+    public SignupTokenPayload getSignupTokenPayload(String token)
         throws JWTVerificationException {
         try {
             DecodedJWT decodedJWT = verifyJwtToken(token);
@@ -34,7 +34,7 @@ public class JwtResolver {
             SocialProvider socialProvider = SocialProvider.valueOf(
                 decodedJWT.getClaim("provider").asString()
             );
-            return new RegisterTokenPayload(providerId, socialProvider);
+            return new SignupTokenPayload(decodedJWT.getSubject(), providerId, socialProvider);
         } catch (JWTVerificationException e) {
             throw UserJwtException.of(UserHttpResponseCode.TOKEN_INVALID);
         }
