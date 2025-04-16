@@ -1,7 +1,7 @@
 package org.runimo.runimo.user.service.usecases.items;
 
-import org.runimo.runimo.user.service.dtos.UseItemCommand;
-import org.runimo.runimo.user.service.dtos.UseItemResponse;
+import org.runimo.runimo.user.service.dto.command.UseItemCommand;
+import org.runimo.runimo.user.service.dto.response.UseItemResponse;
 
 public interface UseItemUsecase {
 

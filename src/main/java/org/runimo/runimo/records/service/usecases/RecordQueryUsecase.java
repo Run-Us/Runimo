@@ -1,7 +1,7 @@
 package org.runimo.runimo.records.service.usecases;
 
-import org.runimo.runimo.records.service.dtos.WeeklyRecordStatResponse;
-import org.runimo.runimo.records.service.dtos.WeeklyStatQuery;
+import org.runimo.runimo.records.service.dto.WeeklyRecordStatResponse;
+import org.runimo.runimo.records.service.dto.WeeklyStatQuery;
 import org.runimo.runimo.records.service.usecases.dtos.MonthlyRecordStatResponse;
 import org.runimo.runimo.records.service.usecases.dtos.MonthlyStatQuery;
 import org.runimo.runimo.records.service.usecases.dtos.RecordDetailViewResponse;

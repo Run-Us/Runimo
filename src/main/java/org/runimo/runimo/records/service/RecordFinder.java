@@ -6,7 +6,7 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.records.domain.RunningRecord;
 import org.runimo.runimo.records.repository.RecordRepository;
-import org.runimo.runimo.records.service.dtos.DailyStat;
+import org.runimo.runimo.records.service.dto.DailyStat;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;

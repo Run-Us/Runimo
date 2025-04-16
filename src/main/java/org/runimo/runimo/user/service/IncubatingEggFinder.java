@@ -4,7 +4,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.user.domain.IncubatingEgg;
 import org.runimo.runimo.user.repository.IncubatingEggRepository;
-import org.runimo.runimo.user.service.dtos.IncubatingEggView;
+import org.runimo.runimo.user.service.dto.IncubatingEggView;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 

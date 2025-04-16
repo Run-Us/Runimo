@@ -1,6 +1,6 @@
 package org.runimo.runimo.item.service;
 
-import org.runimo.runimo.item.service.dtos.CreateActivityCommand;
+import org.runimo.runimo.item.service.dto.CreateActivityCommand;
 
 public interface ItemActivityCreator {
 

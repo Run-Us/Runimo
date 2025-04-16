@@ -15,6 +15,7 @@ import org.runimo.runimo.auth.controller.request.KakaoLoginRequest;
 import org.runimo.runimo.auth.service.OidcService;
 import org.runimo.runimo.auth.service.SignUpUsecase;
 import org.runimo.runimo.auth.service.TokenRefreshService;
+import org.runimo.runimo.auth.service.dtos.AuthResponse;
 import org.runimo.runimo.auth.service.dtos.AuthResult;
 import org.runimo.runimo.auth.service.dtos.AuthStatus;
 import org.runimo.runimo.auth.service.dtos.SignupUserResponse;

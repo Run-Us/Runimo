@@ -5,7 +5,7 @@ import jakarta.persistence.QueryHint;
 import java.util.List;
 import java.util.Optional;
 import org.runimo.runimo.user.domain.IncubatingEgg;
-import org.runimo.runimo.user.service.dtos.IncubatingEggView;
+import org.runimo.runimo.user.service.dto.IncubatingEggView;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
@@ -26,7 +26,7 @@ public interface IncubatingEggRepository extends JpaRepository<IncubatingEgg, In
     List<IncubatingEgg> findAllByUserId(Long userId);
 
     @Query(
-        "select new org.runimo.runimo.user.service.dtos.IncubatingEggView(ie.id, e.name, e.imgUrl, ie.hatchRequireAmount, ie.currentLovePointAmount, ie.status) "
+        "select new org.runimo.runimo.user.service.dto.IncubatingEggView(ie.id, e.name, e.imgUrl, ie.hatchRequireAmount, ie.currentLovePointAmount, ie.status) "
             +
             "from IncubatingEgg ie " +
             "join Egg e on e.id = ie.eggId " +

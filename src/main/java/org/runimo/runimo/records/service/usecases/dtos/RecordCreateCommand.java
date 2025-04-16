@@ -5,7 +5,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import org.runimo.runimo.common.scale.Distance;
 import org.runimo.runimo.common.scale.Pace;
-import org.runimo.runimo.records.controller.requests.RecordSaveRequest;
+import org.runimo.runimo.records.controller.request.RecordSaveRequest;
 
 public record RecordCreateCommand(
     Long userId,

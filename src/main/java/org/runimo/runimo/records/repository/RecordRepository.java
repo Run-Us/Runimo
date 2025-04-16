@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import org.runimo.runimo.records.domain.RunningRecord;
-import org.runimo.runimo.records.service.dtos.DailyStat;
+import org.runimo.runimo.records.service.dto.DailyStat;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -33,7 +33,7 @@ public interface RecordRepository extends JpaRepository<RunningRecord, Long> {
     @Query("select r from RunningRecord r where r.userId = :userId")
     Slice<RunningRecord> findLatestByUserId(Long userId, Pageable pageRequest);
 
-    @Query("select new org.runimo.runimo.records.service.dtos.DailyStat(" +
+    @Query("select new org.runimo.runimo.records.service.dto.DailyStat(" +
         "cast(r.startedAt as localdate), " +
         "sum(r.totalDistance.amount)) " +
         "from RunningRecord r " +
