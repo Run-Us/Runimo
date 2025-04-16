@@ -8,7 +8,8 @@ import lombok.Getter;
 public enum EggType {
     MADANG("A100", "마당", 0L),
     FOREST("A101", "숲", 30000L),
-    GRASSLAND("A102", "초원", 50000L);
+//    GRASSLAND("A102", "초원", 50000L),
+    ;
 
     private final String code;
     private final String name;
