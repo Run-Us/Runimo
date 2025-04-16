@@ -14,9 +14,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.runimo.runimo.records.service.RecordFinder;
-import org.runimo.runimo.records.service.dtos.DailyStat;
-import org.runimo.runimo.records.service.dtos.WeeklyRecordStatResponse;
-import org.runimo.runimo.records.service.dtos.WeeklyStatQuery;
+import org.runimo.runimo.records.service.dto.DailyStat;
+import org.runimo.runimo.records.service.dto.WeeklyRecordStatResponse;
+import org.runimo.runimo.records.service.dto.WeeklyStatQuery;
 import org.runimo.runimo.records.service.usecases.dtos.MonthlyRecordStatResponse;
 import org.runimo.runimo.records.service.usecases.dtos.MonthlyStatQuery;
 

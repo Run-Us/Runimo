@@ -3,8 +3,8 @@ package org.runimo.runimo.user.service.usecases.eggs;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.user.service.IncubatingEggFinder;
-import org.runimo.runimo.user.service.dtos.IncubatingEggView;
-import org.runimo.runimo.user.service.dtos.QueryIncubatingEggResponse;
+import org.runimo.runimo.user.service.dto.IncubatingEggView;
+import org.runimo.runimo.user.service.dto.response.QueryIncubatingEggResponse;
 import org.springframework.stereotype.Service;
 
 @Service

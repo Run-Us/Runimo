@@ -3,7 +3,7 @@ package org.runimo.runimo.user.controller;
 import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.common.response.SuccessResponse;
 import org.runimo.runimo.user.enums.UserHttpResponseCode;
-import org.runimo.runimo.user.service.dtos.MyPageViewResponse;
+import org.runimo.runimo.user.service.dto.response.MyPageViewResponse;
 import org.runimo.runimo.user.service.usecases.query.MyPageQueryUsecase;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;

@@ -2,7 +2,7 @@ package org.runimo.runimo.records;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import org.runimo.runimo.records.controller.requests.RecordSaveRequest;
+import org.runimo.runimo.records.controller.request.RecordSaveRequest;
 import org.runimo.runimo.records.service.usecases.dtos.SegmentPace;
 
 public class RecordFixtures {

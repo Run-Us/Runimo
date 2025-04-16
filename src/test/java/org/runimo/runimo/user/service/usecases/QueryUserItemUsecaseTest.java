@@ -10,8 +10,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.runimo.runimo.user.repository.MyItemRepository;
-import org.runimo.runimo.user.service.dtos.InventoryItem;
-import org.runimo.runimo.user.service.dtos.ItemQueryResponse;
+import org.runimo.runimo.user.service.dto.InventoryItem;
+import org.runimo.runimo.user.service.dto.response.ItemQueryResponse;
 import org.runimo.runimo.user.service.usecases.query.MyItemQueryUsecase;
 import org.runimo.runimo.user.service.usecases.query.MyItemQueryUsecaseImpl;
 

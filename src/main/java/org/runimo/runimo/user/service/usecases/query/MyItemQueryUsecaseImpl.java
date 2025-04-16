@@ -4,8 +4,8 @@ package org.runimo.runimo.user.service.usecases.query;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.user.repository.MyItemRepository;
-import org.runimo.runimo.user.service.dtos.InventoryItem;
-import org.runimo.runimo.user.service.dtos.ItemQueryResponse;
+import org.runimo.runimo.user.service.dto.InventoryItem;
+import org.runimo.runimo.user.service.dto.response.ItemQueryResponse;
 import org.springframework.stereotype.Service;
 
 @Service
