@@ -1,4 +1,4 @@
-package org.runimo.runimo.auth.service.dtos;
+package org.runimo.runimo.auth.service.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 

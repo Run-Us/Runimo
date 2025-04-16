@@ -14,7 +14,7 @@ import org.runimo.runimo.auth.domain.SignupToken;
 import org.runimo.runimo.auth.jwt.JwtTokenFactory;
 import org.runimo.runimo.auth.repository.SignupTokenRepository;
 import org.runimo.runimo.auth.service.SignUpUsecaseImpl;
-import org.runimo.runimo.auth.service.dtos.UserSignupCommand;
+import org.runimo.runimo.auth.service.dto.UserSignupCommand;
 import org.runimo.runimo.common.scale.Distance;
 import org.runimo.runimo.common.scale.Pace;
 import org.runimo.runimo.records.service.usecases.RecordCreateUsecase;
