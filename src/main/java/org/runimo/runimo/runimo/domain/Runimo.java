@@ -40,4 +40,9 @@ public class Runimo extends BaseEntity {
         }
 
     }
+
+    public void updateStat(Long distanceInMeters) {
+        this.totalRunCount += 1;
+        this.totalDistanceInMeters += distanceInMeters;
+    }
 }
