@@ -92,7 +92,7 @@ class RunimoControllerTest {
             .statusCode(HttpStatus.OK.value())
 
             .body("code", equalTo("MSH2003"))
-            .body("payload.runimo_groups", hasSize(3))
+            .body("payload.runimo_groups", hasSize(2))
 
             .body("payload.runimo_groups[0].egg_type", equalTo("마당"))
             .body("payload.runimo_groups[0].runimo_types", hasSize(4))
