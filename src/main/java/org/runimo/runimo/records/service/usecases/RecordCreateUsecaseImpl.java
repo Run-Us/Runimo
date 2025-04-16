@@ -27,7 +27,12 @@ public class RecordCreateUsecaseImpl implements RecordCreateUsecase {
         User user = userFinder.findUserById(command.userId())
             .orElseThrow(NoSuchElementException::new);
         userStatService.updateUserStats(user, command);
-        runimoService.updateRunimoStat(user.getMainRunimoId(), command.totalDistanceInMeters());
+
+        Long mainRunimoId = user.getMainRunimoId();
+        if (mainRunimoId != null) {
+            runimoService.updateRunimoStat(user.getMainRunimoId(), command.totalDistanceInMeters());
+        }
+
         return commandService.saveRecord(user.getId(), command);
     }
 }
