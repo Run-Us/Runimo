@@ -4,14 +4,14 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.runimo.runimo.runimo.service.model.MainRunimoStat;
+import org.runimo.runimo.runimo.service.dtos.MainRunimoStat;
 import org.runimo.runimo.runimo.service.usecase.RunimoFinder;
 import org.runimo.runimo.user.domain.LovePoint;
 import org.runimo.runimo.user.domain.User;
 import org.runimo.runimo.user.domain.UserItem;
 import org.runimo.runimo.user.service.UserFinder;
 import org.runimo.runimo.user.service.UserItemFinder;
-import org.runimo.runimo.user.service.dtos.MainViewResponse;
+import org.runimo.runimo.user.service.dtos.response.MainViewResponse;
 import org.runimo.runimo.user.service.dtos.UserMainViewInfo;
 import org.springframework.stereotype.Service;
 

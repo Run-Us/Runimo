@@ -5,7 +5,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.user.repository.MyItemRepository;
 import org.runimo.runimo.user.service.dtos.InventoryItem;
-import org.runimo.runimo.user.service.dtos.ItemQueryResponse;
+import org.runimo.runimo.user.service.dtos.response.ItemQueryResponse;
 import org.springframework.stereotype.Service;
 
 @Service

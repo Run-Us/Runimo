@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.user.domain.IncubatingEgg;
 import org.runimo.runimo.user.service.IncubatingEggProcessor;
 import org.runimo.runimo.user.service.LovePointProcessor;
-import org.runimo.runimo.user.service.dtos.UseLovePointCommand;
-import org.runimo.runimo.user.service.dtos.UseLovePointResponse;
+import org.runimo.runimo.user.service.dtos.command.UseLovePointCommand;
+import org.runimo.runimo.user.service.dtos.response.UseLovePointResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

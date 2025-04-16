@@ -8,7 +8,7 @@ import org.runimo.runimo.user.domain.User;
 import org.runimo.runimo.user.repository.LovePointRepository;
 import org.runimo.runimo.user.repository.OAuthInfoRepository;
 import org.runimo.runimo.user.repository.UserRepository;
-import org.runimo.runimo.user.service.dtos.UserCreateCommand;
+import org.runimo.runimo.user.service.dtos.command.UserCreateCommand;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 

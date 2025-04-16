@@ -5,8 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.user.domain.UserItem;
 import org.runimo.runimo.user.repository.UserItemRepository;
 import org.runimo.runimo.user.service.UserItemFinder;
-import org.runimo.runimo.user.service.dtos.GainItemCommand;
-import org.runimo.runimo.user.service.dtos.GainItemResponse;
+import org.runimo.runimo.user.service.dtos.command.GainItemCommand;
+import org.runimo.runimo.user.service.dtos.response.GainItemResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

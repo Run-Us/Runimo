@@ -1,6 +1,6 @@
 package org.runimo.runimo.hatch.service.usecase;
 
-import org.runimo.runimo.hatch.controller.dto.response.HatchEggResponse;
+import org.runimo.runimo.hatch.service.dtos.HatchEggResponse;
 
 public interface HatchUsecase {
 

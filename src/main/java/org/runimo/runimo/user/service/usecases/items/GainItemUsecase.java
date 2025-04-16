@@ -1,7 +1,7 @@
 package org.runimo.runimo.user.service.usecases.items;
 
-import org.runimo.runimo.user.service.dtos.GainItemCommand;
-import org.runimo.runimo.user.service.dtos.GainItemResponse;
+import org.runimo.runimo.user.service.dtos.command.GainItemCommand;
+import org.runimo.runimo.user.service.dtos.response.GainItemResponse;
 
 public interface GainItemUsecase {
 

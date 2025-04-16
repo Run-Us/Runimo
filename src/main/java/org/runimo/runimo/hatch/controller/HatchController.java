@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.common.response.SuccessResponse;
-import org.runimo.runimo.hatch.controller.dto.response.HatchEggResponse;
+import org.runimo.runimo.hatch.service.dtos.HatchEggResponse;
 import org.runimo.runimo.hatch.exception.HatchHttpResponseCode;
 import org.runimo.runimo.hatch.service.usecase.HatchUsecase;
 import org.runimo.runimo.user.controller.UserId;

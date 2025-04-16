@@ -10,7 +10,7 @@ import org.runimo.runimo.records.service.RecordFinder;
 import org.runimo.runimo.user.domain.User;
 import org.runimo.runimo.user.service.UserFinder;
 import org.runimo.runimo.user.service.dtos.LatestRunningRecord;
-import org.runimo.runimo.user.service.dtos.MyPageViewResponse;
+import org.runimo.runimo.user.service.dtos.response.MyPageViewResponse;
 import org.springframework.stereotype.Service;
 
 @Service
