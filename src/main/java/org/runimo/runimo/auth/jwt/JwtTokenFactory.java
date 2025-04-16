@@ -3,7 +3,7 @@ package org.runimo.runimo.auth.jwt;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import java.util.Date;
-import org.runimo.runimo.auth.service.dtos.TokenPair;
+import org.runimo.runimo.auth.service.dto.TokenPair;
 import org.runimo.runimo.user.domain.SocialProvider;
 import org.runimo.runimo.user.domain.User;
 

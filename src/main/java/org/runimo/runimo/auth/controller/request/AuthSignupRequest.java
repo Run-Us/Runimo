@@ -3,7 +3,7 @@ package org.runimo.runimo.auth.controller.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import org.hibernate.validator.constraints.URL;
-import org.runimo.runimo.auth.service.dtos.UserSignupCommand;
+import org.runimo.runimo.auth.service.dto.UserSignupCommand;
 import org.runimo.runimo.user.domain.Gender;
 
 @Schema(description = "사용자 회원가입 요청 DTO")

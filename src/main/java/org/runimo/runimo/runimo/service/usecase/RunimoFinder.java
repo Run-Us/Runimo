@@ -3,7 +3,7 @@ package org.runimo.runimo.runimo.service.usecase;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.runimo.repository.RunimoRepository;
-import org.runimo.runimo.runimo.service.model.MainRunimoStat;
+import org.runimo.runimo.runimo.service.dto.MainRunimoStat;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 

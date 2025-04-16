@@ -3,7 +3,7 @@ package org.runimo.runimo.user.service;
 import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.item.domain.ActivityType;
 import org.runimo.runimo.item.service.ItemActivityCreator;
-import org.runimo.runimo.item.service.dtos.CreateActivityCommand;
+import org.runimo.runimo.item.service.dto.CreateActivityCommand;
 import org.runimo.runimo.user.domain.UserItem;
 import org.runimo.runimo.user.repository.UserItemRepository;
 import org.springframework.stereotype.Component;

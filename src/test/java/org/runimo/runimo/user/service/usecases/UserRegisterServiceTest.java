@@ -20,7 +20,7 @@ import org.runimo.runimo.user.domain.User;
 import org.runimo.runimo.user.service.UserCreator;
 import org.runimo.runimo.user.service.UserItemCreator;
 import org.runimo.runimo.user.service.UserRegisterService;
-import org.runimo.runimo.user.service.dtos.UserRegisterCommand;
+import org.runimo.runimo.user.service.dto.command.UserRegisterCommand;
 
 class UserRegisterServiceTest {
 

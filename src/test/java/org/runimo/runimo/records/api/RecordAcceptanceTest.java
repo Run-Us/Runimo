@@ -15,7 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.runimo.runimo.CleanUpUtil;
 import org.runimo.runimo.auth.jwt.JwtTokenFactory;
-import org.runimo.runimo.records.controller.requests.RecordSaveRequest;
+import org.runimo.runimo.records.controller.request.RecordSaveRequest;
 import org.runimo.runimo.records.service.usecases.dtos.SegmentPace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

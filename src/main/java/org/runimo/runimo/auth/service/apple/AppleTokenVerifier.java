@@ -22,7 +22,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.runimo.runimo.auth.exceptions.UserJwtException;
 import org.runimo.runimo.auth.jwt.JwtTokenFactory;
-import org.runimo.runimo.auth.service.dtos.TokenPair;
+import org.runimo.runimo.auth.service.dto.TokenPair;
 import org.runimo.runimo.auth.service.kakao.AppleUserInfo;
 import org.runimo.runimo.user.enums.UserHttpResponseCode;
 import org.springframework.beans.factory.annotation.Value;
