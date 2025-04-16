@@ -13,7 +13,7 @@ import org.runimo.runimo.auth.jwt.JwtTokenFactory;
 import org.runimo.runimo.configs.ControllerTest;
 import org.runimo.runimo.user.UserFixtures;
 import org.runimo.runimo.user.service.UserFinder;
-import org.runimo.runimo.user.service.dtos.response.ItemQueryResponse;
+import org.runimo.runimo.user.service.dtos.ItemQueryResponse;
 import org.runimo.runimo.user.service.usecases.items.UseItemUsecase;
 import org.runimo.runimo.user.service.usecases.query.MyItemQueryUsecase;
 import org.springframework.beans.factory.annotation.Autowired;

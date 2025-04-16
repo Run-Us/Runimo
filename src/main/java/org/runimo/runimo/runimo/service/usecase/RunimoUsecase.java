@@ -1,8 +1,8 @@
 package org.runimo.runimo.runimo.service.usecase;
 
-import org.runimo.runimo.runimo.service.dtos.response.GetMyRunimoListResponse;
-import org.runimo.runimo.runimo.service.dtos.response.GetRunimoTypeListResponse;
-import org.runimo.runimo.runimo.service.dtos.response.SetMainRunimoResponse;
+import org.runimo.runimo.runimo.controller.dto.response.GetMyRunimoListResponse;
+import org.runimo.runimo.runimo.controller.dto.response.GetRunimoTypeListResponse;
+import org.runimo.runimo.runimo.controller.dto.response.SetMainRunimoResponse;
 
 public interface RunimoUsecase {
 

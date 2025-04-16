@@ -9,7 +9,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.runimo.runimo.auth.controller.dtos.KakaoLoginRequest;
+import org.runimo.runimo.auth.controller.request.KakaoLoginRequest;
 import org.runimo.runimo.auth.exceptions.UserJwtException;
 import org.runimo.runimo.auth.jwt.JwtResolver;
 import org.runimo.runimo.auth.service.OidcService;

@@ -6,8 +6,8 @@ import org.runimo.runimo.item.service.ItemFinder;
 import org.runimo.runimo.user.domain.IncubatingEgg;
 import org.runimo.runimo.user.service.IncubatingEggProcessor;
 import org.runimo.runimo.user.service.UserItemProcessor;
-import org.runimo.runimo.user.service.dtos.command.RegisterEggCommand;
-import org.runimo.runimo.user.service.dtos.response.RegisterEggResponse;
+import org.runimo.runimo.user.service.dtos.RegisterEggCommand;
+import org.runimo.runimo.user.service.dtos.RegisterEggResponse;
 import org.springframework.stereotype.Service;
 
 @Service

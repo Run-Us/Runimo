@@ -5,7 +5,7 @@ import org.runimo.runimo.item.domain.Egg;
 import org.runimo.runimo.user.domain.EggStatus;
 import org.runimo.runimo.user.domain.IncubatingEgg;
 import org.runimo.runimo.user.repository.IncubatingEggRepository;
-import org.runimo.runimo.user.service.dtos.command.UseLovePointCommand;
+import org.runimo.runimo.user.service.dtos.UseLovePointCommand;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 

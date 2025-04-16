@@ -18,7 +18,6 @@ public enum UserHttpResponseCode implements CustomResponseCode {
     LOGIN_FAIL_NOT_SIGN_IN(HttpStatus.NOT_FOUND
         , "로그인 실패 - 회원가입하지 않은 사용자", "로그인 실패 - 회원가입하지 않은 사용자"),
     LOGIN_FAIL_INVALID(HttpStatus.UNAUTHORIZED, "인증 실패", "JWT Decode실패"),
-    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자가 존재하지 않습니다.", "사용자가 존재하지 않습니다."),
     SIGNIN_FAIL_ALREADY_EXIST(HttpStatus.CONFLICT, "로그인 실패 - 이미 존재하는 사용자", "로그인 실패 - 이미 존재하는 사용자"),
     JWT_TOKEN_BROKEN(HttpStatus.BAD_REQUEST, "JWT 토큰이 손상되었습니다", "JWT 토큰이 손상되었습니다"),
     TOKEN_REFRESH_FAIL(HttpStatus.FORBIDDEN, "토큰 재발급 실패", "Refresh 토큰이 유효하지 않습니다."),

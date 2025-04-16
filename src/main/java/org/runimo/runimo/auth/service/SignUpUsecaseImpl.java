@@ -14,7 +14,7 @@ import org.runimo.runimo.user.domain.SocialProvider;
 import org.runimo.runimo.user.domain.User;
 import org.runimo.runimo.user.repository.AppleUserTokenRepository;
 import org.runimo.runimo.user.service.UserRegisterService;
-import org.runimo.runimo.user.service.dtos.command.UserRegisterCommand;
+import org.runimo.runimo.user.service.dtos.UserRegisterCommand;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
