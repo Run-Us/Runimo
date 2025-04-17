@@ -1,7 +1,9 @@
 package org.runimo.runimo.common.response;
 
+import lombok.ToString;
 import org.runimo.runimo.exceptions.code.CustomResponseCode;
 
+@ToString
 public class ErrorResponse extends Response {
 
     private ErrorResponse(final String errorMessage, final String errorCode) {
