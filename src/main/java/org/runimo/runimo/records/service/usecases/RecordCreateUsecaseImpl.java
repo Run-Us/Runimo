@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.records.service.RecordCommandService;
 import org.runimo.runimo.records.service.usecases.dtos.RecordCreateCommand;
 import org.runimo.runimo.records.service.usecases.dtos.RecordSaveResponse;
+import org.runimo.runimo.runimo.service.RunimoService;
 import org.runimo.runimo.user.domain.User;
 import org.runimo.runimo.user.service.UserFinder;
 import org.runimo.runimo.user.service.UserStatService;
@@ -18,6 +19,7 @@ public class RecordCreateUsecaseImpl implements RecordCreateUsecase {
     private final UserFinder userFinder;
     private final UserStatService userStatService;
     private final RecordCommandService commandService;
+    private final RunimoService runimoService;
 
     @Override
     @Transactional
@@ -25,6 +27,12 @@ public class RecordCreateUsecaseImpl implements RecordCreateUsecase {
         User user = userFinder.findUserById(command.userId())
             .orElseThrow(NoSuchElementException::new);
         userStatService.updateUserStats(user, command);
+
+        Long mainRunimoId = user.getMainRunimoId();
+        if (mainRunimoId != null) {
+            runimoService.updateRunimoStat(user.getMainRunimoId(), command.totalDistanceInMeters());
+        }
+
         return commandService.saveRecord(user.getId(), command);
     }
 }
