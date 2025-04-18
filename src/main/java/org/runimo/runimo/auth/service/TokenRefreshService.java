@@ -21,6 +21,10 @@ public class TokenRefreshService {
     @Value("${jwt.refresh.expiration}")
     private Long refreshTokenExpiry;
 
+    public void saveRefreshToken(String userId, String refreshToken) {
+        refreshTokenCache.put(userId, refreshToken, Duration.ofMillis(refreshTokenExpiry));
+    }
+
     public TokenPair refreshAccessToken(String refreshToken) {
         String userId;
         try {
