@@ -10,6 +10,7 @@ import org.runimo.runimo.auth.domain.SignupToken;
 import org.runimo.runimo.auth.exceptions.UserJwtException;
 import org.runimo.runimo.auth.jwt.JwtTokenFactory;
 import org.runimo.runimo.auth.repository.SignupTokenRepository;
+import org.runimo.runimo.auth.service.TokenRefreshService;
 import org.runimo.runimo.auth.service.apple.KakaoUserInfo;
 import org.runimo.runimo.auth.service.dto.AuthResult;
 import org.runimo.runimo.auth.service.dto.AuthStatus;
@@ -28,6 +29,7 @@ public class KakaoLoginHandler {
     private final KakaoTokenVerifier kakaoTokenVerifier;
     private final OAuthInfoRepository oAuthInfoRepository;
     private final JwtTokenFactory jwtTokenFactory;
+    private final TokenRefreshService tokenRefreshService;
     private final SignupTokenRepository signupTokenRepository;
 
     /**
@@ -51,6 +53,8 @@ public class KakaoLoginHandler {
         }
 
         TokenPair tokenPair = jwtTokenFactory.generateTokenPair(oAuthInfo.get().getUser());
+        tokenRefreshService.putRefreshToken(oAuthInfo.get().getUser().getPublicId(),
+            tokenPair.refreshToken());
         return AuthResult.success(AuthStatus.LOGIN_SUCCESS, oAuthInfo.get().getUser(), tokenPair);
     }
 
