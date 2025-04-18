@@ -8,7 +8,6 @@ import org.runimo.runimo.auth.jwt.JwtTokenFactory;
 import org.runimo.runimo.auth.jwt.SignupTokenPayload;
 import org.runimo.runimo.auth.repository.SignupTokenRepository;
 import org.runimo.runimo.auth.service.dto.SignupUserResponse;
-import org.runimo.runimo.auth.service.dto.TokenPair;
 import org.runimo.runimo.auth.service.dto.UserSignupCommand;
 import org.runimo.runimo.user.domain.AppleUserToken;
 import org.runimo.runimo.user.domain.SocialProvider;
@@ -29,7 +28,6 @@ public class SignUpUsecaseImpl implements SignUpUsecase {
     private final SignupTokenRepository signupTokenRepository;
     private final AppleUserTokenRepository appleUserTokenRepository;
     private final JwtResolver jwtResolver;
-    private final TokenRefreshService tokenRefreshService;
 
     @Override
     @Transactional
@@ -46,12 +44,7 @@ public class SignUpUsecaseImpl implements SignUpUsecase {
         if (payload.socialProvider() == SocialProvider.APPLE) {
             createAppleUserToken(savedUser.getId(), signupToken);
         }
-        TokenPair tokenPair = jwtTokenFactory.generateTokenPair(savedUser);
-        tokenRefreshService.saveRefreshToken(
-            savedUser.getPublicId(),
-            tokenPair.refreshToken()
-        );
-        return new SignupUserResponse(savedUser, tokenPair);
+        return new SignupUserResponse(savedUser, jwtTokenFactory.generateTokenPair(savedUser));
     }
 
     private SignupToken findUnExpiredSignupToken(String token) {
