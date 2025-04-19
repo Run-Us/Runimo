@@ -61,7 +61,7 @@ public class RecordFinder {
     public List<RecordSimpleView> findRecordSimpleViewByUserId(Long id, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return recordRepository
-            .findRecordSimpleViewByUserIdOrderByStartedAtDesc(id, pageable)
+            .findRecordByUserIdOrderByStartedAtDesc(id, pageable)
             .stream()
             .map(RecordSimpleView::from)
             .toList();

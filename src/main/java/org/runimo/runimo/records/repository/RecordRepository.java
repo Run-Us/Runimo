@@ -43,5 +43,5 @@ public interface RecordRepository extends JpaRepository<RunningRecord, Long> {
     List<DailyStat> findDailyDistanceByUserIdAndThisWeek(Long userId, LocalDateTime startOfWeek,
         LocalDateTime now);
 
-    List<RunningRecord> findRecordSimpleViewByUserIdOrderByStartedAtDesc(Long id, Pageable pageable);
+    List<RunningRecord> findRecordByUserIdOrderByStartedAtDesc(Long id, Pageable pageable);
 }
