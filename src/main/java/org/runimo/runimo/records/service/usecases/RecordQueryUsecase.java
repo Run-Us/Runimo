@@ -1,5 +1,6 @@
 package org.runimo.runimo.records.service.usecases;
 
+import org.runimo.runimo.records.service.dto.RecordSimpleViewResponse;
 import org.runimo.runimo.records.service.dto.WeeklyRecordStatResponse;
 import org.runimo.runimo.records.service.dto.WeeklyStatQuery;
 import org.runimo.runimo.records.service.usecases.dtos.MonthlyRecordStatResponse;
@@ -13,4 +14,6 @@ public interface RecordQueryUsecase {
     WeeklyRecordStatResponse getUserWeeklyRecordStat(WeeklyStatQuery query);
 
     MonthlyRecordStatResponse getUserMonthlyRecordStat(MonthlyStatQuery query);
+
+    RecordSimpleViewResponse getUserRecordSimpleView(Long id, int page, int size);
 }

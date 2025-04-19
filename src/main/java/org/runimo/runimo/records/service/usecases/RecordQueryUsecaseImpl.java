@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.records.domain.RunningRecord;
 import org.runimo.runimo.records.service.RecordFinder;
 import org.runimo.runimo.records.service.dto.DailyStat;
+import org.runimo.runimo.records.service.dto.RecordSimpleView;
+import org.runimo.runimo.records.service.dto.RecordSimpleViewResponse;
 import org.runimo.runimo.records.service.dto.WeeklyRecordStatResponse;
 import org.runimo.runimo.records.service.dto.WeeklyStatQuery;
 import org.runimo.runimo.records.service.usecases.dtos.MonthlyRecordStatResponse;
@@ -49,5 +51,12 @@ public class RecordQueryUsecaseImpl implements RecordQueryUsecase {
             to.atTime(23, 59, 59)
         );
         return new MonthlyRecordStatResponse(dailyDistances);
+    }
+
+    @Override
+    public RecordSimpleViewResponse getUserRecordSimpleView(Long id, int page, int size) {
+        List<RecordSimpleView> recordSimpleViews = recordFinder.findRecordSimpleViewByUserId(id,
+            page, size);
+        return new RecordSimpleViewResponse(recordSimpleViews);
     }
 }

@@ -7,7 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.records.domain.RunningRecord;
 import org.runimo.runimo.records.repository.RecordRepository;
 import org.runimo.runimo.records.service.dto.DailyStat;
+import org.runimo.runimo.records.service.dto.RecordSimpleView;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,5 +55,15 @@ public class RecordFinder {
     public List<DailyStat> findDailyStatByUserIdBetween(Long id, LocalDateTime from,
         LocalDateTime to) {
         return recordRepository.findDailyDistanceByUserIdAndThisWeek(id, from, to);
+    }
+
+    @Transactional(readOnly = true)
+    public List<RecordSimpleView> findRecordSimpleViewByUserId(Long id, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return recordRepository
+            .findRecordSimpleViewByUserIdOrderByStartedAtDesc(id, pageable)
+            .stream()
+            .map(RecordSimpleView::from)
+            .toList();
     }
 }
