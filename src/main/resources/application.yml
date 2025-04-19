@@ -98,9 +98,9 @@ spring:
     show-sql: true
 
 jwt:
-  expiration: 300000
+  expiration: ${JWT_EXPIRATION:180000}
   refresh:
-    expiration: 3600000
+    expiration: ${JWT_REFRESH_EXPIRATION:86400000}
 
 ---
 spring:
@@ -119,9 +119,9 @@ spring:
       mode: never
 
 jwt:
-  expiration: 3600000
+  expiration: ${JWT_EXPIRATION:6000000}
   refresh:
-    expiration: 604800000
+    expiration: ${JWT_REFRESH_EXPIRATION:604800000}
 
 ---
 spring:
