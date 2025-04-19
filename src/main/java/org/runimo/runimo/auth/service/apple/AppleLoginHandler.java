@@ -11,6 +11,7 @@ import org.runimo.runimo.auth.exceptions.UserJwtException;
 import org.runimo.runimo.auth.jwt.JwtTokenFactory;
 import org.runimo.runimo.auth.repository.SignupTokenRepository;
 import org.runimo.runimo.auth.service.EncryptUtil;
+import org.runimo.runimo.auth.service.TokenRefreshService;
 import org.runimo.runimo.auth.service.dto.AuthResult;
 import org.runimo.runimo.auth.service.dto.AuthStatus;
 import org.runimo.runimo.auth.service.dto.TokenPair;
@@ -28,6 +29,7 @@ public class AppleLoginHandler {
 
     private final AppleTokenVerifier appleTokenVerifier;
     private final JwtTokenFactory jwtTokenFactory;
+    private final TokenRefreshService tokenRefreshService;
     private final OAuthInfoRepository oAuthInfoRepository;
     private final SignupTokenRepository signupTokenRepository;
     private final EncryptUtil encryptUtil;
@@ -60,6 +62,8 @@ public class AppleLoginHandler {
         }
 
         TokenPair tokenPair = jwtTokenFactory.generateTokenPair(oAuthInfo.get().getUser());
+        tokenRefreshService.putRefreshToken(oAuthInfo.get().getUser().getPublicId(),
+            tokenPair.refreshToken());
         return AuthResult.success(AuthStatus.LOGIN_SUCCESS, oAuthInfo.get().getUser(), tokenPair);
     }
 
