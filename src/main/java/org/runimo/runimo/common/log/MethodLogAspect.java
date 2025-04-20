@@ -1,21 +1,16 @@
 package org.runimo.runimo.common.log;
 
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
-import org.runimo.runimo.common.log.model.HttpRequestLogInfo;
 import org.runimo.runimo.common.log.model.MethodEndLogInfo;
 import org.runimo.runimo.common.log.model.MethodStartLogInfo;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 @Aspect
 @Slf4j
@@ -25,11 +20,11 @@ public class MethodLogAspect {
 
     private final LogMessageFormatter logMessageFormatter;
 
-    @Pointcut("execution(* (@org.runimo.runimo.common.log.ServiceLog *).*(..))")
-    private void service() {
+    @Pointcut("@within(org.runimo.runimo.common.log.ServiceLog) || @annotation(org.runimo.runimo.common.log.ServiceLog)")
+    private void annotatedClassAndMethod() {
     }
 
-    @Around("service()")
+    @Around("annotatedClassAndMethod()")
     public Object calledMethodLogger(ProceedingJoinPoint pjp) throws Throwable {
         MethodStartLogInfo methodStartLogInfo = getMethodStartLogInfo(pjp);
         log.info(logMessageFormatter.toMethodStartLogMessage(methodStartLogInfo));
