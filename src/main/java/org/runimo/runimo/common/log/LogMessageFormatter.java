@@ -40,7 +40,7 @@ public class LogMessageFormatter { // TODO : 중복코드 리팩토링
         Map<String, String> logs = new LinkedHashMap<>();
         logs.put("name", logInfo.methodName());
         logs.put("authenticated", String.valueOf(logInfo.authenticated()));
-        logs.put("userId", logInfo.userId());
+        logs.put("user_id", logInfo.userId());
         logs.put("params", paramString);
         logs.put("time", getCurrentTime());
 
