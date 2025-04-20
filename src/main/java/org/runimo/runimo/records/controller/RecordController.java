@@ -13,6 +13,7 @@ import org.runimo.runimo.common.response.SuccessResponse;
 import org.runimo.runimo.records.controller.request.RecordSaveRequest;
 import org.runimo.runimo.records.controller.request.RecordUpdateRequest;
 import org.runimo.runimo.records.enums.RecordHttpResponse;
+import org.runimo.runimo.records.service.dto.RecordSimpleViewResponse;
 import org.runimo.runimo.records.service.dto.WeeklyRecordStatResponse;
 import org.runimo.runimo.records.service.dto.WeeklyStatQuery;
 import org.runimo.runimo.records.service.usecases.RecordCreateUsecase;
@@ -136,5 +137,22 @@ public class RecordController {
             new MonthlyStatQuery(userId, year, month));
         return ResponseEntity.ok(
             SuccessResponse.of(UserHttpResponseCode.MY_PAGE_DATA_FETCHED, response));
+    }
+
+    @Operation(summary = "개인 기록 페이지네이션 전체 조회", description = "개인 기록 페이지네이션 조회")
+    @ApiResponse(responseCode = "200", description = "기록 조회 성공",
+        content = @Content(schema = @Schema(implementation = RecordSimpleViewResponse.class)))
+    @GetMapping("/me")
+    public ResponseEntity<SuccessResponse<RecordSimpleViewResponse>> getMyRecordList(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size,
+        @UserId Long userId
+    ) {
+        return ResponseEntity.ok(
+            SuccessResponse.of(
+                RecordHttpResponse.RECORD_FETCHED,
+                recordQueryUsecase.getUserRecordSimpleView(userId, page, size)
+            )
+        );
     }
 }

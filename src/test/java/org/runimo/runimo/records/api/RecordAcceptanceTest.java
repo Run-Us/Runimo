@@ -20,6 +20,7 @@ import org.runimo.runimo.records.service.usecases.dtos.SegmentPace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
@@ -260,6 +261,25 @@ class RecordAcceptanceTest {
             .then()
             .log().all()
             .statusCode(401);
+    }
+
+    @Test
+    @Sql(scripts = "/sql/weekly_record_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void 사용자_기록_페이지네이션_조회() {
+
+        String token = AUTH_HEADER_PREFIX + jwtTokenFactory.generateAccessToken(USER_UUID);
+
+        given()
+            .contentType(ContentType.JSON)
+            .header("Authorization", token)
+            .param("page", 0)
+            .param("size", 5)
+            .when()
+            .get("/api/v1/records/me")
+            .then()
+            .log().all()
+            .statusCode(HttpStatus.OK.value())
+            .body("payload.record_list.size()", equalTo(5));
     }
 }
 
