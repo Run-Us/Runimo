@@ -25,7 +25,7 @@ public class MethodLogAspect {
 
     private final LogMessageFormatter logMessageFormatter;
 
-    @Pointcut("@annotation(org.runimo.runimo.common.log.ServiceLog)")
+    @Pointcut("execution(* (@org.runimo.runimo.common.log.ServiceLog *).*(..))")
     private void service() {
     }
 
