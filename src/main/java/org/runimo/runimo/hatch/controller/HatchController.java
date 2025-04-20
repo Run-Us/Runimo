@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.runimo.runimo.common.log.ServiceLog;
 import org.runimo.runimo.common.response.SuccessResponse;
 import org.runimo.runimo.hatch.service.dto.HatchEggResponse;
 import org.runimo.runimo.hatch.exception.HatchHttpResponseCode;
@@ -23,6 +24,7 @@ public class HatchController {
 
     private final HatchUsecase hatchUsecase;
 
+    @ServiceLog
     @Operation(summary = "알 부화", description = "알을 부화합니다.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "201", description = "[HSH2011] 알 부화 성공"),
