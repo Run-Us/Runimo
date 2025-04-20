@@ -21,33 +21,15 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class LogAspect {
+public class MethodLogAspect {
 
     private final LogMessageFormatter logMessageFormatter;
-
-    @Pointcut("execution(* org.runimo.runimo..controller.*Controller.*(..))")
-    private void controller() {
-    }
 
     @Pointcut("@annotation(org.runimo.runimo.common.log.ServiceLog)")
     private void service() {
     }
 
-    @Before("controller()")
-    public void apiRequestLogger() {
-        ServletRequestAttributes attributes = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes());
-        if (attributes == null) {
-            log.info("ServletRequestAttributes is null");
-            return;
-        }
-
-        HttpServletRequest request = attributes.getRequest();
-        HttpRequestLogInfo logInfo = HttpRequestLogInfo.of(request);
-
-        log.info(logMessageFormatter.toHttpRequestLogMessage(logInfo));
-    }
-
-    @Around("controller() || service()")
+    @Around("service()")
     public Object calledMethodLogger(ProceedingJoinPoint pjp) throws Throwable {
         MethodStartLogInfo methodStartLogInfo = getMethodStartLogInfo(pjp);
         log.info(logMessageFormatter.toMethodStartLogMessage(methodStartLogInfo));
