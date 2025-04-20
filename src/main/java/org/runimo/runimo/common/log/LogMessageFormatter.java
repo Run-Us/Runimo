@@ -38,7 +38,7 @@ public class LogMessageFormatter { // TODO : 중복코드 리팩토링
             new StringBuilder()).toString();
 
         Map<String, String> logs = new LinkedHashMap<>();
-        logs.put("name", logInfo.methodName());
+        logs.put("name", logInfo.className() + "." + logInfo.methodName());
         logs.put("authenticated", String.valueOf(logInfo.authenticated()));
         logs.put("user_id", logInfo.userId());
         logs.put("params", paramString);
@@ -54,7 +54,7 @@ public class LogMessageFormatter { // TODO : 중복코드 리팩토링
 
     public String toMethodEndLogMessage(MethodEndLogInfo logInfo) {
         Map<String, String> logs = new LinkedHashMap<>();
-        logs.put("name", logInfo.methodName());
+        logs.put("name", logInfo.className() + "." + logInfo.methodName());
         logs.put("elapsed_time", logInfo.elapsedTimeMillis() + "ms");
         logs.put("return", logInfo.returnData());
         logs.put("time", getCurrentTime());
