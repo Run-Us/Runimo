@@ -19,6 +19,7 @@ public record RecordUpdateRequest(
             .recordPublicId(recordPublicId)
             .editorId(userId)
             .title(request.title)
+            .description(request.description)
             .imgUrl(request.imgUrl)
             .build();
     }
