@@ -55,6 +55,7 @@ public class RunningRecord extends BaseEntity {
         this.isRewarded = isRewarded;
         this.totalDistance = totalDistance;
         this.averagePace = averagePace;
+        setTitleIfNull();
     }
 
     public static RunningRecord withoutId(Long userId, String title, LocalDateTime startedAt,
@@ -98,6 +99,11 @@ public class RunningRecord extends BaseEntity {
 
     public Duration getRunningTime() {
         return Duration.between(startedAt, endAt);
+    }
+
+    private void setTitleIfNull() {
+        if (this.title != null) return;
+        this.title = DefaultTitle.fromTime(this.startedAt).getTitle();
     }
 
     private void validateEditor(Long editorId) {
