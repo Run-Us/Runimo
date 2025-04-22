@@ -70,9 +70,9 @@ class RewardAcceptanceTest {
             .body("payload", notNullValue())
             .body("payload.saved_id", notNullValue());
 
-        Integer recordId = res.extract().path("payload.saved_id");
+        String recordId = res.extract().path("payload.saved_id");
 
-        RewardClaimRequest rewardClaimRequest = new RewardClaimRequest(Long.valueOf(recordId));
+        RewardClaimRequest rewardClaimRequest = new RewardClaimRequest(recordId);
 
         given()
             .header("Authorization", header)
@@ -102,9 +102,9 @@ class RewardAcceptanceTest {
             .body("payload", notNullValue())
             .body("payload.saved_id", notNullValue());
 
-        Integer recordId = res.extract().path("payload.saved_id");
+        String recordId = res.extract().path("payload.saved_id");
 
-        RewardClaimRequest rewardClaimRequest = new RewardClaimRequest(Long.valueOf(recordId));
+        RewardClaimRequest rewardClaimRequest = new RewardClaimRequest(recordId);
 
         given()
             .header("Authorization", header)
@@ -152,7 +152,7 @@ class RewardAcceptanceTest {
             .body("payload", notNullValue())
             .body("payload.saved_id", notNullValue());
 
-        Integer firstRecordId = firstRes.extract().path("payload.saved_id");
+        String firstRecordId = firstRes.extract().path("payload.saved_id");
 
         // 두번째 기록 저장 (startedAt이 더 빠르게)
         RecordSaveRequest secondRequest = new RecordSaveRequest(
@@ -174,7 +174,7 @@ class RewardAcceptanceTest {
             .body("payload.saved_id", notNullValue());
 
         // 첫번째 기록의 id로 보상 요청
-        RewardClaimRequest rewardClaimRequest = new RewardClaimRequest(Long.valueOf(firstRecordId));
+        RewardClaimRequest rewardClaimRequest = new RewardClaimRequest(firstRecordId);
 
         given()
             .header("Authorization", header)
@@ -207,9 +207,9 @@ class RewardAcceptanceTest {
             .body("payload", notNullValue())
             .body("payload.saved_id", notNullValue());
 
-        Integer recordId = res.extract().path("payload.saved_id");
+        String recordId = res.extract().path("payload.saved_id");
 
-        RewardClaimRequest rewardClaimRequest = new RewardClaimRequest(Long.valueOf(recordId));
+        RewardClaimRequest rewardClaimRequest = new RewardClaimRequest(recordId);
 
         given()
             .header("Authorization", header)
@@ -247,9 +247,9 @@ class RewardAcceptanceTest {
             .body("payload", notNullValue())
             .body("payload.saved_id", notNullValue());
 
-        Integer recordId = res.extract().path("payload.saved_id");
+        String recordId = res.extract().path("payload.saved_id");
 
-        RewardClaimRequest rewardClaimRequest = new RewardClaimRequest(Long.valueOf(recordId));
+        RewardClaimRequest rewardClaimRequest = new RewardClaimRequest(recordId);
 
         given()
             .header("Authorization", header)

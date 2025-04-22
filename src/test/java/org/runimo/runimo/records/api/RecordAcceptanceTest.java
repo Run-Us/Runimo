@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.notNullValue;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.runimo.runimo.CleanUpUtil;
 import org.runimo.runimo.auth.jwt.JwtTokenFactory;
 import org.runimo.runimo.records.controller.request.RecordSaveRequest;
+import org.runimo.runimo.records.controller.request.RecordUpdateRequest;
 import org.runimo.runimo.records.service.usecases.dtos.SegmentPace;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -129,7 +131,7 @@ class RecordAcceptanceTest {
             .then()
             .log().all()
             .statusCode(200)
-            .body("payload.record_id", equalTo(1))
+            .body("payload.record_id", notNullValue())
             .body("payload.segment_pace_list.size()", greaterThanOrEqualTo(1))
             .body("payload.segment_pace_list[0].distance", equalTo(1.0f))
             .body("payload.segment_pace_list[0].pace", equalTo(732000));
@@ -280,6 +282,43 @@ class RecordAcceptanceTest {
             .log().all()
             .statusCode(HttpStatus.OK.value())
             .body("payload.record_list.size()", equalTo(5));
+    }
+
+    @Test
+    @Sql(scripts = "/sql/weekly_record_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void 사용자_기록_페이지네이션_조회_잘못된_요청() {
+        String token = AUTH_HEADER_PREFIX + jwtTokenFactory.generateAccessToken(USER_UUID);
+
+        given()
+            .contentType(ContentType.JSON)
+            .header("Authorization", token)
+            .param("page", -1) // 잘못된 페이지 번호
+            .param("size", 5)
+            .when()
+            .get("/api/v1/records/me")
+            .then()
+            .log().all()
+            .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    @Sql(scripts = "/sql/weekly_record_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void 사용자_기록_업데이트() throws JsonProcessingException {
+        String token = AUTH_HEADER_PREFIX + jwtTokenFactory.generateAccessToken(USER_UUID);
+        RecordUpdateRequest request = new RecordUpdateRequest(
+            "예시 제목",
+            "오늘은 올림픽 공원을 달렸어요.",
+            "https://example.com/image.jpg"
+        );
+
+        given()
+            .contentType(ContentType.JSON)
+            .header("Authorization", token)
+            .body(objectMapper.writeValueAsString(request))
+            .when()
+            .patch("/api/v1/records/record-public-id-1")
+            .then()
+            .statusCode(HttpStatus.OK.value());
     }
 }
 
