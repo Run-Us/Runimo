@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotNull;
 import java.net.URI;
 import java.time.LocalDate;
 import lombok.RequiredArgsConstructor;
@@ -90,9 +91,10 @@ public class RecordController {
     @PatchMapping("/{recordId}")
     public ResponseEntity<Void> updateRecord(
         @RequestBody RecordUpdateRequest request,
+        @NotNull @PathVariable String recordId,
         @UserId Long userId
     ) {
-        recordUpdateUsecase.updateRecord(RecordUpdateRequest.toCommand(userId, request));
+        recordUpdateUsecase.updateRecord(RecordUpdateRequest.toCommand(userId, recordId, request));
         return ResponseEntity.ok().build();
     }
 

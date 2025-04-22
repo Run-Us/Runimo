@@ -33,6 +33,6 @@ public class RecordCreateUsecaseImpl implements RecordCreateUsecase {
             runimoService.updateRunimoStat(user.getMainRunimoId(), command.totalDistanceInMeters());
         }
 
-        return commandService.saveRecord(user.getId(), command);
+        return new RecordSaveResponse(commandService.saveRecord(user.getId(), command).getRecordPublicId());
     }
 }

@@ -2,31 +2,24 @@ package org.runimo.runimo.records.controller.request;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import java.time.LocalDateTime;
 import org.runimo.runimo.records.service.usecases.dtos.RecordUpdateCommand;
 
 @Schema(description = "사용자 달리기 기록 수정 요청 DTO")
 public record RecordUpdateRequest(
     @Schema(description = "달리기 제목", example = "오늘의 달리기")
     String title,
-    @Schema(description = "달리기 시작 시각", example = "2021-10-10T10:10:10")
-    LocalDateTime startedAt,
-    @Schema(description = "달리기 종료 시각", example = "2021-10-10T10:20:10")
-    LocalDateTime endAt,
-    @Schema(description = "달린 거리 (미터)", example = "10000")
-    Long totalDistanceInMeters,
-    @Schema(description = "평균 페이스 (밀리초)", example = "300000")
-    Long averagePaceInMilliSeconds
+    @Schema(description = "달리기 설명", example = "오늘은 올림픽 공원을 달렸어요")
+    String description,
+    @Schema(description = "대표 이미지 URL", example = "https://example.com/image.jpg")
+    String imgUrl
 ) {
 
-    public static RecordUpdateCommand toCommand(Long userId, RecordUpdateRequest request) {
+    public static RecordUpdateCommand toCommand(Long userId, String recordPublicId, RecordUpdateRequest request) {
         return RecordUpdateCommand.builder()
+            .recordPublicId(recordPublicId)
             .editorId(userId)
             .title(request.title)
-            .startedAt(request.startedAt)
-            .endAt(request.endAt)
-            .totalDistanceInMeters(request.totalDistanceInMeters)
-            .averagePaceInMilliSeconds(request.averagePaceInMilliSeconds)
+            .imgUrl(request.imgUrl)
             .build();
     }
 }
