@@ -31,6 +31,8 @@ public class RunningRecord extends BaseEntity {
     private String recordPublicId;
     private Long userId;
     private String title;
+    private String description;
+    private String imgUrl;
     private LocalDateTime startedAt;
     private LocalDateTime endAt;
     @Embedded
@@ -45,10 +47,21 @@ public class RunningRecord extends BaseEntity {
     private List<SegmentPace> pacePerKm;
 
     @Builder
-    public RunningRecord(Long userId, String title, LocalDateTime startedAt, LocalDateTime endAt,
-        Distance totalDistance, Pace averagePace, Boolean isRewarded, List<SegmentPace> pacePerKm) {
+    public RunningRecord(
+        Long userId,
+        String title,
+        String description,
+        String imgUrl,
+        LocalDateTime startedAt,
+        LocalDateTime endAt,
+        Distance totalDistance,
+        Pace averagePace,
+        Boolean isRewarded,
+        List<SegmentPace> pacePerKm) {
         this.userId = userId;
         this.title = title;
+        this.description = description;
+        this.imgUrl = imgUrl;
         this.pacePerKm = pacePerKm;
         this.startedAt = startedAt;
         this.endAt = endAt;
@@ -65,12 +78,12 @@ public class RunningRecord extends BaseEntity {
 
     public void updateDescription(Long editor, String description) {
         validateEditor(editor);
-        this.title = description;
+        this.description = description;
     }
 
     public void updateImageUrl(Long editor, String imgUrl) {
         validateEditor(editor);
-        this.title = imgUrl;
+        this.imgUrl = imgUrl;
     }
 
     public void reward(Long editorId) {
