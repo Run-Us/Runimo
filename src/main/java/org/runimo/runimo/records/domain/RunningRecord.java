@@ -6,6 +6,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
 import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -30,6 +31,8 @@ public class RunningRecord extends BaseEntity {
     private String recordPublicId;
     private Long userId;
     private String title;
+    private String description;
+    private String imgUrl;
     private LocalDateTime startedAt;
     private LocalDateTime endAt;
     @Embedded
@@ -44,12 +47,22 @@ public class RunningRecord extends BaseEntity {
     private List<SegmentPace> pacePerKm;
 
     @Builder
-    public RunningRecord(Long userId, String title, LocalDateTime startedAt, LocalDateTime endAt,
-        Distance totalDistance, Pace averagePace, Boolean isRewarded, List<SegmentPace> pacePerKm) {
+    public RunningRecord(
+        Long userId,
+        String title,
+        String description,
+        String imgUrl,
+        LocalDateTime startedAt,
+        LocalDateTime endAt,
+        Distance totalDistance,
+        Pace averagePace,
+        Boolean isRewarded,
+        List<SegmentPace> pacePerKm) {
         this.userId = userId;
         this.title = title;
+        this.description = description;
+        this.imgUrl = imgUrl;
         this.pacePerKm = pacePerKm;
-        this.recordPublicId = UUID.randomUUID().toString();
         this.startedAt = startedAt;
         this.endAt = endAt;
         this.isRewarded = isRewarded;
@@ -58,26 +71,19 @@ public class RunningRecord extends BaseEntity {
         setTitleIfNull();
     }
 
-    public static RunningRecord withoutId(Long userId, String title, LocalDateTime startedAt,
-        LocalDateTime endAt, Distance totalDistance, Pace averagePace) {
-        return RunningRecord.builder()
-            .userId(userId)
-            .title(title)
-            .startedAt(startedAt)
-            .endAt(endAt)
-            .totalDistance(totalDistance)
-            .averagePace(averagePace)
-            .build();
+    public void updateTitle(Long editor, String title) {
+        validateEditor(editor);
+        this.title = title;
     }
 
-    public void update(RunningRecord updatedEntity) {
-        validateEditor(updatedEntity.userId);
-        this.title = updatedEntity.getTitle();
-        this.startedAt = updatedEntity.getStartedAt();
-        this.endAt = updatedEntity.getEndAt();
-        this.averagePace = updatedEntity.averagePace;
-        this.recordPublicId = updatedEntity.recordPublicId;
-        this.isRewarded = updatedEntity.isRewarded;
+    public void updateDescription(Long editor, String description) {
+        validateEditor(editor);
+        this.description = description;
+    }
+
+    public void updateImageUrl(Long editor, String imgUrl) {
+        validateEditor(editor);
+        this.imgUrl = imgUrl;
     }
 
     public void reward(Long editorId) {
@@ -99,6 +105,13 @@ public class RunningRecord extends BaseEntity {
 
     public Duration getRunningTime() {
         return Duration.between(startedAt, endAt);
+    }
+
+    @PrePersist
+    public void generateRecordPublicId() {
+        if (recordPublicId == null) {
+            this.recordPublicId = UUID.randomUUID().toString();
+        }
     }
 
     private void setTitleIfNull() {

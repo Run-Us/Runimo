@@ -29,7 +29,7 @@ public class RewardService {
 
     @Transactional
     public RewardResponse claimReward(RewardClaimCommand command) {
-        RunningRecord runningRecord = recordFinder.findById(command.recordId())
+        RunningRecord runningRecord = recordFinder.findByPublicId(command.recordPublicId())
             .orElseThrow(NoSuchElementException::new);
         validateRecord(runningRecord);
         Egg grantedEgg = rewardEgg(command);
@@ -61,7 +61,7 @@ public class RewardService {
             log.info("유저 {}의 첫번째 달리기 기록이 없습니다.", command.userId());
             return false;
         }
-        if (!command.recordId().equals(firstRecordOfWeek.get().getId())) {
+        if (!command.recordPublicId().equals(firstRecordOfWeek.get().getRecordPublicId())) {
             log.info("유저 {}의 첫번째 달리기 기록이 아닙니다.", command.userId());
             return false;
         }

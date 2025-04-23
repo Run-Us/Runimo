@@ -1,17 +1,15 @@
 package org.runimo.runimo.records.service.usecases.dtos;
 
-import java.time.LocalDateTime;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
 
 @Builder
 public record RecordUpdateCommand(
-    Long editorId,
-    String recordPublicId,
+    @NotEmpty Long editorId,
+    @NotEmpty String recordPublicId,
     String title,
-    LocalDateTime startedAt,
-    LocalDateTime endAt,
-    Long totalDistanceInMeters,
-    Long averagePaceInMilliSeconds
+    String description,
+    String imgUrl
 ) {
 
 }
