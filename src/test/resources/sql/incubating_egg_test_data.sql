@@ -18,8 +18,8 @@ INSERT INTO user_item (id, user_id, item_id, quantity, created_at, updated_at)
 VALUES (1001, 1, 1, 2, NOW(), NOW()),
        (1002, 1, 2, 1, NOW(), NOW());
 
-INSERT INTO item (id, name, item_code, description, item_type, img_url, dtype, egg_type, hatch_require_amount, created_at, updated_at)
-VALUES (1, '마당알', 'A100', '기본 알', 'USABLE', 'https://example.com/images/egg.png', 'EGG', 'MADANG', 100, NOW(), NOW());
+INSERT INTO item (id, name, item_code, description, item_type, img_url, dtype, egg_type_id, hatch_require_amount, created_at, updated_at)
+VALUES (1, '마당알', 'A100', '기본 알', 'USABLE', 'https://example.com/images/egg.png', 'EGG', 1, 100, NOW(), NOW());
 
 INSERT INTO incubating_egg (id, user_id, egg_id, current_love_point_amount, hatch_require_amount, egg_status, created_at, updated_at)
 VALUES (1, 1, 1, 50, 100, 'INCUBATING', NOW(), NOW());

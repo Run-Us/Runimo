@@ -1,5 +1,6 @@
 SET FOREIGN_KEY_CHECKS = 0;
 
+DROP TABLE IF EXISTS egg_type;
 DROP TABLE IF EXISTS signup_token;
 DROP TABLE IF EXISTS apple_user_token;
 DROP TABLE IF EXISTS user_token;
@@ -68,22 +69,22 @@ CREATE TABLE `oauth_account`
 
 CREATE TABLE `apple_user_token`
 (
-    `id`           BIGINT PRIMARY KEY AUTO_INCREMENT,
-    `user_id`      BIGINT       NOT NULL,
+    `id`            BIGINT PRIMARY KEY AUTO_INCREMENT,
+    `user_id`       BIGINT       NOT NULL,
     `refresh_token` VARCHAR(255) NOT NULL,
-    `created_at`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `updated_at`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `deleted_at`   TIMESTAMP    NULL,
+    `created_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at`    TIMESTAMP    NULL,
     FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 );
 
 CREATE TABLE `signup_token`
 (
-    `token`       VARCHAR(255) PRIMARY KEY NOT NULL UNIQUE ,
-    `provider_id` VARCHAR(255) NOT NULL,
+    `token`         VARCHAR(255) PRIMARY KEY NOT NULL UNIQUE,
+    `provider_id`   VARCHAR(255)             NOT NULL,
     `refresh_token` VARCHAR(255),
-    `provider` VARCHAR(255),
-    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    `provider`      VARCHAR(255),
+    `created_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 
@@ -115,11 +116,24 @@ CREATE TABLE `item`
     `item_type`            VARCHAR(255) NOT NULL,
     `img_url`              VARCHAR(255),
     `dtype`                VARCHAR(255),
-    `egg_type`             VARCHAR(255),
+    `egg_type_id`          BIGINT,
     `hatch_require_amount` BIGINT,
     `created_at`           TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at`           TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `deleted_at`           TIMESTAMP    NULL
+);
+
+CREATE TABLE `egg_type`
+(
+    `id`                          INTEGER PRIMARY KEY AUTO_INCREMENT,
+    `name`                        VARCHAR(64) NOT NULL,
+    `code`                        VARCHAR(64) NOT NULL,
+    `required_distance_in_meters` BIGINT,
+    `level`                       INTEGER,
+    `created_at`                  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`                  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at`                  TIMESTAMP   NULL
+
 );
 
 CREATE TABLE `item_activity`
@@ -165,10 +179,10 @@ CREATE TABLE `runimo_definition`
     `code`        VARCHAR(255),
     `description` VARCHAR(255),
     `img_url`     varchar(255),
-    `egg_type`    varchar(255) NOT NULL,
+    `egg_type_id` BIGINT    NOT NULL,
     `created_at`  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at`  TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `deleted_at`  TIMESTAMP    NULL
+    `deleted_at`  TIMESTAMP NULL
 );
 
 CREATE TABLE `runimo`
@@ -190,17 +204,26 @@ ALTER TABLE `oauth_account`
     ADD FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 -- insert static data
-INSERT INTO runimo_definition (id, name, code, description, img_url, egg_type, created_at, updated_at)
-VALUES (1, '강아지', 'R-101', '마당-강아지예여', 'http://dummy1', 'MADANG', NOW(), NOW()),
-       (2, '고양이', 'R-102', '마당-고양이예여', 'http://dummy2', 'MADANG', NOW(), NOW()),
-       (3, '토끼', 'R-103', '마당-토끼예여', 'http://dummy2', 'MADANG', NOW(), NOW()),
-       (4, '오리', 'R-104', '마당-오리예여', 'http://dummy2', 'MADANG', NOW(), NOW()),
-       (5, '늑대 강아지', 'R-105', '늑대 강아지예여', 'http://dummy2', 'FOREST', NOW(), NOW()),
-       (6, '숲 고양이', 'R-106', '숲 고양이예여', 'http://dummy2', 'FOREST', NOW(), NOW()),
-       (7, '나뭇잎 토끼', 'R-107', '나뭇잎 토끼예여', 'http://dummy2', 'FOREST', NOW(), NOW()),
-       (8, '숲 오리', 'R-108', '숲 오리예여', 'http://dummy2', 'FOREST', NOW(), NOW());
 
-INSERT INTO item (id, name, item_code, description, item_type, img_url, dtype, egg_type, hatch_require_amount, created_at, updated_at)
-VALUES (1, '마당', 'A100', '기본 알', 'USABLE', 'https://example.com/images/egg1.png', 'EGG', 'MADANG', 0L, NOW(), NOW()),
-       (2, '숲', 'A101', '두번째 단계 알', 'USABLE', 'https://example.com/images/egg2.png', 'EGG', 'FOREST', 30000L, NOW(), NOW()),
-       (3, '초원', 'A102', '세번째 단계 알', 'USABLE', 'https://example.com/images/egg3.png', 'EGG', 'GRASSLAND', 50000L, NOW(), NOW());
+INSERT INTO egg_type (id, name, code, required_distance_in_meters, level, created_at, updated_at)
+VALUES (1, '마당', 'A100', 0, 1, NOW(), NOW()),
+       (2, '숲', 'A101', 30000, 2, NOW(), NOW());
+
+
+INSERT INTO runimo_definition (id, name, code, description, img_url, egg_type_id, created_at,
+                               updated_at)
+VALUES (1, '강아지', 'R-101', '마당-강아지예여', 'http://dummy1', 1, NOW(), NOW()),
+       (2, '고양이', 'R-102', '마당-고양이예여', 'http://dummy2', 1, NOW(), NOW()),
+       (3, '토끼', 'R-103', '마당-토끼예여', 'http://dummy2', 1, NOW(), NOW()),
+       (4, '오리', 'R-104', '마당-오리예여', 'http://dummy2', 1, NOW(), NOW()),
+       (5, '늑대 강아지', 'R-105', '늑대 강아지예여', 'http://dummy2', 2, NOW(), NOW()),
+       (6, '숲 고양이', 'R-106', '숲 고양이예여', 'http://dummy2', 2, NOW(), NOW()),
+       (7, '나뭇잎 토끼', 'R-107', '나뭇잎 토끼예여', 'http://dummy2', 2, NOW(), NOW()),
+       (8, '숲 오리', 'R-108', '숲 오리예여', 'http://dummy2', 2, NOW(), NOW());
+
+INSERT INTO item (id, name, item_code, description, item_type, img_url, dtype, egg_type_id,
+                  hatch_require_amount, created_at, updated_at)
+VALUES (1, '마당', 'A100', '기본 알', 'USABLE', 'https://example.com/images/egg1.png', 'EGG', 1,
+        100, NOW(), NOW()),
+       (2, '숲', 'A101', '두번째 단계 알', 'USABLE', 'https://example.com/images/egg2.png', 'EGG',
+        2, 30000, NOW(), NOW());
