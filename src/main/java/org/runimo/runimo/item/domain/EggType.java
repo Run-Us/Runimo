@@ -29,26 +29,26 @@ public class EggType extends BaseEntity {
     private Integer level;
 
     @Builder
-    private EggType(String name, String code, Long requiredDistanceInMeters, Integer eggLevel) {
+    private EggType(String name, String code, Long requiredDistanceInMeters, Integer level) {
         this.name = name;
         this.code = code;
         if (requiredDistanceInMeters < 0) {
             throw new IllegalArgumentException("알의 요구 거리(미터)는 0보다 작을 수 없습니다.");
         }
         this.requiredDistanceInMeters = requiredDistanceInMeters;
-        if (eggLevel < 0) {
+        if (level < 0) {
             throw new IllegalArgumentException("알의 레벨은 0보다 작을 수 없습니다.");
         }
-        this.level = eggLevel;
+        this.level = level;
     }
 
     public static EggType of(String name, String code, Long requiredDistanceInMeters,
-        Integer eggLevel) {
+        Integer level) {
         return EggType.builder()
             .name(name)
             .code(code)
             .requiredDistanceInMeters(requiredDistanceInMeters)
-            .eggLevel(eggLevel)
+            .level(level)
             .build();
     }
 
