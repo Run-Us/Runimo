@@ -101,9 +101,9 @@ class RewardTest {
         RewardResponse rewardResponse = rewardService.claimReward(rewardClaimCommand);
 
         UserItem savedItem = userItemFinder.
-            findEggByUserIdAndEggType(
+            findEggByUserIdAndEggCode(
                 savedUser.getId(),
-                rewardResponse.eggType())
+                rewardResponse.eggCode())
             .get();
 
         assertNotNull(rewardResponse.eggCode());

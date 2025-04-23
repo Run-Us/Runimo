@@ -66,7 +66,7 @@ class HatchControllerTest {
 
                 .then()
                 .log().all()
-                .statusCode(HttpStatus.CREATED.value())
+                 .statusCode(HttpStatus.CREATED.value())
 
                 .body("code", equalTo("HSH2011"))
                 .body("payload.name", notNullValue())
