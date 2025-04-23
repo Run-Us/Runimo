@@ -1,5 +1,6 @@
 package org.runimo.runimo.runimo.service.usecase;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -62,19 +63,18 @@ public class RunimoUsecaseImpl implements RunimoUsecase {
 
     @Override
     public GetRunimoTypeListResponse getRunimoTypeList() {
-        List<EggType> eggTypes = eggTypeRepository.findAllOrderById();
+        List<EggType> eggTypes = eggTypeRepository.findAllByOrderByIdAsc();
 
-        Map<Long, List<RunimoTypeSimpleModel>> runimoTypeInfos = eggTypes.stream()
-            .collect(Collectors.toMap(
-                EggType::getId,
-                type -> runimoDefinitionRepository.findRunimoSimpleTypeModelByType(List.of(type))
-            ));
+        Map<Long, List<RunimoTypeSimpleModel>> runimoTypeInfos =
+            runimoDefinitionRepository.findRunimoSimpleTypeModelByType(eggTypes).stream()
+                .collect(Collectors.groupingBy(RunimoTypeSimpleModel::getEggTypeId));
 
         List<RunimoTypeGroup> runimoTypeGroups = eggTypes.stream()
             .map(type -> new RunimoTypeGroup(
                 type.getName(),
                 type.getRequiredDistanceInMeters(),
-                RunimoTypeInfo.from(runimoTypeInfos.get(type.getId()))
+                RunimoTypeInfo.from(
+                    runimoTypeInfos.getOrDefault(type.getId(), Collections.emptyList()))
             ))
             .toList();
 
