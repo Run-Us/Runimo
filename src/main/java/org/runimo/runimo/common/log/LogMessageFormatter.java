@@ -67,6 +67,14 @@ public class LogMessageFormatter { // TODO : 중복코드 리팩토링
         return sb.toString();
     }
 
+    public String toMethodErrorLogMessage(Throwable ex) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("METHOD_EXCEPTION ");
+        sb.append(ex.getMessage());
+
+        return sb.toString();
+    }
+
     private StringBuilder convertMapToLogFormatString(Map<String, String> infoMap,
         StringBuilder sb) {
         sb.append("[");
@@ -88,7 +96,7 @@ public class LogMessageFormatter { // TODO : 중복코드 리팩토링
     }
 
     private String getCurrentTime() {
-        return ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss"));
+        return ZonedDateTime.now().toString();
     }
 
     private String convertCamelCaseToSnakeCase(String camelCase) {

@@ -30,8 +30,14 @@ public class MethodLogAspect {
         log.info(logMessageFormatter.toMethodStartLogMessage(methodStartLogInfo));
 
         long startTime = getCurrentTimeMillis();
-        Object proceedReturn = pjp.proceed();
-        long endTime = getCurrentTimeMillis();
+        long endTime;
+        Object proceedReturn = null;
+        try {
+            proceedReturn = pjp.proceed();
+        } catch (Throwable ex) {
+            log.info(logMessageFormatter.toMethodErrorLogMessage(ex));
+        }
+        endTime = getCurrentTimeMillis();
 
         MethodEndLogInfo methodEndLogInfo = MethodEndLogInfo.of(pjp, endTime - startTime,
             proceedReturn);
