@@ -35,7 +35,7 @@ public class MethodLogAspect {
         try {
             proceedReturn = pjp.proceed();
         } catch (Throwable ex) {
-            log.info(logMessageFormatter.toMethodErrorLogMessage(ex));
+            log.error(logMessageFormatter.toMethodErrorLogMessage(ex));
         }
         endTime = getCurrentTimeMillis();
 
