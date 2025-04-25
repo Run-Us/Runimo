@@ -13,6 +13,7 @@ import static org.mockito.MockitoAnnotations.openMocks;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -50,6 +51,8 @@ class RewardServiceTest {
             .startedAt(LocalDateTime.now())
             .build();
         ReflectionTestUtils.setField(runningRecord, "id", recordId);
+        ReflectionTestUtils.setField(runningRecord, "recordPublicId",
+            UUID.randomUUID().toString());
         return runningRecord;
     }
 
@@ -65,9 +68,9 @@ class RewardServiceTest {
     @Test
     void 보상을_받지_않은_이번주_첫_기록이라면_알을_지급한다() {
         RunningRecord unRewardedRecord = getRunningRecordWithIds(1L, 1L, false);
-        RewardClaimCommand command = new RewardClaimCommand(1L, 1L);
+        RewardClaimCommand command = new RewardClaimCommand(1L, unRewardedRecord.getRecordPublicId());
 
-        when(recordFinder.findById(any())).thenReturn(java.util.Optional.of(unRewardedRecord));
+        when(recordFinder.findByPublicId(any())).thenReturn(java.util.Optional.of(unRewardedRecord));
         when(recordFinder.findFirstRunOfCurrentWeek(any())).thenReturn(
             java.util.Optional.of(unRewardedRecord));
         when(eggGrantService.grantRandomEggToUser(any())).thenReturn(
@@ -82,9 +85,10 @@ class RewardServiceTest {
     @Test
     void 이미_보상을_받은_기록이면_예외를_던진다() {
         RunningRecord alreadyRewardedRecord = getRunningRecordWithIds(1L, 1L, true);
-        RewardClaimCommand command = new RewardClaimCommand(1L, 1L);
+        RewardClaimCommand command = new RewardClaimCommand(1L,
+            alreadyRewardedRecord.getRecordPublicId());
 
-        when(recordFinder.findById(any())).thenReturn(java.util.Optional.of(alreadyRewardedRecord));
+        when(recordFinder.findByPublicId(any())).thenReturn(java.util.Optional.of(alreadyRewardedRecord));
         when(recordFinder.findFirstRunOfCurrentWeek(any())).thenReturn(
             java.util.Optional.of(alreadyRewardedRecord));
         when(eggGrantService.grantRandomEggToUser(any())).thenReturn(
@@ -98,9 +102,9 @@ class RewardServiceTest {
     void 이번주_첫_기록이_아니면_알을_지급하지_않는다() {
         RunningRecord unRewardedRecord = getRunningRecordWithIds(1L, 1L, false);
         RunningRecord anotherRecord = getRunningRecordWithIds(1L, 2L, false);
-        RewardClaimCommand command = new RewardClaimCommand(1L, 1L);
+        RewardClaimCommand command = new RewardClaimCommand(1L, unRewardedRecord.getRecordPublicId());
 
-        when(recordFinder.findById(any())).thenReturn(java.util.Optional.of(unRewardedRecord));
+        when(recordFinder.findByPublicId(any())).thenReturn(java.util.Optional.of(unRewardedRecord));
         when(recordFinder.findFirstRunOfCurrentWeek(any())).thenReturn(Optional.of(anotherRecord));
         when(loveGrantService.grantLoveToUserWithDistance(any())).thenReturn(10L);
 

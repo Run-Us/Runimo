@@ -93,6 +93,8 @@ CREATE TABLE `running_record`
     `user_id`               INTEGER      NOT NULL,
     `record_public_id`      VARCHAR(255) NOT NULL,
     `title`                 VARCHAR(255),
+    `description`           VARCHAR(255),
+    `img_url`               VARCHAR(255),
     `started_at`            TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `end_at`                TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `total_distance`        INTEGER,

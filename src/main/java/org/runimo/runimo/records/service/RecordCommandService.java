@@ -2,12 +2,9 @@ package org.runimo.runimo.records.service;
 
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
-import org.runimo.runimo.common.scale.Distance;
-import org.runimo.runimo.common.scale.Pace;
 import org.runimo.runimo.records.domain.RunningRecord;
 import org.runimo.runimo.records.repository.RecordRepository;
 import org.runimo.runimo.records.service.usecases.dtos.RecordCreateCommand;
-import org.runimo.runimo.records.service.usecases.dtos.RecordSaveResponse;
 import org.runimo.runimo.records.service.usecases.dtos.RecordUpdateCommand;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,10 +16,9 @@ public class RecordCommandService {
     private final RecordRepository recordRepository;
 
     @Transactional
-    public RecordSaveResponse saveRecord(Long userId, RecordCreateCommand command) {
+    public RunningRecord saveRecord(Long userId, RecordCreateCommand command) {
         RunningRecord runningRecord = mapToCreatedRunningRecord(userId, command);
-        recordRepository.save(runningRecord);
-        return new RecordSaveResponse(runningRecord.getId());
+        return recordRepository.save(runningRecord);
     }
 
     @Transactional
@@ -30,20 +26,13 @@ public class RecordCommandService {
         RunningRecord runningRecord = recordRepository.findByRecordPublicId(
                 command.recordPublicId())
             .orElseThrow(NoSuchElementException::new);
-        runningRecord.update(mapToUpdateRecord(command));
+
+        runningRecord.updateTitle(command.editorId(), command.title());
+        runningRecord.updateDescription(command.editorId(), command.description());
+        runningRecord.updateImageUrl(command.editorId(), command.imgUrl());
         recordRepository.save(runningRecord);
     }
 
-    private RunningRecord mapToUpdateRecord(RecordUpdateCommand command) {
-        return RunningRecord.withoutId(
-            command.editorId(),
-            command.title(),
-            command.startedAt(),
-            command.endAt(),
-            new Distance(command.totalDistanceInMeters()),
-            new Pace(command.averagePaceInMilliSeconds())
-        );
-    }
 
     private RunningRecord mapToCreatedRunningRecord(Long id, RecordCreateCommand command) {
         return RunningRecord.builder()
