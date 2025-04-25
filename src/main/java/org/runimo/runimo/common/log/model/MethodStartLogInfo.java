@@ -37,7 +37,7 @@ public record MethodStartLogInfo(
 
         Map<String, String> params = new HashMap<>();
         for (int i = 0; i < parameterNames.length; i++) {
-            params.put(parameterNames[i], parameterValues[i].toString());
+            params.put(parameterNames[i], String.valueOf(parameterValues[i]));
         }
         return params;
     }

@@ -18,7 +18,7 @@ public record MethodEndLogInfo(
             .className(getClassName(joinPoint))
             .methodName(joinPoint.getSignature().getName())
             .elapsedTimeMillis(elapsedTimeMillis)
-            .returnData(returnData.toString())
+            .returnData(String.valueOf(returnData))
             .build();
     }
 
