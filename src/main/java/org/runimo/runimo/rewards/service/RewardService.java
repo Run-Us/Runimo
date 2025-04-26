@@ -35,7 +35,8 @@ public class RewardService {
         Egg grantedEgg = rewardEgg(command);
         Long grantedLoveAmount = loveGrantService.grantLoveToUserWithDistance(runningRecord);
         runningRecord.reward(command.userId());
-        return new RewardResponse(grantedEgg.getItemCode(), grantedEgg.getEggType(),
+        return new RewardResponse(!grantedEgg.isEmpty(), grantedEgg.getItemCode(),
+            grantedEgg.getEggType().getName(),
             grantedLoveAmount);
     }
 

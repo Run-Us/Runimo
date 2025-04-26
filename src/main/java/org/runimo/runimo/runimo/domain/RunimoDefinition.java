@@ -2,8 +2,9 @@ package org.runimo.runimo.runimo.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -30,8 +31,8 @@ public class RunimoDefinition extends BaseEntity {
     @Column(name = "img_url")
     private String imgUrl;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "egg_type", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "egg_type_id", nullable = false)
     private EggType type;
 
     @Builder

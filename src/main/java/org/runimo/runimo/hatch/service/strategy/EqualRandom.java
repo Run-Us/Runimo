@@ -4,9 +4,9 @@ import java.security.SecureRandom;
 
 public class EqualRandom implements HatchRandomStrategy {
 
-    private final SecureRandom secureRandom = new SecureRandom(); // TODO : 빈으로 관리?
+    private final SecureRandom secureRandom = new SecureRandom();
 
-    private int size;
+    private final int size;
 
     public EqualRandom(int size) {
         this.size = size;

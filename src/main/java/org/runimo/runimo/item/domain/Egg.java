@@ -5,8 +5,9 @@ import static org.runimo.runimo.common.GlobalConsts.EMPTYFIELD;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,10 +19,10 @@ import lombok.NoArgsConstructor;
 @DiscriminatorValue("EGG")
 public class Egg extends Item {
 
-    public static final Egg EMPTY = new Egg(EMPTYFIELD, EMPTYFIELD, EMPTYFIELD, EMPTYFIELD, null,
-        0L);
-    @Column(name = "egg_type")
-    @Enumerated(EnumType.STRING)
+    public static final Egg EMPTY = new Egg(EMPTYFIELD, EMPTYFIELD, EMPTYFIELD, EMPTYFIELD,
+        EggType.EMPTY, 0L);
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "egg_type_id", referencedColumnName = "id")
     private EggType eggType;
     @Column(name = "hatch_require_amount")
     private Long hatchRequireAmount;
@@ -32,5 +33,9 @@ public class Egg extends Item {
         super(itemCode, name, description, imgUrl, ItemType.USABLE);
         this.eggType = eggType;
         this.hatchRequireAmount = hatchRequireAmount;
+    }
+
+    public boolean isEmpty() {
+        return this == EMPTY;
     }
 }

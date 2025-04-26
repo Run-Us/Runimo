@@ -4,7 +4,6 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.hamcrest.Matchers.nullValue;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -185,7 +184,8 @@ class RewardAcceptanceTest {
             .then()
             .log().all()
             .statusCode(HttpStatus.OK.value())
-            .body("payload.egg_type", nullValue())
+            .body("payload.is_rewarded", equalTo(false))
+            .body("payload.egg_type", equalTo("EMPTY"))
             .body("payload.egg_code", equalTo("EMPTY"));
     }
 
@@ -260,6 +260,7 @@ class RewardAcceptanceTest {
             .then()
             .log().all()
             .statusCode(HttpStatus.OK.value())
+            .body("payload.is_rewarded", equalTo(false))
             .body("payload.love_point_amount", notNullValue())
             .body("payload.love_point_amount", equalTo(0));
     }

@@ -1,10 +1,10 @@
 package org.runimo.runimo.rewards.service.dto;
 
-import org.runimo.runimo.item.domain.EggType;
 
 public record RewardResponse(
+    Boolean isRewarded,
     String eggCode,
-    EggType eggType,
+    String eggType,
     Long lovePointAmount
 ) {
 

@@ -4,6 +4,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.item.domain.Egg;
 import org.runimo.runimo.item.domain.EggType;
+import org.runimo.runimo.item.repository.EggTypeRepository;
 import org.runimo.runimo.item.service.EggFactory;
 import org.runimo.runimo.user.domain.User;
 import org.runimo.runimo.user.service.UserItemProcessor;
@@ -19,6 +20,7 @@ public class EggGrantService {
     private static final Long DEFAULT_REWARD_EGG_AMOUNT = 1L;
     private final EggFactory eggFactory;
     private final UserItemProcessor userItemProcessor;
+    private final EggTypeRepository eggTypeRepository;
 
     @Transactional
     public void grantGreetingEggToUser(User user) {
@@ -31,7 +33,7 @@ public class EggGrantService {
 
     @Transactional
     public Egg grantRandomEggToUser(User user) {
-        List<EggType> unLockedEggTypes = EggType.getUnLockedEggTypes(
+        List<EggType> unLockedEggTypes = eggTypeRepository.findEggTypeByRequiredDistanceInMetersLessThanEqual(
             user.getTotalDistanceInMeters());
         Egg grantedEgg = eggFactory.createEggRandomly(unLockedEggTypes);
         userItemProcessor.updateItemQuantity(user.getId(), grantedEgg.getId(),

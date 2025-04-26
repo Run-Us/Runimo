@@ -12,14 +12,6 @@ TRUNCATE TABLE oauth_account;
 INSERT INTO oauth_account (id, created_at, deleted_at, updated_at, provider, provider_id, user_id)
     VALUES (1, NOW(), null, NOW(), 'KAKAO', 1234, 1);
 
-
-TRUNCATE TABLE item;
-INSERT INTO item (name, item_code, description, item_type, img_url, dtype, egg_type,
-                  hatch_require_amount, created_at,
-                  updated_at)
-VALUES ('마당알', 'A100', '마당알: 기본 알', 'USABLE', 'example.url', 'EGG', 'MADANG', 10, NOW(), NOW());
-
-
 -- 보유 아이템
 TRUNCATE TABLE user_item;
 INSERT INTO user_item (id, user_id, item_id, quantity, created_at, updated_at)

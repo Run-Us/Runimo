@@ -3,8 +3,8 @@ package org.runimo.runimo.rewards.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -74,11 +74,17 @@ class RewardServiceTest {
         when(recordFinder.findFirstRunOfCurrentWeek(any())).thenReturn(
             java.util.Optional.of(unRewardedRecord));
         when(eggGrantService.grantRandomEggToUser(any())).thenReturn(
-            Egg.builder().eggType(EggType.MADANG).build());
+            Egg.builder().eggType(EggType.of(
+                "MADANG",
+                "hi",
+                0L,
+                0
+            )).build());
         when(loveGrantService.grantLoveToUserWithDistance(any())).thenReturn(10L);
         RewardResponse res = rewardService.claimReward(command);
         assertNotNull(res);
-        assertEquals(EggType.MADANG, res.eggType());
+        assertTrue(res.isRewarded());
+        assertEquals("MADANG", res.eggType());
         assertNotEquals(0, res.lovePointAmount());
     }
 
@@ -92,7 +98,12 @@ class RewardServiceTest {
         when(recordFinder.findFirstRunOfCurrentWeek(any())).thenReturn(
             java.util.Optional.of(alreadyRewardedRecord));
         when(eggGrantService.grantRandomEggToUser(any())).thenReturn(
-            Egg.builder().eggType(EggType.MADANG).build());
+            Egg.builder().eggType(EggType.of(
+                "MADANG",
+                "hi",
+                0L,
+                0
+            )).build());
         when(loveGrantService.grantLoveToUserWithDistance(any())).thenReturn(10L);
 
         assertThrows(IllegalStateException.class, () -> rewardService.claimReward(command));
@@ -110,7 +121,8 @@ class RewardServiceTest {
 
         RewardResponse res = rewardService.claimReward(command);
         verify(eggGrantService, never()).grantRandomEggToUser(any());
+        assertEquals(false, res.isRewarded());
         assertEquals(Egg.EMPTY.getItemCode(), res.eggCode());
-        assertNull(res.eggType());
+        assertEquals(Egg.EMPTY.getName(), res.eggType());
     }
 }

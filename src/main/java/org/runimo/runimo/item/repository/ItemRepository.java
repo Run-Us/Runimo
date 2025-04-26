@@ -15,6 +15,6 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
     @Query("select i.id from Item i")
     List<Long> findAllItemIds();
 
-    @Query("select e from Egg e where e.eggType = :eggtype")
-    Optional<Egg> findByEggType(EggType eggtype);
+    @Query("select e from Egg e where e.eggType = :eggType")
+    Optional<Egg> findByEggType(EggType eggType);
 }

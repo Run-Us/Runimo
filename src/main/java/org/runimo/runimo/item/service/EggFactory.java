@@ -13,11 +13,12 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class EggFactory {
 
+    private static final Long GREETING_EGG_ID = 1L;
     private final ItemFinder itemFinder;
     private final EggTypeRandomGenerator eggTypeRandomGenerator;
 
     public Egg createGreetingEgg() {
-        return itemFinder.findEggByEggType(EggType.MADANG)
+        return (Egg) itemFinder.findById(GREETING_EGG_ID)
             .orElseThrow(RuntimeException::new);
     }
 
