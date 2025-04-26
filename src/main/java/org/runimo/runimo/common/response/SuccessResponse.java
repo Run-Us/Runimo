@@ -1,8 +1,10 @@
 package org.runimo.runimo.common.response;
 
 import lombok.Getter;
+import lombok.ToString;
 import org.runimo.runimo.exceptions.code.CustomResponseCode;
 
+@ToString
 @Getter
 public class SuccessResponse<T> extends Response {
 
