@@ -31,11 +31,12 @@ public class MethodLogAspect {
 
         long startTime = getCurrentTimeMillis();
         long endTime;
-        Object proceedReturn = null;
+        Object proceedReturn;
         try {
             proceedReturn = pjp.proceed();
         } catch (Throwable ex) {
             log.error(logMessageFormatter.toMethodErrorLogMessage(ex));
+            throw ex;
         }
         endTime = getCurrentTimeMillis();
 
