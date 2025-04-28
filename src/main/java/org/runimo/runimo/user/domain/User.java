@@ -2,6 +2,8 @@ package org.runimo.runimo.user.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
@@ -33,6 +35,7 @@ public class User extends BaseEntity {
     @Column(name = "main_runimo_id")
     private Long mainRunimoId;
     @Column(name = "gender")
+    @Enumerated(EnumType.STRING)
     private Gender gender;
 
     @Builder
