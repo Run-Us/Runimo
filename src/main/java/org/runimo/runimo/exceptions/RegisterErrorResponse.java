@@ -1,16 +1,19 @@
 package org.runimo.runimo.exceptions;
 
+import lombok.AccessLevel;
 import lombok.Getter;
-import org.runimo.runimo.common.response.Response;
+import lombok.NoArgsConstructor;
+import org.runimo.runimo.common.response.ErrorResponse;
 import org.runimo.runimo.exceptions.code.CustomResponseCode;
 
 @Getter
-public class RegisterErrorResponse extends Response {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class RegisterErrorResponse extends ErrorResponse {
 
-    private final String temporalRegisterToken;
+    private  String temporalRegisterToken;
 
     public RegisterErrorResponse(CustomResponseCode errorCode, String temporalRegisterToken) {
-        super(false, errorCode.getClientMessage(), errorCode.getCode());
+        super(errorCode.getClientMessage(), errorCode.getCode());
         this.temporalRegisterToken = temporalRegisterToken;
     }
 }
