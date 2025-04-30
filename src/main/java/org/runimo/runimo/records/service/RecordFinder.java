@@ -1,6 +1,7 @@
 package org.runimo.runimo.records.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -8,6 +9,7 @@ import org.runimo.runimo.records.domain.RunningRecord;
 import org.runimo.runimo.records.repository.RecordRepository;
 import org.runimo.runimo.records.service.dto.DailyStat;
 import org.runimo.runimo.records.service.dto.RecordSimpleView;
+import org.runimo.runimo.records.service.dto.RecordStatDto;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -54,7 +56,8 @@ public class RecordFinder {
     @Transactional(readOnly = true)
     public List<DailyStat> findDailyStatByUserIdBetween(Long id, LocalDateTime from,
         LocalDateTime to) {
-        return recordRepository.findDailyDistanceByUserIdAndThisWeek(id, from, to);
+        return mapToDailyStatList(
+            recordRepository.findRecordStatByUserIdAndBetween(id, from, to));
     }
 
     @Transactional(readOnly = true)
@@ -66,4 +69,22 @@ public class RecordFinder {
             .map(RecordSimpleView::from)
             .toList();
     }
+
+    private List<DailyStat> mapToDailyStatList(List<RecordStatDto> recordStatDtos) {
+        List<DailyStat> list = new ArrayList<>();
+        for (RecordStatDto recordStatDto : recordStatDtos) {
+            if (list.isEmpty() || list.getLast().getDate() != recordStatDto.getStartedAt()
+                .toLocalDate()) {
+                DailyStat dailyStat = DailyStat.empty(recordStatDto.getStartedAt().toLocalDate());
+                dailyStat.addData(recordStatDto);
+                list.add(dailyStat);
+                continue;
+            }
+            DailyStat last = list.getLast();
+            last.addData(recordStatDto);
+        }
+        return list;
+    }
+
+
 }
