@@ -159,19 +159,19 @@ class RecordAcceptanceTest {
             .body("code", equalTo("MY_PAGE_DATA_FETCHED"))
             .body("payload.daily_stats.size()", equalTo(7))
             .body("payload.daily_stats[0].date", equalTo("2025-03-31"))
-            .body("payload.daily_stats[0].distance", equalTo(1000))
+            .body("payload.daily_stats[0].distance_in_meters", equalTo(1000))
             .body("payload.daily_stats[1].date", equalTo("2025-04-01"))
-            .body("payload.daily_stats[1].distance", equalTo(2000))
+            .body("payload.daily_stats[1].distance_in_meters", equalTo(2000))
             .body("payload.daily_stats[2].date", equalTo("2025-04-02"))
-            .body("payload.daily_stats[2].distance", equalTo(3000))
+            .body("payload.daily_stats[2].distance_in_meters", equalTo(3000))
             .body("payload.daily_stats[3].date", equalTo("2025-04-03"))
-            .body("payload.daily_stats[3].distance", equalTo(4000))
+            .body("payload.daily_stats[3].distance_in_meters", equalTo(4000))
             .body("payload.daily_stats[4].date", equalTo("2025-04-04"))
-            .body("payload.daily_stats[4].distance", equalTo(5000))
+            .body("payload.daily_stats[4].distance_in_meters", equalTo(5000))
             .body("payload.daily_stats[5].date", equalTo("2025-04-05"))
-            .body("payload.daily_stats[5].distance", equalTo(6000))
+            .body("payload.daily_stats[5].distance_in_meters", equalTo(6000))
             .body("payload.daily_stats[6].date", equalTo("2025-04-06"))
-            .body("payload.daily_stats[6].distance", equalTo(7000));
+            .body("payload.daily_stats[6].distance_in_meters", equalTo(7000));
     }
 
     @Test
@@ -192,17 +192,21 @@ class RecordAcceptanceTest {
             .log().ifValidationFails()
             .statusCode(200)
             .body("code", equalTo("MY_PAGE_DATA_FETCHED"))
+            .body("payload.simple_stat", notNullValue())
+            .body("payload.simple_stat.total_time_in_seconds", equalTo(18000))
+            .body("payload.simple_stat.total_running_count", equalTo(5))
+            .body("payload.simple_stat.total_distance_in_meters", equalTo(21000))
             .body("payload.daily_stats.size()", equalTo(5))
             .body("payload.daily_stats[0].date", equalTo("2025-03-31"))
-            .body("payload.daily_stats[0].distance", equalTo(1000))
+            .body("payload.daily_stats[0].distance_in_meters", equalTo(1000))
             .body("payload.daily_stats[1].date", equalTo("2025-04-01"))
-            .body("payload.daily_stats[1].distance", equalTo(2000))
+            .body("payload.daily_stats[1].distance_in_meters", equalTo(2000))
             .body("payload.daily_stats[2].date", equalTo("2025-04-04"))
-            .body("payload.daily_stats[2].distance", equalTo(5000))
+            .body("payload.daily_stats[2].distance_in_meters", equalTo(5000))
             .body("payload.daily_stats[3].date", equalTo("2025-04-05"))
-            .body("payload.daily_stats[3].distance", equalTo(6000))
+            .body("payload.daily_stats[3].distance_in_meters", equalTo(6000))
             .body("payload.daily_stats[4].date", equalTo("2025-04-06"))
-            .body("payload.daily_stats[4].distance", equalTo(7000));
+            .body("payload.daily_stats[4].distance_in_meters", equalTo(7000));
     }
 
     @Test
@@ -224,11 +228,15 @@ class RecordAcceptanceTest {
             .log().all()
             .statusCode(200)
             .body("code", equalTo("MY_PAGE_DATA_FETCHED"))
+            .body("payload.simple_stat", notNullValue())
+            .body("payload.simple_stat.total_time_in_seconds", equalTo(21600))
+            .body("payload.simple_stat.total_running_count", equalTo(6))
+            .body("payload.simple_stat.total_distance_in_meters", equalTo(27000))
             .body("payload.daily_stats.size()", equalTo(6))
             .body("payload.daily_stats[0].date", equalTo("2025-04-01"))
-            .body("payload.daily_stats[0].distance", equalTo(2000))
+            .body("payload.daily_stats[0].distance_in_meters", equalTo(2000))
             .body("payload.daily_stats[1].date", equalTo("2025-04-02"))
-            .body("payload.daily_stats[1].distance", equalTo(3000));
+            .body("payload.daily_stats[1].distance_in_meters", equalTo(3000));
     }
 
     @Test

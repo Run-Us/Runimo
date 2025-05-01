@@ -10,6 +10,7 @@ import org.runimo.runimo.records.service.RecordFinder;
 import org.runimo.runimo.records.service.dto.DailyStat;
 import org.runimo.runimo.records.service.dto.RecordSimpleView;
 import org.runimo.runimo.records.service.dto.RecordSimpleViewResponse;
+import org.runimo.runimo.records.service.dto.SimpleStat;
 import org.runimo.runimo.records.service.dto.WeeklyRecordStatResponse;
 import org.runimo.runimo.records.service.dto.WeeklyStatQuery;
 import org.runimo.runimo.records.service.usecases.dtos.MonthlyRecordStatResponse;
@@ -32,13 +33,15 @@ public class RecordQueryUsecaseImpl implements RecordQueryUsecase {
 
     @Override
     public WeeklyRecordStatResponse getUserWeeklyRecordStat(WeeklyStatQuery query) {
-        // DB에서 일별로 이미 합산된 데이터 조회
         List<DailyStat> dailyDistances = recordFinder.findDailyStatByUserIdBetween(
             query.userId(),
             query.startDate().atStartOfDay(),
             query.endDate().atTime(23, 59, 59)
         );
-        return new WeeklyRecordStatResponse(dailyDistances);
+
+        SimpleStat weeklyStat = SimpleStat.from(dailyDistances);
+
+        return new WeeklyRecordStatResponse(weeklyStat, dailyDistances);
     }
 
     @Override
@@ -50,7 +53,8 @@ public class RecordQueryUsecaseImpl implements RecordQueryUsecase {
             from.atStartOfDay(),
             to.atTime(23, 59, 59)
         );
-        return new MonthlyRecordStatResponse(dailyDistances);
+        SimpleStat monthlyStat = SimpleStat.from(dailyDistances);
+        return new MonthlyRecordStatResponse(monthlyStat, dailyDistances);
     }
 
     @Override
