@@ -33,8 +33,6 @@ public class RecordQueryUsecaseImpl implements RecordQueryUsecase {
 
     @Override
     public WeeklyRecordStatResponse getUserWeeklyRecordStat(WeeklyStatQuery query) {
-        // DB에서 일별로 이미 합산된 데이터 조회
-
         List<DailyStat> dailyDistances = recordFinder.findDailyStatByUserIdBetween(
             query.userId(),
             query.startDate().atStartOfDay(),
