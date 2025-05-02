@@ -9,7 +9,7 @@ import org.runimo.runimo.records.service.usecases.dtos.RecordDetailViewResponse;
 
 public interface RecordQueryUsecase {
 
-    RecordDetailViewResponse getRecordDetailView(Long publicId);
+    RecordDetailViewResponse getRecordDetailView(String publicId);
 
     WeeklyRecordStatResponse getUserWeeklyRecordStat(WeeklyStatQuery query);
 
