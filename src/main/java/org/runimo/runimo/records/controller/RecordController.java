@@ -74,7 +74,7 @@ public class RecordController {
     })
     @GetMapping("/{recordId}")
     public ResponseEntity<SuccessResponse<RecordDetailViewResponse>> viewRecord(
-        @PathVariable Long recordId
+        @PathVariable String recordId
     ) {
         RecordDetailViewResponse response = recordQueryUsecase.getRecordDetailView(recordId);
         return ResponseEntity.ok(SuccessResponse.of(RecordHttpResponse.RECORD_FETCHED, response));
