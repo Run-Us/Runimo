@@ -12,6 +12,12 @@ runimo:
     iv: ${AES_IV}
 
 spring:
+  servlet:
+    multipart:
+      enabled: true
+      max-request-size: 15MB
+      max-file-size: 10MB
+
   config:
     import:
       - optional:file:${ENV_PATH:.}/.env.${SPRING_PROFILES_ACTIVE:dev}[.properties]

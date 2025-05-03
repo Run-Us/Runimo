@@ -24,13 +24,17 @@ import org.runimo.runimo.common.response.ErrorResponse;
 import org.runimo.runimo.common.response.Response;
 import org.runimo.runimo.common.response.SuccessResponse;
 import org.runimo.runimo.exceptions.RegisterErrorResponse;
+import org.runimo.runimo.external.FileStorageService;
+import org.runimo.runimo.external.S3Service;
 import org.runimo.runimo.user.enums.UserHttpResponseCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @Tag(name = "Auth API", description = "인증 관련 API 모음")
 @RestController
@@ -41,6 +45,8 @@ public class AuthController {
     private final OidcService oidcService;
     private final TokenRefreshService tokenRefreshService;
     private final SignUpUsecase signUpUsecase;
+    private final S3Service s3Service;
+    private final FileStorageService fileStorageService;
 
     @Operation(summary = "카카오 소셜 로그인", description = "카카오 OIDC 토큰을 이용하여 로그인합니다.")
     @ApiResponses(value = {
@@ -86,11 +92,13 @@ public class AuthController {
                 schema = @Schema(implementation = ErrorResponse.class))),
         @ApiResponse(responseCode = "409", description = "이미 존재하는 사용자")
     })
-    @PostMapping("/signup")
+    @PostMapping(value = "/signup", consumes = {"multipart/form-data"})
     public ResponseEntity<SuccessResponse<SignupUserResponse>> signupAndLogin(
-        @Valid @RequestBody AuthSignupRequest request) {
+        @Valid @RequestBody AuthSignupRequest request,
+        @RequestPart(value = "profileImage") MultipartFile profileImage
+    ) {
         SignupUserResponse authResult = signUpUsecase.register(
-            request.toUserSignupCommand()
+            request.toUserSignupCommand(profileImage)
         );
         return ResponseEntity.created(URI.create("/api/v1/user" + authResult.userId()))
             .body(SuccessResponse.of(
