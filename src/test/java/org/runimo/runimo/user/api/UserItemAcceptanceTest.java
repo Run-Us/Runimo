@@ -150,13 +150,12 @@ class UserItemAcceptanceTest {
         AuthSignupRequest request = new AuthSignupRequest(
             registerToken,
             "test-user",
-            "https://test-image.com",
             Gender.FEMALE
         );
 
         ValidatableResponse res = given()
-            .body(objectMapper.writeValueAsString(request))
-            .contentType(ContentType.JSON)
+            .multiPart("request", objectMapper.writeValueAsString(request))
+            .contentType("multipart/form-data")
             .when()
             .post("/api/v1/auth/signup")
             .then()
