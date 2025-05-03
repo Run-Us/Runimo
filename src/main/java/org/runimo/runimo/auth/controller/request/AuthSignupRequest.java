@@ -2,9 +2,9 @@ package org.runimo.runimo.auth.controller.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
-import org.hibernate.validator.constraints.URL;
 import org.runimo.runimo.auth.service.dto.UserSignupCommand;
 import org.runimo.runimo.user.domain.Gender;
+import org.springframework.web.multipart.MultipartFile;
 
 @Schema(description = "사용자 회원가입 요청 DTO")
 public record AuthSignupRequest(
@@ -14,14 +14,11 @@ public record AuthSignupRequest(
     @Schema(description = "사용자 닉네임", example = "RunimoUser")
     @NotBlank String nickname,
 
-    @Schema(description = "프로필 이미지 URL", example = "https://example.com/image.jpg")
-    @URL String imgUrl,
-
     @Schema(description = "성별", example = "FEMALE")
     Gender gender
 ) {
 
-    public UserSignupCommand toUserSignupCommand() {
-        return new UserSignupCommand(registerToken, nickname, imgUrl, gender);
+    public UserSignupCommand toUserSignupCommand(MultipartFile file) {
+        return new UserSignupCommand(registerToken, nickname, file, gender);
     }
 }

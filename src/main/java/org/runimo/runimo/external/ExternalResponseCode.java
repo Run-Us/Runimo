@@ -6,7 +6,9 @@ import org.springframework.http.HttpStatus;
 public enum ExternalResponseCode implements CustomResponseCode {
     PRESIGNED_URL_FETCHED("ESH2011", HttpStatus.CREATED, "Presigned URL 발급 성공", "Presigned URL 발급 성공"),
 
-    PRESIGNED_URL_FETCH_FAILED("ESH4001", HttpStatus.BAD_REQUEST, "Presigned URL 발급 실패", "Presigned URL 발급 실패");
+    PRESIGNED_URL_FETCH_FAILED("ESH4001", HttpStatus.BAD_REQUEST, "Presigned URL 발급 실패", "Presigned URL 발급 실패"),
+    FILE_UPLOAD_FAILED("ESH4002", HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드 실패", "파일 업로드 실패"),;
+
     private final String code;
     private final HttpStatus httpStatus;
     private final String clientMessage;

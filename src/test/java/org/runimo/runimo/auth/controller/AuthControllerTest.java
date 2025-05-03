@@ -2,6 +2,7 @@ package org.runimo.runimo.auth.controller;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -134,10 +135,10 @@ class AuthControllerTest {
             .willThrow(UserJwtException.of(UserHttpResponseCode.TOKEN_INVALID));
 
         // when & then
-        mockMvc.perform(post("/api/v1/auth/signup")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(
-                    "{\"register_token\":\"invalid-token\", \"nickname\":\"RunimoUser\", \"img_url\":\"https://example.com/image.jpg\"}"))
+        mockMvc.perform(
+            multipart(
+                "/api/v1/auth/signup")
+                .param("request", "{\"registerToken\":\"invalid-token\", \"nickname\":\"RunimoUser\"}"))
             .andExpect(status().isUnauthorized())
             .andExpect(jsonPath("$.code").value(UserHttpResponseCode.TOKEN_INVALID.getCode()))
             .andExpect(

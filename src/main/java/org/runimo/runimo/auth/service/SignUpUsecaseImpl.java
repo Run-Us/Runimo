@@ -9,6 +9,7 @@ import org.runimo.runimo.auth.jwt.SignupTokenPayload;
 import org.runimo.runimo.auth.repository.SignupTokenRepository;
 import org.runimo.runimo.auth.service.dto.SignupUserResponse;
 import org.runimo.runimo.auth.service.dto.UserSignupCommand;
+import org.runimo.runimo.external.FileStorageService;
 import org.runimo.runimo.user.domain.AppleUserToken;
 import org.runimo.runimo.user.domain.SocialProvider;
 import org.runimo.runimo.user.domain.User;
@@ -24,6 +25,7 @@ public class SignUpUsecaseImpl implements SignUpUsecase {
 
     private static final int REGISTER_CUTOFF_MIN = 10;
     private final UserRegisterService userRegisterService;
+    private final FileStorageService fileStorageService;
     private final JwtTokenFactory jwtTokenFactory;
     private final SignupTokenRepository signupTokenRepository;
     private final AppleUserTokenRepository appleUserTokenRepository;
@@ -34,9 +36,10 @@ public class SignUpUsecaseImpl implements SignUpUsecase {
     public SignupUserResponse register(UserSignupCommand command) {
         SignupTokenPayload payload = jwtResolver.getSignupTokenPayload(command.registerToken());
         SignupToken signupToken = findUnExpiredSignupToken(payload.token());
+        String imgUrl = fileStorageService.storeFile(command.profileImage());
         User savedUser = userRegisterService.registerUser(new UserRegisterCommand(
             command.nickname(),
-            command.imgUrl(),
+            imgUrl,
             command.gender(),
             payload.providerId(),
             payload.socialProvider())

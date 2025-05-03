@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class ImageUploadController {
 
-    private final S3Service s3Service;
+    private final FileStorageService fileStorageService;
 
     @Operation(summary = "Presigned URL 발급", description = "Presigned URL을 발급합니다.")
     @ApiResponses(value = {
@@ -32,7 +32,7 @@ public class ImageUploadController {
     public ResponseEntity<SuccessResponse<String>> upload(
         @RequestBody ImageUploadRequest request
     ) {
-        URL presignedUrl = s3Service.generatePresignedUrl(request.fileName());
+        URL presignedUrl = fileStorageService.generatePresignedUrl(request.fileName());
         return ResponseEntity.status(201)
             .body(SuccessResponse.of(
                 ExternalResponseCode.PRESIGNED_URL_FETCHED,

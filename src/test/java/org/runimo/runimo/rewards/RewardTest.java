@@ -74,7 +74,7 @@ class RewardTest {
             null,
             SocialProvider.KAKAO
         ));
-        UserSignupCommand command = new UserSignupCommand(registerToken, "name", "1234", Gender.UNKNOWN);
+        UserSignupCommand command = new UserSignupCommand(registerToken, "name", null, Gender.UNKNOWN);
         Long useId = signUpUsecaseImpl.register(command).userId();
         savedUser = userRepository.findById(useId).orElse(null);
     }
