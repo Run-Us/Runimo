@@ -25,8 +25,8 @@ import org.runimo.runimo.common.response.Response;
 import org.runimo.runimo.common.response.SuccessResponse;
 import org.runimo.runimo.exceptions.RegisterErrorResponse;
 import org.runimo.runimo.user.enums.UserHttpResponseCode;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -90,7 +90,7 @@ public class AuthController {
                 schema = @Schema(implementation = ErrorResponse.class))),
         @ApiResponse(responseCode = "409", description = "이미 존재하는 사용자")
     })
-    @PostMapping(value = "/signup", consumes = {"multipart/form-data", "application/json"})
+    @PostMapping(value = "/signup", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<SuccessResponse<SignupUserResponse>> signupAndLogin(
         @RequestParam @Valid AuthSignupRequest request,
         @RequestPart(value = "profileImage", required = false) MultipartFile profileImage
