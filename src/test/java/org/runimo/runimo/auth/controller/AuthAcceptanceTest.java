@@ -1,0 +1,145 @@
+package org.runimo.runimo.auth.controller;
+
+import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.*;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.runimo.runimo.CleanUpUtil;
+import org.runimo.runimo.auth.controller.request.AuthSignupRequest;
+import org.runimo.runimo.auth.domain.SignupToken;
+import org.runimo.runimo.auth.repository.SignupTokenRepository;
+
+import org.runimo.runimo.auth.service.apple.AppleTokenVerifier;
+import org.runimo.runimo.auth.service.kakao.KakaoLoginHandler;
+import org.runimo.runimo.auth.service.kakao.KakaoTokenVerifier;
+import org.runimo.runimo.external.FileStorageService;
+import org.runimo.runimo.user.domain.Gender;
+import org.runimo.runimo.user.domain.SocialProvider;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ActiveProfiles("test")
+class AuthAcceptanceTest {
+
+  @LocalServerPort
+  private int port;
+  @MockitoBean
+  private FileStorageService fileStorageService;
+  @MockitoBean
+  private KakaoTokenVerifier kakaoTokenVerifier;
+  @MockitoBean
+  private AppleTokenVerifier appleTokenVerifier;
+
+  @Autowired
+  private SignupTokenRepository signupTokenRepository;
+
+  @Autowired
+  private KakaoLoginHandler kakaoLoginHandler;
+
+  private String token;
+  @Autowired
+  private ObjectMapper objectMapper;
+  @Autowired
+  private CleanUpUtil cleanUpUtil;
+
+  @BeforeEach
+  void setUp() {
+    RestAssured.port = port;
+    // Save a valid signup token in the database
+    SignupToken signupToken = new SignupToken(
+        "valid-token",
+        "refresh-token",
+        "provider-id",
+        org.runimo.runimo.user.domain.SocialProvider.KAKAO
+    );
+    token = kakaoLoginHandler.createTemporalSignupToken("temp-id", SocialProvider.KAKAO);
+    signupTokenRepository.save(signupToken);
+  }
+
+  @AfterEach
+  void tearDown() {
+    cleanUpUtil.cleanUpUserInfos();
+  }
+
+  @Test
+  void 회원가입_성공_201응답() throws JsonProcessingException {
+
+    AuthSignupRequest request = new AuthSignupRequest(token, "username", Gender.UNKNOWN);
+
+    given()
+        .contentType(ContentType.MULTIPART)
+        .multiPart("request", objectMapper.writeValueAsString(request))
+        .when()
+        .post("/api/v1/auth/signup")
+        .then()
+        .statusCode(HttpStatus.CREATED.value())
+        .log().all()
+        .body("payload.nickname", equalTo("username"))
+        .body("payload.token_pair.access_token", notNullValue())
+        .body("payload.token_pair.refresh_token", notNullValue());
+  }
+
+  @Test
+  void 토큰_오류_회원가입_실패_401응답() throws JsonProcessingException {
+    AuthSignupRequest request = new AuthSignupRequest(token, "username", Gender.UNKNOWN);
+
+    given()
+        .contentType(ContentType.MULTIPART)
+        .multiPart("request", objectMapper.writeValueAsString(request))
+        .when()
+        .post("/api/v1/auth/signup")
+        .then()
+        .statusCode(HttpStatus.CREATED.value())
+        .log().all()
+        .body("payload.nickname", equalTo("username"))
+        .body("payload.token_pair.access_token", notNullValue())
+        .body("payload.token_pair.refresh_token", notNullValue());
+
+    given()
+        .contentType(ContentType.MULTIPART)
+        .multiPart("request", objectMapper.writeValueAsString(request))
+        .when()
+        .post("/api/v1/auth/signup")
+        .then()
+        .statusCode(HttpStatus.UNAUTHORIZED.value());
+  }
+
+  @Test
+  void 중복_유저_회원가입_409응답() throws JsonProcessingException {
+    AuthSignupRequest request = new AuthSignupRequest(token, "username", Gender.UNKNOWN);
+
+    given()
+        .contentType(ContentType.MULTIPART)
+        .multiPart("request", objectMapper.writeValueAsString(request))
+        .when()
+        .post("/api/v1/auth/signup")
+        .then()
+        .statusCode(HttpStatus.CREATED.value())
+        .log().all()
+        .body("payload.nickname", equalTo("username"))
+        .body("payload.token_pair.access_token", notNullValue())
+        .body("payload.token_pair.refresh_token", notNullValue());
+
+    token = kakaoLoginHandler.createTemporalSignupToken("temp-id", SocialProvider.KAKAO);
+    request = new AuthSignupRequest(token, "username", Gender.UNKNOWN);
+
+    given()
+        .contentType(ContentType.MULTIPART)
+        .multiPart("request", objectMapper.writeValueAsString(request))
+        .when()
+        .post("/api/v1/auth/signup")
+        .then()
+        .statusCode(HttpStatus.CONFLICT.value());
+  }
+}
