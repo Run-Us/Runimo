@@ -11,6 +11,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.runimo.runimo.auth.domain.SignupToken;
+import org.runimo.runimo.auth.exceptions.SignUpException;
 import org.runimo.runimo.auth.jwt.JwtResolver;
 import org.runimo.runimo.auth.jwt.JwtTokenFactory;
 import org.runimo.runimo.auth.jwt.SignupTokenPayload;
@@ -19,6 +21,7 @@ import org.runimo.runimo.auth.service.dto.UserSignupCommand;
 import org.runimo.runimo.external.FileStorageService;
 import org.runimo.runimo.user.domain.Gender;
 import org.runimo.runimo.user.domain.SocialProvider;
+import org.runimo.runimo.user.enums.UserHttpResponseCode;
 import org.runimo.runimo.user.repository.AppleUserTokenRepository;
 import org.runimo.runimo.user.service.UserRegisterService;
 
@@ -61,15 +64,15 @@ class SignUpUsecaseTest {
 
     when(jwtResolver.getSignupTokenPayload(registerToken)).thenReturn(payload);
     when(signupTokenRepository.findByIdAndCreatedAtAfter(eq(registerToken), any()))
-        .thenReturn(Optional.of(new org.runimo.runimo.auth.domain.SignupToken(
+        .thenReturn(Optional.of(new SignupToken(
             registerToken, "refresh", "refresh", SocialProvider.KAKAO)));
 
     doThrow(new org.runimo.runimo.auth.exceptions.SignUpException(
-        org.runimo.runimo.user.enums.UserHttpResponseCode.SIGNIN_FAIL_ALREADY_EXIST))
+        UserHttpResponseCode.SIGNIN_FAIL_ALREADY_EXIST))
         .when(userRegisterService)
         .validateExistingUser(payload.providerId(), payload.socialProvider());
 
-    assertThrows(org.runimo.runimo.auth.exceptions.SignUpException.class, () -> {
+    assertThrows(SignUpException.class, () -> {
       sut.register(new UserSignupCommand(registerToken, "nickname", null, Gender.UNKNOWN));
     });
   }
