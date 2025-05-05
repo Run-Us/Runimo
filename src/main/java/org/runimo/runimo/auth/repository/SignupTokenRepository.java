@@ -12,4 +12,6 @@ public interface SignupTokenRepository extends JpaRepository<SignupToken, String
         "SELECT st FROM SignupToken st WHERE st.token = :token AND st.createdAt > :createdAtAfter"
     )
     Optional<SignupToken> findByIdAndCreatedAtAfter(String token, LocalDateTime createdAtAfter);
+
+    void deleteByToken(String token);
 }
