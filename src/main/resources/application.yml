@@ -10,6 +10,9 @@ runimo:
   security:
     secret-key: ${AES_KEY}
     iv: ${AES_IV}
+  server:
+    ui:
+      path: ${SWAGGER_UI_SERVER:http://localhost:8080}
 
 spring:
   servlet:
