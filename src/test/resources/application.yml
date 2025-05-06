@@ -10,6 +10,9 @@ runimo:
   security:
     secret-key: ${AES_KEY}
     iv: ${AES_IV}
+  server:
+    ui:
+      path: ${SWAGGER_UI_SERVER:http://localhost:8080}
 
 spring:
   config:
@@ -17,15 +20,12 @@ spring:
       - optional:file:${ENV_PATH:.}/.env.${SPRING_PROFILES_ACTIVE:test}[.properties]
   datasource:
     driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MYSQL
+    url: jdbc:h2:mem:testdb;MODE=MYSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
   jpa:
     hibernate:
       ddl-auto: none
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
     open-in-view: false
     show-sql: true
     defer-datasource-initialization: true
@@ -36,7 +36,7 @@ spring:
     init:
       mode: always
       schema-locations: classpath*:sql/schema.sql
-      data-locations: classpath*:sql/data.sql
+      data-locations:
 
   security:
     oauth2:
