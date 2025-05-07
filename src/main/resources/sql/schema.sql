@@ -12,6 +12,7 @@ DROP TABLE IF EXISTS runimo;
 DROP TABLE IF EXISTS item_activity;
 DROP TABLE IF EXISTS runimo_definition;
 DROP TABLE IF EXISTS item;
+DROP TABLE IF EXISTS user_refresh_token;
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS user_love_point;
 DROP TABLE IF EXISTS incubating_egg;
@@ -195,6 +196,15 @@ CREATE TABLE `runimo`
     `created_at`               TIMESTAMP          DEFAULT CURRENT_TIMESTAMP,
     `updated_at`               TIMESTAMP          DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `deleted_at`               TIMESTAMP NULL
+);
+
+CREATE TABLE `user_refresh_token`
+(
+    `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
+    `user_id` BIGINT NOT NULL UNIQUE ,
+    `refresh_token` TEXT NOT NULL,
+    `created_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 ALTER TABLE `user_token`
