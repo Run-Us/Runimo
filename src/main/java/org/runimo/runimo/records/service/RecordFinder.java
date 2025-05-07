@@ -73,8 +73,8 @@ public class RecordFinder {
     private List<DailyStat> mapToDailyStatList(List<RecordStatDto> recordStatDtos) {
         List<DailyStat> list = new ArrayList<>();
         for (RecordStatDto recordStatDto : recordStatDtos) {
-            if (list.isEmpty() || list.getLast().getDate() != recordStatDto.getStartedAt()
-                .toLocalDate()) {
+            if (list.isEmpty() || !list.getLast().getDate().equals(recordStatDto.getStartedAt()
+                .toLocalDate())) {
                 DailyStat dailyStat = DailyStat.empty(recordStatDto.getStartedAt().toLocalDate());
                 dailyStat.addData(recordStatDto);
                 list.add(dailyStat);

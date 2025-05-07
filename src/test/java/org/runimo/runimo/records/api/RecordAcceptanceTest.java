@@ -174,7 +174,7 @@ class RecordAcceptanceTest {
         .body("payload.daily_stats[5].date", equalTo("2025-04-05"))
         .body("payload.daily_stats[5].distance_in_meters", equalTo(6000))
         .body("payload.daily_stats[6].date", equalTo("2025-04-06"))
-        .body("payload.daily_stats[6].distance_in_meters", equalTo(7000));
+        .body("payload.daily_stats[6].distance_in_meters", equalTo(14000));
   }
 
   @Test
@@ -232,14 +232,15 @@ class RecordAcceptanceTest {
         .statusCode(200)
         .body("code", equalTo("MY_PAGE_DATA_FETCHED"))
         .body("payload.simple_stat", notNullValue())
-        .body("payload.simple_stat.total_time_in_seconds", equalTo(21600))
-        .body("payload.simple_stat.total_running_count", equalTo(6))
-        .body("payload.simple_stat.total_distance_in_meters", equalTo(27000))
+        .body("payload.simple_stat.total_time_in_seconds", equalTo(25200))
+        .body("payload.simple_stat.total_running_count", equalTo(7))
+        .body("payload.simple_stat.total_distance_in_meters", equalTo(34000))
         .body("payload.daily_stats.size()", equalTo(6))
         .body("payload.daily_stats[0].date", equalTo("2025-04-01"))
         .body("payload.daily_stats[0].distance_in_meters", equalTo(2000))
         .body("payload.daily_stats[1].date", equalTo("2025-04-02"))
-        .body("payload.daily_stats[1].distance_in_meters", equalTo(3000));
+        .body("payload.daily_stats[1].distance_in_meters", equalTo(3000))
+        .body("payload.daily_stats[5].distance_in_meters", equalTo(14000));
   }
 
   @Test

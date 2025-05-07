@@ -18,4 +18,5 @@ VALUES
     (4, 1, 'record-public-id-4', 'record-title-4', '2025-04-03 10:00:00', '2025-04-03 11:00:00', 4000, 400, false, NOW(), NOW()),
     (5, 1, 'record-public-id-5', 'record-title-5', '2025-04-04 10:00:00', '2025-04-04 11:00:00', 5000, 500, false, NOW(), NOW()),
     (6, 1, 'record-public-id-6', 'record-title-6', '2025-04-05 10:00:00', '2025-04-05 11:00:00', 6000, 600, false, NOW(), NOW()),
-    (7, 1, 'record-public-id-7', 'record-title-7', '2025-04-06 10:00:00', '2025-04-06 11:00:00', 7000, 700, false, NOW(), NOW());
+    (7, 1, 'record-public-id-7', 'record-title-7', '2025-04-06 10:00:00', '2025-04-06 11:00:00', 7000, 700, false, NOW(), NOW()),
+    (8, 1, 'record-public-id-8', 'record-title-8', '2025-04-06 10:00:00', '2025-04-06 11:00:00', 7000, 700, false, NOW(), NOW());
