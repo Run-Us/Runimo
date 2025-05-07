@@ -13,38 +13,38 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 @Configuration
 public class CacheConfig {
 
-    @Value("${cache.cleanup.interval:300}")
-    private int cleanupIntervalSeconds;
+  @Value("${cache.cleanup.interval:300}")
+  private int cleanupIntervalSeconds;
 
-    @Value("${cache.cleanup.thread-pool-size:1}")
-    private int cleanupThreadPoolSize;
+  @Value("${cache.cleanup.thread-pool-size:1}")
+  private int cleanupThreadPoolSize;
 
-    @Bean
-    public TaskScheduler cacheCleanupScheduler() {
-        ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
-        scheduler.setPoolSize(cleanupThreadPoolSize);
-        scheduler.setThreadNamePrefix("cache-cleanup-");
-        scheduler.setDaemon(true);
-        scheduler.setWaitForTasksToCompleteOnShutdown(true);
-        scheduler.setAwaitTerminationSeconds(10);
-        return scheduler;
-    }
+  @Bean
+  public TaskScheduler cacheCleanupScheduler() {
+    ThreadPoolTaskScheduler scheduler = new ThreadPoolTaskScheduler();
+    scheduler.setPoolSize(cleanupThreadPoolSize);
+    scheduler.setThreadNamePrefix("cache-cleanup-");
+    scheduler.setDaemon(true);
+    scheduler.setWaitForTasksToCompleteOnShutdown(true);
+    scheduler.setAwaitTerminationSeconds(10);
+    return scheduler;
+  }
 
-    @Bean
-    public InMemoryCache<String, String> refreshTokenCache(TaskScheduler cacheCleanupScheduler) {
-        return new SpringInMemoryCache<>(
-            cacheCleanupScheduler,
-            Duration.ofSeconds(cleanupIntervalSeconds)
-        );
-    }
+  @Bean
+  public InMemoryCache<Long, String> refreshTokenCache(TaskScheduler cacheCleanupScheduler) {
+    return new SpringInMemoryCache<>(
+        cacheCleanupScheduler,
+        Duration.ofSeconds(cleanupIntervalSeconds)
+    );
+  }
 
-    @Bean
-    public InMemoryCache<String, UserPrincipal> userPrincipalCache(
-        TaskScheduler cacheCleanupScheduler
-    ) {
-        return new SpringInMemoryCache<>(
-            cacheCleanupScheduler,
-            Duration.ofSeconds(cleanupIntervalSeconds)
-        );
-    }
+  @Bean
+  public InMemoryCache<String, UserPrincipal> userPrincipalCache(
+      TaskScheduler cacheCleanupScheduler
+  ) {
+    return new SpringInMemoryCache<>(
+        cacheCleanupScheduler,
+        Duration.ofSeconds(cleanupIntervalSeconds)
+    );
+  }
 }
