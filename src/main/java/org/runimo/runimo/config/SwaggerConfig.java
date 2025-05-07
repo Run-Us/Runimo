@@ -9,6 +9,7 @@ import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 import java.util.Collections;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,11 +17,14 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SwaggerConfig {
 
+    @Value("${runimo.server.ui.path}")
+    private String serverUiPath;
+
     @Bean
     public OpenAPI customOpenAPI() {
 
         Server server = new Server();
-        server.setUrl("https://toy.hyeonjae.dev");
+        server.setUrl(serverUiPath);
 
         return new OpenAPI()
             .info(new Info()
