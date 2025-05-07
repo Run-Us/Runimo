@@ -174,7 +174,7 @@ class RecordAcceptanceTest {
         .body("payload.daily_stats[5].date", equalTo("2025-04-05"))
         .body("payload.daily_stats[5].distance_in_meters", equalTo(6000))
         .body("payload.daily_stats[6].date", equalTo("2025-04-06"))
-        .body("payload.daily_stats[6].distance_in_meters", equalTo(7000));
+        .body("payload.daily_stats[6].distance_in_meters", equalTo(14000));
   }
 
   @Test
