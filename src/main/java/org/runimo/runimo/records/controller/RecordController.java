@@ -17,7 +17,6 @@ import org.runimo.runimo.records.controller.request.RecordSaveRequest;
 import org.runimo.runimo.records.controller.request.RecordUpdateRequest;
 import org.runimo.runimo.records.enums.RecordHttpResponse;
 import org.runimo.runimo.records.service.dto.RecordSimpleView;
-import org.runimo.runimo.records.service.dto.RecordSimpleViewResponse;
 import org.runimo.runimo.records.service.dto.WeeklyRecordStatResponse;
 import org.runimo.runimo.records.service.dto.WeeklyStatQuery;
 import org.runimo.runimo.records.service.usecases.RecordCreateUsecase;
@@ -30,6 +29,7 @@ import org.runimo.runimo.records.service.usecases.dtos.RecordDetailViewResponse;
 import org.runimo.runimo.records.service.usecases.dtos.RecordSaveResponse;
 import org.runimo.runimo.user.controller.UserId;
 import org.runimo.runimo.user.enums.UserHttpResponseCode;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -146,11 +146,10 @@ public class RecordController {
   }
 
   @Operation(summary = "개인 기록 페이지네이션 전체 조회", description = "개인 기록 페이지네이션 조회")
-  @ApiResponse(responseCode = "200", description = "기록 조회 성공",
-      content = @Content(schema = @Schema(implementation = RecordSimpleViewResponse.class)))
+  @ApiResponse(responseCode = "200", description = "기록 조회 성공")
   @GetMapping("/me")
   public ResponseEntity<SuccessPageResponse<RecordSimpleView>> getMyRecordList(
-      @ModelAttribute MyRecordPageRequest request,
+      @ParameterObject @ModelAttribute MyRecordPageRequest request,
       @UserId Long userId
   ) {
     return ResponseEntity.ok(
