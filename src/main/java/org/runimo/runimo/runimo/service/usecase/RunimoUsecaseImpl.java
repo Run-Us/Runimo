@@ -44,6 +44,7 @@ public class RunimoUsecaseImpl implements RunimoUsecase {
             HatchHttpResponseCode.HATCH_USER_NOT_FOUND));
 
         return new GetMyRunimoListResponse(
+            user.getTotalDistanceInMeters(),
             RunimoSimpleModel.toDtoList(models, user.getMainRunimoId()));
     }
 
