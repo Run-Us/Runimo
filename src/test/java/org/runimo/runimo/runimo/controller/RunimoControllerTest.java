@@ -66,6 +66,7 @@ class RunimoControllerTest {
 
             .body("code", equalTo("MSH2001"))
             .body("payload.runimos", hasSize(3))
+            .body("payload.total_distance_in_meters", equalTo(10000))
 
             .body("payload.runimos[0].id", equalTo(1))
             .body("payload.runimos[0].code", equalTo("R-101"))
