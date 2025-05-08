@@ -13,6 +13,8 @@ public record RecordDetailViewResponse(
     String recordId,
     @Schema(description = "기록 제목")
     String title,
+    @Schema(description = "기록 설명")
+    String description,
     @Schema(description = "기록 시작 시간")
     LocalDateTime startedAt,
     LocalDateTime endAt,
@@ -32,6 +34,8 @@ public record RecordDetailViewResponse(
         return RecordDetailViewResponse.builder()
             .recordId(runningRecord.getRecordPublicId())
             .title(runningRecord.getTitle())
+            .description(runningRecord.getDescription())
+            .imgUrl(runningRecord.getImgUrl())
             .startedAt(runningRecord.getStartedAt())
             .endAt(runningRecord.getEndAt())
             .totalRunningTime(runningRecord.getRunningTime().getSeconds())
