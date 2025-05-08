@@ -286,6 +286,8 @@ class RecordAcceptanceTest {
     given()
         .contentType(ContentType.JSON)
         .header("Authorization", token)
+        .param("startDate", "2025-04-01")
+        .param("endDate", "2025-04-30")
         .param("page", 0)
         .param("size", 5)
         .when()
@@ -293,7 +295,35 @@ class RecordAcceptanceTest {
         .then()
         .log().all()
         .statusCode(HttpStatus.OK.value())
-        .body("payload.record_list.size()", equalTo(5));
+        .body("payload.pagination.total_pages", equalTo(2))
+        .body("payload.pagination.per_page", equalTo(5))
+        .body("payload.pagination.current_page", equalTo(0))
+        .body("payload.pagination.total_items", equalTo(7))
+        .body("payload.items.size()", equalTo(5));
+  }
+
+  @Test
+  @Sql(scripts = "/sql/weekly_record_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+  void 사용자_기록_페이지네이션_조회_결과_없음() {
+
+    String token = AUTH_HEADER_PREFIX + jwtTokenFactory.generateAccessToken(USER_UUID);
+
+    given()
+        .contentType(ContentType.JSON)
+        .header("Authorization", token)
+        .param("startDate", "2010-01-01")
+        .param("endDate", "2010-01-30")
+        .param("size", 5)
+        .when()
+        .get("/api/v1/records/me")
+        .then()
+        .log().all()
+        .statusCode(HttpStatus.OK.value())
+        .body("payload.pagination.total_pages", equalTo(0))
+        .body("payload.pagination.per_page", equalTo(5))
+        .body("payload.pagination.current_page", equalTo(0))
+        .body("payload.pagination.total_items", equalTo(0))
+        .body("payload.items.size()", equalTo(0));
   }
 
   @Test
