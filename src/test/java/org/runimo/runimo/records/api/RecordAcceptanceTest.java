@@ -361,6 +361,20 @@ class RecordAcceptanceTest {
         .patch("/api/v1/records/record-public-id-1")
         .then()
         .statusCode(HttpStatus.OK.value());
+
+    given()
+        .header("Authorization", token)
+        .contentType(ContentType.JSON)
+        .when()
+        .get("/api/v1/records/{recordId}", "record-public-id-1")
+        .then()
+        .log().all()
+        .statusCode(200)
+        .body("payload.record_id", notNullValue())
+        .body("payload.title", equalTo("예시 제목"))
+        .body("payload.description", equalTo("오늘은 올림픽 공원을 달렸어요."))
+        .body("payload.img_url", equalTo("https://example.com/image.jpg"));
+
   }
 }
 
