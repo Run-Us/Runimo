@@ -41,7 +41,7 @@ public class HatchClient {
     }
 
     private List<Long> generateRunimoPoolCoveringLowerLevel(EggType eggType) {
-        List<EggType> eggTypes = eggTypeRepository.findEggTypeByLevelLessThan(eggType.getLevel());
+        List<EggType> eggTypes = eggTypeRepository.findEggTypeByLevelLessThanEqual(eggType.getLevel());
         return runimoDefinitionRepository.findIdInEggTypes(eggTypes);
     }
 }
