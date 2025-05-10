@@ -1,6 +1,7 @@
-package org.runimo.runimo.auth.service;
+package org.runimo.runimo.auth.controller;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.ArgumentMatchers.any;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
@@ -15,6 +16,7 @@ import org.runimo.runimo.auth.controller.request.KakaoLoginRequest;
 import org.runimo.runimo.auth.jwt.JwtTokenFactory;
 import org.runimo.runimo.auth.service.apple.KakaoUserInfo;
 import org.runimo.runimo.auth.service.kakao.KakaoTokenVerifier;
+import org.runimo.runimo.auth.test.TestAuthRequest;
 import org.runimo.runimo.user.UserFixtures;
 import org.runimo.runimo.user.domain.OAuthInfo;
 import org.runimo.runimo.user.domain.SocialProvider;
@@ -137,6 +139,30 @@ public class TokenRefreshAcceptanceTest {
         .then()
         .statusCode(HttpStatus.UNAUTHORIZED.value());
 
+  }
+
+  @Test
+  void 테스트_로그인_후_리프레쉬_성공() throws JsonProcessingException {
+    TestAuthRequest request = new TestAuthRequest(1L);
+    String refreshToken = given()
+        .contentType("application/json")
+        .body(objectMapper.writeValueAsString(request))
+        .when()
+        .post("/api/v1/auth/test/login")
+        .then()
+        .statusCode(HttpStatus.OK.value())
+        .extract()
+        .path("payload.tokens.refresh_token");
+
+    given()
+        .header("Authorization", "Bearer " + refreshToken)
+        .when()
+        .post("/api/v1/auth/refresh")
+        .then()
+        .log().all()
+        .statusCode(HttpStatus.OK.value())
+        .body("payload.access_token", notNullValue())
+        .body("payload.refresh_token", notNullValue());
   }
 
 }
