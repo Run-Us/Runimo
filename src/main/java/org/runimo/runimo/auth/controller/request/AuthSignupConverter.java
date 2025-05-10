@@ -11,10 +11,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class AuthSignupConverter implements Converter<String, AuthSignupRequest> {
 
-  private final ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
+
     @SneakyThrows
     @Override
     public AuthSignupRequest convert(@NotNull String source) {
-      return objectMapper.readValue(source, AuthSignupRequest.class);
+        return objectMapper.readValue(source, AuthSignupRequest.class);
     }
 }

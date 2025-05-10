@@ -16,31 +16,31 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class TestAuthController {
 
-  private final TestAuthService testAuthService;
+    private final TestAuthService testAuthService;
 
-  @PostMapping("/login")
-  public ResponseEntity<SuccessResponse<TestAuthResponse>> login(
-      @RequestBody TestAuthRequest request
-  ) {
-    TestAuthResponse response = testAuthService.login(request.userId());
+    @PostMapping("/login")
+    public ResponseEntity<SuccessResponse<TestAuthResponse>> login(
+        @RequestBody TestAuthRequest request
+    ) {
+        TestAuthResponse response = testAuthService.login(request.userId());
 
-      return ResponseEntity.ok(
-          SuccessResponse.of(
-              UserHttpResponseCode.LOGIN_SUCCESS,
-            response
-          )
-      );
-  }
+        return ResponseEntity.ok(
+            SuccessResponse.of(
+                UserHttpResponseCode.LOGIN_SUCCESS,
+                response
+            )
+        );
+    }
 
-  @PostMapping("/signup")
-  public ResponseEntity<SuccessResponse<TestAuthResponse>> signUp() {
-    TestAuthResponse response = testAuthService.signUp();
-    return ResponseEntity.ok(
-        SuccessResponse.of(
-            UserHttpResponseCode.SIGNUP_SUCCESS,
-            response
-        )
-    );
-  }
+    @PostMapping("/signup")
+    public ResponseEntity<SuccessResponse<TestAuthResponse>> signUp() {
+        TestAuthResponse response = testAuthService.signUp();
+        return ResponseEntity.ok(
+            SuccessResponse.of(
+                UserHttpResponseCode.SIGNUP_SUCCESS,
+                response
+            )
+        );
+    }
 
 }

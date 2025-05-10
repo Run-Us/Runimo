@@ -1,9 +1,9 @@
 package org.runimo.runimo.auth.service;
 
 import lombok.RequiredArgsConstructor;
-import org.runimo.runimo.auth.service.apple.AppleLoginHandler;
 import org.runimo.runimo.auth.service.dto.AuthResult;
-import org.runimo.runimo.auth.service.kakao.KakaoLoginHandler;
+import org.runimo.runimo.auth.service.login.apple.AppleLoginHandler;
+import org.runimo.runimo.auth.service.login.kakao.KakaoLoginHandler;
 import org.springframework.stereotype.Service;
 
 @Service

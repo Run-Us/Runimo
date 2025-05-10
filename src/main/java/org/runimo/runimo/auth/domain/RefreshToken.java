@@ -22,31 +22,31 @@ import org.springframework.context.annotation.Profile;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RefreshToken extends CreateUpdateAuditEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
-  @Column(name = "user_id", nullable = false, unique = true)
-  private Long userId;
-  @Column(name = "refresh_token", nullable = false)
-  private String refreshToken;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    @Column(name = "user_id", nullable = false, unique = true)
+    private Long userId;
+    @Column(name = "refresh_token", nullable = false)
+    private String refreshToken;
 
-  @Builder
-  private RefreshToken(Long userId, String refreshToken) {
-    this.userId = userId;
-    this.refreshToken = refreshToken;
-  }
-
-  public static RefreshToken of(Long userId, String refreshToken) {
-    return RefreshToken.builder()
-        .userId(userId)
-        .refreshToken(refreshToken)
-        .build();
-  }
-
-  public void update(String refreshToken) {
-    if (refreshToken == null || refreshToken.isEmpty()) {
-      throw UserJwtException.of(UserHttpResponseCode.TOKEN_REFRESH_FAIL);
+    @Builder
+    private RefreshToken(Long userId, String refreshToken) {
+        this.userId = userId;
+        this.refreshToken = refreshToken;
     }
-    this.refreshToken = refreshToken;
-  }
+
+    public static RefreshToken of(Long userId, String refreshToken) {
+        return RefreshToken.builder()
+            .userId(userId)
+            .refreshToken(refreshToken)
+            .build();
+    }
+
+    public void update(String refreshToken) {
+        if (refreshToken == null || refreshToken.isEmpty()) {
+            throw UserJwtException.of(UserHttpResponseCode.TOKEN_REFRESH_FAIL);
+        }
+        this.refreshToken = refreshToken;
+    }
 }
