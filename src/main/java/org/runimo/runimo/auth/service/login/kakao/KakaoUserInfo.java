@@ -1,4 +1,4 @@
-package org.runimo.runimo.auth.service.apple;
+package org.runimo.runimo.auth.service.login.kakao;
 
 import lombok.Getter;
 

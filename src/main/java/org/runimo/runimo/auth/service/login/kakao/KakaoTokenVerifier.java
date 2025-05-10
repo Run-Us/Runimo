@@ -1,4 +1,4 @@
-package org.runimo.runimo.auth.service.kakao;
+package org.runimo.runimo.auth.service.login.kakao;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -17,7 +17,6 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.runimo.runimo.auth.exceptions.UserJwtException;
-import org.runimo.runimo.auth.service.apple.KakaoUserInfo;
 import org.runimo.runimo.user.enums.UserHttpResponseCode;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
