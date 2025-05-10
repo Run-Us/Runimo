@@ -10,5 +10,5 @@ public interface EggTypeRepository extends JpaRepository<EggType, Long> {
 
     List<EggType> findEggTypeByRequiredDistanceInMetersLessThanEqual(Long totalDistanceInMeters);
 
-    List<EggType> findEggTypeByLevelLessThan(Integer level);
+    List<EggType> findEggTypeByLevelLessThanEqual(Integer level);
 }
