@@ -3,7 +3,7 @@ package org.runimo.runimo.user.service;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.auth.service.EncryptUtil;
-import org.runimo.runimo.auth.service.apple.AppleTokenVerifier;
+import org.runimo.runimo.auth.service.login.apple.AppleTokenVerifier;
 import org.runimo.runimo.user.domain.AppleUserToken;
 import org.runimo.runimo.user.domain.OAuthInfo;
 import org.runimo.runimo.user.domain.SocialProvider;
