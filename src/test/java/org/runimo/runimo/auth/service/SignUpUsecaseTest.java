@@ -40,7 +40,7 @@ class SignUpUsecaseTest {
   @Mock
   private JwtResolver jwtResolver;
 
-  private SignUpUsecaseImpl sut;
+  private SignUpUsecase sut;
 
   @BeforeEach
   void setUp() {

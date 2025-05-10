@@ -14,33 +14,43 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class DatabaseTokenRepository implements JwtTokenRepository {
 
-  private final RefreshTokenJpaRepository refreshTokenJpaRepository;
-  @Value("${jwt.refresh.expiration}")
-  private Long refreshTokenExpiryMillis;
+    private final RefreshTokenJpaRepository refreshTokenJpaRepository;
+    @Value("${jwt.refresh.expiration}")
+    private Long refreshTokenExpiryMillis;
 
-  @Override
-  public Optional<String> findRefreshTokenByUserId(final Long userId) {
-    return refreshTokenJpaRepository.findByUserId(userId)
-        .map(RefreshToken::getRefreshToken);
-  }
 
-  @Override
-  public void saveRefreshTokenWithUserId(final Long userId, final String refreshToken) {
-    LocalDateTime REPLACE_CUTOFF_TIME = LocalDateTime.now()
-        .minus(refreshTokenExpiryMillis, ChronoUnit.MILLIS);
+    /**
+     * @param userId 사용자 ID
+     * 만료되지않은 refreshToken을 조회합니다.
+     * */
+    @Override
+    public Optional<String> findRefreshTokenByUserId(final Long userId) {
+        LocalDateTime REPLACE_CUTOFF_TIME = LocalDateTime.now()
+            .minus(refreshTokenExpiryMillis, ChronoUnit.MILLIS);
+        return refreshTokenJpaRepository.findByUserIdAfterCutoffTime(userId, REPLACE_CUTOFF_TIME)
+            .map(RefreshToken::getRefreshToken);
+    }
 
-    RefreshToken updatedRefreshToken = refreshTokenJpaRepository.findByUserIdAfterCutoffTime(userId,
-            REPLACE_CUTOFF_TIME)
-        .map(existingToken -> {
-          existingToken.update(refreshToken);
-          return existingToken;
-        })
-        .orElseGet(() ->
-            RefreshToken.of(userId, refreshToken)
-        );
+    /**
+     * @param userId 사용자 ID
+     * @param refreshToken refreshToken
+     * refreshToken 엔티티를 UPSERT합니다.
+     * */
+    @Override
+    public void saveRefreshTokenWithUserId(final Long userId, final String refreshToken) {
 
-    refreshTokenJpaRepository.save(updatedRefreshToken);
-  }
+        RefreshToken updatedRefreshToken = refreshTokenJpaRepository.findByUserId(
+                userId)
+            .map(existingToken -> {
+                existingToken.update(refreshToken);
+                return existingToken;
+            })
+            .orElseGet(() ->
+                RefreshToken.of(userId, refreshToken)
+            );
+
+        refreshTokenJpaRepository.save(updatedRefreshToken);
+    }
 
 
 }

@@ -4,7 +4,7 @@ import java.util.Optional;
 
 public interface JwtTokenRepository {
 
-  Optional<String> findRefreshTokenByUserId(Long userId);
+    Optional<String> findRefreshTokenByUserId(Long userId);
 
-  void saveRefreshTokenWithUserId(Long userId, String refreshToken);
+    void saveRefreshTokenWithUserId(Long userId, String refreshToken);
 }

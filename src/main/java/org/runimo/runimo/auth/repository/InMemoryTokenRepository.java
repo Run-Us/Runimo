@@ -13,18 +13,18 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class InMemoryTokenRepository implements JwtTokenRepository {
 
-  private final InMemoryCache<Long, String> refreshTokenCache;
-  @Value("${jwt.refresh.expiration}")
-  private Long refreshTokenExpiry;
+    private final InMemoryCache<Long, String> refreshTokenCache;
+    @Value("${jwt.refresh.expiration}")
+    private Long refreshTokenExpiry;
 
 
-  @Override
-  public Optional<String> findRefreshTokenByUserId(Long userId) {
-    return refreshTokenCache.get(userId);
-  }
+    @Override
+    public Optional<String> findRefreshTokenByUserId(Long userId) {
+        return refreshTokenCache.get(userId);
+    }
 
-  @Override
-  public void saveRefreshTokenWithUserId(Long userId, String refreshToken) {
-    refreshTokenCache.put(userId, refreshToken, Duration.ofMillis(refreshTokenExpiry));
-  }
+    @Override
+    public void saveRefreshTokenWithUserId(Long userId, String refreshToken) {
+        refreshTokenCache.put(userId, refreshToken, Duration.ofMillis(refreshTokenExpiry));
+    }
 }

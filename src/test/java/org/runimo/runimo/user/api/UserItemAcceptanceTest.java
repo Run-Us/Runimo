@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.runimo.runimo.CleanUpUtil;
 import org.runimo.runimo.auth.controller.request.AuthSignupRequest;
 import org.runimo.runimo.auth.jwt.JwtTokenFactory;
-import org.runimo.runimo.auth.service.SignUpUsecaseImpl;
+import org.runimo.runimo.auth.service.SignUpUsecase;
 import org.runimo.runimo.auth.service.dto.SignupUserResponse;
 import org.runimo.runimo.auth.service.dto.TokenPair;
 import org.runimo.runimo.user.controller.request.UseItemRequest;
@@ -49,7 +49,7 @@ class UserItemAcceptanceTest {
     private JwtTokenFactory jwtTokenFactory;
 
     @MockitoBean
-    private SignUpUsecaseImpl signUpUsecaseImpl;
+    private SignUpUsecase signUpUsecaseImpl;
 
 
     @Autowired

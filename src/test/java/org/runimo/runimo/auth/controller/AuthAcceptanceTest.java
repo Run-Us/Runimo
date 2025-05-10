@@ -13,11 +13,12 @@ import org.junit.jupiter.api.Test;
 import org.runimo.runimo.CleanUpUtil;
 import org.runimo.runimo.auth.controller.request.AuthSignupRequest;
 import org.runimo.runimo.auth.domain.SignupToken;
+import org.runimo.runimo.auth.jwt.JwtTokenFactory;
 import org.runimo.runimo.auth.repository.SignupTokenRepository;
 
-import org.runimo.runimo.auth.service.apple.AppleTokenVerifier;
-import org.runimo.runimo.auth.service.kakao.KakaoLoginHandler;
-import org.runimo.runimo.auth.service.kakao.KakaoTokenVerifier;
+import org.runimo.runimo.auth.service.login.apple.AppleTokenVerifier;
+import org.runimo.runimo.auth.service.login.kakao.KakaoLoginHandler;
+import org.runimo.runimo.auth.service.login.kakao.KakaoTokenVerifier;
 import org.runimo.runimo.external.FileStorageService;
 import org.runimo.runimo.user.domain.Gender;
 import org.runimo.runimo.user.domain.SocialProvider;
@@ -52,6 +53,8 @@ class AuthAcceptanceTest {
   private ObjectMapper objectMapper;
   @Autowired
   private CleanUpUtil cleanUpUtil;
+  @Autowired
+  private JwtTokenFactory jwtTokenFactory;
 
   @BeforeEach
   void setUp() {
@@ -59,11 +62,12 @@ class AuthAcceptanceTest {
     // Save a valid signup token in the database
     SignupToken signupToken = new SignupToken(
         "valid-token",
-        "refresh-token",
         "provider-id",
-        org.runimo.runimo.user.domain.SocialProvider.KAKAO
+        "refresh-token",
+        SocialProvider.KAKAO
     );
-    token = kakaoLoginHandler.createTemporalSignupToken("temp-id", SocialProvider.KAKAO);
+    token = jwtTokenFactory.generateSignupTemporalToken("provider-id", SocialProvider.KAKAO,
+        "valid-token");
     signupTokenRepository.save(signupToken);
   }
 
@@ -131,7 +135,15 @@ class AuthAcceptanceTest {
         .body("payload.token_pair.access_token", notNullValue())
         .body("payload.token_pair.refresh_token", notNullValue());
 
-    token = kakaoLoginHandler.createTemporalSignupToken("temp-id", SocialProvider.KAKAO);
+    SignupToken signupToken = new SignupToken(
+        "valid-token",
+        "provider-id",
+        "refresh-token",
+        SocialProvider.KAKAO
+    );
+    token = jwtTokenFactory.generateSignupTemporalToken("provider-id", SocialProvider.KAKAO,
+        "valid-token");
+    signupTokenRepository.save(signupToken);
     request = new AuthSignupRequest(token, "username", Gender.UNKNOWN);
 
     given()
@@ -141,5 +153,7 @@ class AuthAcceptanceTest {
         .post("/api/v1/auth/signup")
         .then()
         .statusCode(HttpStatus.CONFLICT.value());
+
+    signupTokenRepository.delete(signupToken);
   }
 }
