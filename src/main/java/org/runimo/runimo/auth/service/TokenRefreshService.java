@@ -38,6 +38,7 @@ public class TokenRefreshService {
         User user = userFinder.findUserByPublicId(userPublicId)
             .orElseThrow(() -> UserJwtException.of(UserHttpResponseCode.TOKEN_REFRESH_FAIL));
 
+        // Check if the refresh token is expired
         String storedToken = jwtTokenRepository.findRefreshTokenByUserId(user.getId())
             .orElseThrow(() -> UserJwtException.of(UserHttpResponseCode.REFRESH_EXPIRED));
         if (!storedToken.equals(refreshToken)) {
