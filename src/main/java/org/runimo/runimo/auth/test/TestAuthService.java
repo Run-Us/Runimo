@@ -4,6 +4,8 @@ import java.util.UUID;
 import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.auth.exceptions.SignUpException;
 import org.runimo.runimo.auth.jwt.JwtTokenFactory;
+import org.runimo.runimo.auth.service.TokenRefreshService;
+import org.runimo.runimo.auth.service.dto.TokenPair;
 import org.runimo.runimo.rewards.service.eggs.EggGrantService;
 import org.runimo.runimo.user.domain.Gender;
 import org.runimo.runimo.user.domain.User;
@@ -25,13 +27,16 @@ public class TestAuthService {
   private final UserCreator userCreator;
   private final UserItemCreator userItemCreator;
   private final EggGrantService eggGrantService;
+  private final TokenRefreshService tokenRefreshService;
 
 
   @Transactional
   public TestAuthResponse login(Long userId) {
     User user = userRepository.findById(userId)
         .orElseThrow(() -> SignUpException.of(UserHttpResponseCode.LOGIN_FAIL_NOT_SIGN_IN));
-    return new TestAuthResponse(jwtTokenFactory.generateTokenPair(user));
+    TokenPair pair = jwtTokenFactory.generateTokenPair(user);
+    tokenRefreshService.putRefreshToken(user.getPublicId(), pair.refreshToken());
+    return new TestAuthResponse(pair);
   }
 
   @Transactional
