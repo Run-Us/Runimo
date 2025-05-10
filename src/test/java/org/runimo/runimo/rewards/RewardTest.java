@@ -13,7 +13,7 @@ import org.runimo.runimo.CleanUpUtil;
 import org.runimo.runimo.auth.domain.SignupToken;
 import org.runimo.runimo.auth.jwt.JwtTokenFactory;
 import org.runimo.runimo.auth.repository.SignupTokenRepository;
-import org.runimo.runimo.auth.service.SignUpUsecaseImpl;
+import org.runimo.runimo.auth.service.SignUpUsecase;
 import org.runimo.runimo.auth.service.dto.UserSignupCommand;
 import org.runimo.runimo.common.scale.Distance;
 import org.runimo.runimo.common.scale.Pace;
@@ -39,7 +39,7 @@ import org.springframework.test.context.jdbc.Sql;
 class RewardTest {
 
     @Autowired
-    private SignUpUsecaseImpl signUpUsecaseImpl;
+    private SignUpUsecase signUpUsecaseImpl;
     @Autowired
     private RewardService rewardService;
 
