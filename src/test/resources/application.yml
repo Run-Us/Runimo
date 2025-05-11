@@ -92,3 +92,13 @@ decorator:
   datasource:
     p6spy:
       enable-logging: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+  prometheus:
+    metrics:
+      export:
+        enabled: true
