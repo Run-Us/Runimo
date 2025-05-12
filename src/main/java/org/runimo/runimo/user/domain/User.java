@@ -37,6 +37,10 @@ public class User extends BaseEntity {
     @Column(name = "gender")
     @Enumerated(EnumType.STRING)
     private Gender gender;
+    @Column(name = "role", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private UserRole role = UserRole.USER;
+
 
     @Builder
     public User(String nickname, String imgUrl, Long totalDistanceInMeters,
@@ -46,6 +50,7 @@ public class User extends BaseEntity {
         this.totalDistanceInMeters = totalDistanceInMeters != null ? totalDistanceInMeters : 0L;
         this.totalTimeInSeconds = totalTimeInSeconds != null ? totalTimeInSeconds : 0L;
         this.gender = gender;
+        this.role = role != null ? role : UserRole.USER;
     }
 
     public boolean checkUserFirstRun() {
