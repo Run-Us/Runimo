@@ -29,6 +29,7 @@ CREATE TABLE `users`
     `total_time_in_seconds`    BIGINT    NOT NULL DEFAULT 0,
     `main_runimo_id`           BIGINT,
     `gender`                   VARCHAR(24),
+    `role`                     VARCHAR(24) NOT NULL DEFAULT 'USER',
     `updated_at`               TIMESTAMP          DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `created_at`               TIMESTAMP          DEFAULT CURRENT_TIMESTAMP,
     `deleted_at`               TIMESTAMP NULL
@@ -91,16 +92,16 @@ CREATE TABLE `signup_token`
 
 CREATE TABLE `running_record`
 (
-    `id`                    INTEGER PRIMARY KEY AUTO_INCREMENT,
-    `user_id`               INTEGER      NOT NULL,
+    `id`                    BIGINT PRIMARY KEY AUTO_INCREMENT,
+    `user_id`               BIGINT      NOT NULL,
     `record_public_id`      VARCHAR(255) NOT NULL,
     `title`                 VARCHAR(255),
     `description`           VARCHAR(255),
     `img_url`               VARCHAR(255),
     `started_at`            TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `end_at`                TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `total_distance`        INTEGER,
-    `pace_in_milli_seconds` INTEGER,
+    `total_distance`        BIGINT,
+    `pace_in_milli_seconds` BIGINT,
     `is_rewarded`           BOOLEAN,
     `pace_per_km`           VARCHAR(10000),
     `created_at`            TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -110,7 +111,7 @@ CREATE TABLE `running_record`
 
 CREATE TABLE `item`
 (
-    `id`                   INTEGER PRIMARY KEY AUTO_INCREMENT,
+    `id`                   BIGINT PRIMARY KEY AUTO_INCREMENT,
     `name`                 VARCHAR(255) NOT NULL,
     `item_code`            VARCHAR(255) NOT NULL,
     `description`          VARCHAR(255),
@@ -126,7 +127,7 @@ CREATE TABLE `item`
 
 CREATE TABLE `egg_type`
 (
-    `id`                          INTEGER PRIMARY KEY AUTO_INCREMENT,
+    `id`                          BIGINT PRIMARY KEY AUTO_INCREMENT,
     `name`                        VARCHAR(64) NOT NULL,
     `code`                        VARCHAR(64) NOT NULL,
     `required_distance_in_meters` BIGINT,
@@ -139,11 +140,11 @@ CREATE TABLE `egg_type`
 
 CREATE TABLE `item_activity`
 (
-    `id`                  INTEGER PRIMARY KEY AUTO_INCREMENT,
-    `activity_user_id`    INTEGER      NOT NULL,
-    `activity_item_id`    INTEGER      NOT NULL,
+    `id`                  BIGINT PRIMARY KEY AUTO_INCREMENT,
+    `activity_user_id`    BIGINT      NOT NULL,
+    `activity_item_id`    BIGINT      NOT NULL,
     `activity_event_type` VARCHAR(255) NOT NULL,
-    `quantity`            INTEGER,
+    `quantity`            BIGINT,
     `created_at`          TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at`          TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `deleted_at`          TIMESTAMP    NULL
@@ -152,9 +153,9 @@ CREATE TABLE `item_activity`
 CREATE TABLE `user_item`
 (
     `id`         BIGINT PRIMARY KEY AUTO_INCREMENT,
-    `user_id`    INTEGER   NOT NULL,
-    `item_id`    INTEGER   NOT NULL,
-    `quantity`   INTEGER   NOT NULL,
+    `user_id`    BIGINT   NOT NULL,
+    `item_id`    BIGINT   NOT NULL,
+    `quantity`   BIGINT   NOT NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `deleted_at` TIMESTAMP NULL
@@ -163,10 +164,10 @@ CREATE TABLE `user_item`
 CREATE TABLE `incubating_egg`
 (
     `id`                        BIGINT PRIMARY KEY AUTO_INCREMENT,
-    `user_id`                   INTEGER   NOT NULL,
-    `egg_id`                    INTEGER   NOT NULL,
-    `current_love_point_amount` INTEGER,
-    `hatch_require_amount`      INTEGER,
+    `user_id`                   BIGINT   NOT NULL,
+    `egg_id`                    BIGINT   NOT NULL,
+    `current_love_point_amount` BIGINT,
+    `hatch_require_amount`      BIGINT,
     `egg_status`                VARCHAR(255),
     `created_at`                TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at`                TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
