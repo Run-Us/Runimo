@@ -45,7 +45,7 @@ public class TokenRefreshService {
             throw UserJwtException.of(UserHttpResponseCode.TOKEN_INVALID);
         }
 
-        String newAccessToken = jwtTokenFactory.generateAccessToken(userPublicId);
+        String newAccessToken = jwtTokenFactory.generateAccessToken(user);
         return new TokenPair(newAccessToken, refreshToken);
     }
 }

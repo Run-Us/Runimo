@@ -21,6 +21,13 @@ public class JwtResolver {
         return JWT.require(Algorithm.HMAC256(jwtSecret)).withIssuer(ISSUER).build().verify(token);
     }
 
+    public UserDetail getUserDetailFromJwtToken(String token) throws JWTVerificationException {
+        DecodedJWT jwt = verifyJwtToken(token);
+        String userId = jwt.getSubject();
+        String role = jwt.getClaim("role").asString();
+        return new UserDetail(userId, role);
+    }
+
     public String getUserIdFromJwtToken(String token) throws JWTVerificationException {
         DecodedJWT jwt = verifyJwtToken(token);
         return jwt.getSubject();
