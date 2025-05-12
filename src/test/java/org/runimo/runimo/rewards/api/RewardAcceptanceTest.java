@@ -16,7 +16,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.runimo.runimo.CleanUpUtil;
-import org.runimo.runimo.auth.jwt.JwtTokenFactory;
+import org.runimo.runimo.TokenUtils;
 import org.runimo.runimo.records.RecordFixtures;
 import org.runimo.runimo.records.controller.request.RecordSaveRequest;
 import org.runimo.runimo.rewards.controller.request.RewardClaimRequest;
@@ -31,19 +31,22 @@ import org.springframework.test.context.jdbc.Sql;
 @ActiveProfiles("test")
 class RewardAcceptanceTest {
 
+    private static final String TEST_USER_UUID = "test-user-uuid-1";
     private static final LocalDateTime pivotTime = LocalDateTime.of(2023, 10, 1, 10, 0);
     @LocalServerPort
     private int port;
     @Autowired
-    private JwtTokenFactory jwtTokenFactory;
-    @Autowired
     private CleanUpUtil cleanUpUtil;
     @Autowired
     private ObjectMapper objectMapper;
+    private String token;
+    @Autowired
+    private TokenUtils tokenUtils;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        token = tokenUtils.createTokenByUserPublicId(TEST_USER_UUID);
     }
 
     @AfterEach()
@@ -55,10 +58,9 @@ class RewardAcceptanceTest {
     @Test
     @Sql(scripts = "/sql/user_item_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void 달리기_기록_저장_후_주간_첫번째_달리기보상_수령() throws JsonProcessingException {
-        String header = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
         RecordSaveRequest request = RecordFixtures.createRecordSaveRequest();
         ValidatableResponse res = given()
-            .header("Authorization", header)
+            .header("Authorization", token)
             .body(objectMapper.writeValueAsString(request))
             .contentType(ContentType.JSON)
             .when()
@@ -74,7 +76,7 @@ class RewardAcceptanceTest {
         RewardClaimRequest rewardClaimRequest = new RewardClaimRequest(recordId);
 
         given()
-            .header("Authorization", header)
+            .header("Authorization", token)
             .body(objectMapper.writeValueAsString(rewardClaimRequest))
             .contentType(ContentType.JSON)
             .when()
@@ -87,10 +89,9 @@ class RewardAcceptanceTest {
     @Test
     @Sql(scripts = "/sql/user_item_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void 달리기_보상_수령_후_재시도_시_예외() throws JsonProcessingException {
-        String header = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
         RecordSaveRequest request = RecordFixtures.createRecordSaveRequest();
         ValidatableResponse res = given()
-            .header("Authorization", header)
+            .header("Authorization", token)
             .body(objectMapper.writeValueAsString(request))
             .contentType(ContentType.JSON)
             .when()
@@ -106,7 +107,7 @@ class RewardAcceptanceTest {
         RewardClaimRequest rewardClaimRequest = new RewardClaimRequest(recordId);
 
         given()
-            .header("Authorization", header)
+            .header("Authorization", token)
             .body(objectMapper.writeValueAsString(rewardClaimRequest))
             .contentType(ContentType.JSON)
             .when()
@@ -117,7 +118,7 @@ class RewardAcceptanceTest {
             .body("payload", notNullValue());
 
         given()
-            .header("Authorization", header)
+            .header("Authorization", token)
             .body(objectMapper.writeValueAsString(rewardClaimRequest))
             .contentType(ContentType.JSON)
             .when()
@@ -130,8 +131,6 @@ class RewardAcceptanceTest {
     @Test
     @Sql(scripts = "/sql/user_item_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void 첫번째_기록이_이번주_첫번째_달리기가_아니라서_알_미지급() throws JsonProcessingException {
-        String header = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
-
         // 첫번째 기록 저장
         RecordSaveRequest firstRequest = new RecordSaveRequest(
             pivotTime,
@@ -140,7 +139,7 @@ class RewardAcceptanceTest {
             1000L,
             null);
         ValidatableResponse firstRes = given()
-            .header("Authorization", header)
+            .header("Authorization", token)
             .body(objectMapper.writeValueAsString(firstRequest))
             .contentType(ContentType.JSON)
             .when()
@@ -161,7 +160,7 @@ class RewardAcceptanceTest {
             1000L,
             null);
         given()
-            .header("Authorization", header)
+            .header("Authorization", token)
             .body(objectMapper.writeValueAsString(secondRequest))
             .contentType(ContentType.JSON)
             .when()
@@ -176,7 +175,7 @@ class RewardAcceptanceTest {
         RewardClaimRequest rewardClaimRequest = new RewardClaimRequest(firstRecordId);
 
         given()
-            .header("Authorization", header)
+            .header("Authorization", token)
             .body(objectMapper.writeValueAsString(rewardClaimRequest))
             .contentType(ContentType.JSON)
             .when()
@@ -192,11 +191,10 @@ class RewardAcceptanceTest {
     @Test
     @Sql(scripts = "/sql/user_item_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void 달리기_기록_저장_후_애정_포인트_지급() throws JsonProcessingException {
-        String header = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
         RecordSaveRequest request = RecordFixtures.createRecordSaveRequest();
 
         ValidatableResponse res = given()
-            .header("Authorization", header)
+            .header("Authorization", token)
             .body(objectMapper.writeValueAsString(request))
             .contentType(ContentType.JSON)
             .when()
@@ -212,7 +210,7 @@ class RewardAcceptanceTest {
         RewardClaimRequest rewardClaimRequest = new RewardClaimRequest(recordId);
 
         given()
-            .header("Authorization", header)
+            .header("Authorization", token)
             .body(objectMapper.writeValueAsString(rewardClaimRequest))
             .contentType(ContentType.JSON)
             .when()
@@ -227,7 +225,6 @@ class RewardAcceptanceTest {
     @Test
     @Sql(scripts = "/sql/user_item_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void 기준거리_미달이면_애정을_미지급() throws JsonProcessingException {
-        String header = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
         RecordSaveRequest request = new RecordSaveRequest(
             pivotTime,
             pivotTime.plusMinutes(20),
@@ -236,7 +233,7 @@ class RewardAcceptanceTest {
             List.of()
         );
         ValidatableResponse res = given()
-            .header("Authorization", header)
+            .header("Authorization", token)
             .body(objectMapper.writeValueAsString(request))
             .contentType(ContentType.JSON)
             .when()
@@ -252,7 +249,7 @@ class RewardAcceptanceTest {
         RewardClaimRequest rewardClaimRequest = new RewardClaimRequest(recordId);
 
         given()
-            .header("Authorization", header)
+            .header("Authorization", token)
             .body(objectMapper.writeValueAsString(rewardClaimRequest))
             .contentType(ContentType.JSON)
             .when()

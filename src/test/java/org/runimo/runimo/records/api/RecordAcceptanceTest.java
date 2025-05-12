@@ -15,7 +15,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.runimo.runimo.CleanUpUtil;
-import org.runimo.runimo.auth.jwt.JwtTokenFactory;
+import org.runimo.runimo.TokenUtils;
 import org.runimo.runimo.records.controller.request.RecordSaveRequest;
 import org.runimo.runimo.records.controller.request.RecordUpdateRequest;
 import org.runimo.runimo.records.service.usecases.dtos.SegmentPace;
@@ -32,19 +32,22 @@ import org.springframework.test.context.jdbc.Sql;
 class RecordAcceptanceTest {
 
   private static final String USER_UUID = "test-user-uuid-1";
-  private static final String AUTH_HEADER_PREFIX = "Bearer ";
   @LocalServerPort
   int port;
-  @Autowired
-  private JwtTokenFactory jwtTokenFactory;
   @Autowired
   private ObjectMapper objectMapper;
   @Autowired
   private CleanUpUtil cleanUpUtil;
 
+  @Autowired
+  private TokenUtils tokenUtils;
+
+  private String token;
+
   @BeforeEach
   void setUp() {
     RestAssured.port = port;
+    token = tokenUtils.createTokenByUserPublicId(USER_UUID);
   }
 
   @AfterEach
@@ -56,8 +59,6 @@ class RecordAcceptanceTest {
   @Sql(scripts = "/sql/user_item_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
   void 달리기_기록_저장_성공_기록_id_반환() throws Exception {
     // given
-    String token = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
-
     // 구간별 페이스 데이터
     List<SegmentPace> segmentPaces = List.of(
         new SegmentPace(1.0, 732000),
@@ -93,8 +94,6 @@ class RecordAcceptanceTest {
   @Sql(scripts = "/sql/user_item_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
   void 달리기_기록_조회_성공_구간별_페이스_포함() throws Exception {
     // given
-    String token = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
-
     // 선행 조건: 달리기 기록 저장
     List<SegmentPace> segmentPaces = List.of(
         new SegmentPace(1.0, 732000),
@@ -146,8 +145,6 @@ class RecordAcceptanceTest {
   @Sql(scripts = "/sql/weekly_record_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
   void 주간_달리기_거리_조회_성공시_정확한_정보를_반환한다() {
     // given
-    String token = AUTH_HEADER_PREFIX + jwtTokenFactory.generateAccessToken(USER_UUID);
-
     // when & then
     given()
         .header("Authorization", token)
@@ -181,8 +178,6 @@ class RecordAcceptanceTest {
   @Sql(scripts = "/sql/weekly_record_partial_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
   void 주간_달리기_거리_조회_성공시_일부_날짜에_데이터가_없을때_0을_반환한다() {
     // given
-    String token = AUTH_HEADER_PREFIX + jwtTokenFactory.generateAccessToken(USER_UUID);
-
     // when & then
     given()
         .header("Authorization", token)
@@ -216,9 +211,6 @@ class RecordAcceptanceTest {
   @WithMockUser(username = USER_UUID)
   @Sql(scripts = "/sql/weekly_record_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
   void 월간_기록_통계_조회_성공시_정확한_정보를_반환한다() {
-    // given
-    String token = AUTH_HEADER_PREFIX + jwtTokenFactory.generateAccessToken(USER_UUID);
-
     // when & then
     given()
         .header("Authorization", token)
@@ -247,9 +239,6 @@ class RecordAcceptanceTest {
   @WithMockUser(username = USER_UUID)
   @Sql(scripts = "/sql/weekly_record_partial_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
   void 월간_기록_통계_조회_잘못된_요청_데이터() {
-    // given
-    String token = AUTH_HEADER_PREFIX + jwtTokenFactory.generateAccessToken(USER_UUID);
-
     // when & then
     given()
         .header("Authorization", token)
@@ -264,6 +253,7 @@ class RecordAcceptanceTest {
   }
 
   @Test
+  @Sql(scripts = "/sql/weekly_record_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
   void 월간_기록_통계_조회_인증_실패() {
     // when & then
     given()
@@ -281,7 +271,6 @@ class RecordAcceptanceTest {
   @Sql(scripts = "/sql/weekly_record_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
   void 사용자_기록_페이지네이션_조회() {
 
-    String token = AUTH_HEADER_PREFIX + jwtTokenFactory.generateAccessToken(USER_UUID);
 
     given()
         .contentType(ContentType.JSON)
@@ -306,7 +295,6 @@ class RecordAcceptanceTest {
   @Sql(scripts = "/sql/weekly_record_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
   void 사용자_기록_페이지네이션_조회_결과_없음() {
 
-    String token = AUTH_HEADER_PREFIX + jwtTokenFactory.generateAccessToken(USER_UUID);
 
     given()
         .contentType(ContentType.JSON)
@@ -329,7 +317,6 @@ class RecordAcceptanceTest {
   @Test
   @Sql(scripts = "/sql/weekly_record_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
   void 사용자_기록_페이지네이션_조회_잘못된_요청() {
-    String token = AUTH_HEADER_PREFIX + jwtTokenFactory.generateAccessToken(USER_UUID);
 
     given()
         .contentType(ContentType.JSON)
@@ -346,7 +333,6 @@ class RecordAcceptanceTest {
   @Test
   @Sql(scripts = "/sql/weekly_record_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
   void 사용자_기록_업데이트() throws JsonProcessingException {
-    String token = AUTH_HEADER_PREFIX + jwtTokenFactory.generateAccessToken(USER_UUID);
     RecordUpdateRequest request = new RecordUpdateRequest(
         "예시 제목",
         "오늘은 올림픽 공원을 달렸어요.",

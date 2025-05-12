@@ -1,7 +1,8 @@
 package org.runimo.runimo.auth.controller;
 
 import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,7 +16,6 @@ import org.runimo.runimo.auth.controller.request.AuthSignupRequest;
 import org.runimo.runimo.auth.domain.SignupToken;
 import org.runimo.runimo.auth.jwt.JwtTokenFactory;
 import org.runimo.runimo.auth.repository.SignupTokenRepository;
-
 import org.runimo.runimo.auth.service.login.apple.AppleTokenVerifier;
 import org.runimo.runimo.auth.service.login.kakao.KakaoLoginHandler;
 import org.runimo.runimo.auth.service.login.kakao.KakaoTokenVerifier;

@@ -10,9 +10,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
 import javax.naming.NoPermissionException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.runimo.runimo.TokenUtils;
 import org.runimo.runimo.auth.jwt.JwtResolver;
-import org.runimo.runimo.auth.jwt.JwtTokenFactory;
+import org.runimo.runimo.auth.jwt.UserDetail;
 import org.runimo.runimo.configs.ControllerTest;
 import org.runimo.runimo.user.service.dto.LatestRunningRecord;
 import org.runimo.runimo.user.service.dto.response.MyPageViewResponse;
@@ -28,10 +30,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @ControllerTest(controllers = {MyPageController.class})
 class MyPageControllerTest {
 
+    private static final String TEST_USER_UUID = "test-user-uuid-1";
     @Autowired
     private MockMvc mockMvc;
-    @Autowired
-    private JwtTokenFactory jwtTokenFactory;
     @MockitoBean
     private MyPageQueryUsecase myPageQueryUsecase;
     @MockitoBean
@@ -39,12 +40,17 @@ class MyPageControllerTest {
     @MockitoBean
     private UserIdResolver userIdResolver;
 
+    private String token;
+
+    @BeforeEach
+    void setUp() {
+        token = TokenUtils.createTestOnlyToken(TEST_USER_UUID);
+    }
 
     @Test
     @WithMockUser(username = "test-user-uuid-1")
     void 마이_페이지_조회_성공() throws Exception {
         // given
-        String accessToken = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
 
         MyPageViewResponse response = new MyPageViewResponse(
             "Daniel",
@@ -62,14 +68,14 @@ class MyPageControllerTest {
 
         when(myPageQueryUsecase.execute(any()))
             .thenReturn(response);
-        when(jwtResolver.getUserIdFromJwtToken(any()))
-            .thenReturn("test-user-uuid-1");
+        when(jwtResolver.getUserDetailFromJwtToken(any()))
+            .thenReturn(new UserDetail("test-user-uuid-1", "USER"));
         when(userIdResolver.resolveArgument(any(), any(), any(), any()))
             .thenReturn(1L);
 
         // when & then
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users/me")
-                .header("Authorization", accessToken)
+                .header("Authorization", token)
                 .contentType(MediaType.APPLICATION_JSON))
             .andDo(print())
             .andExpect(status().isOk())
@@ -108,10 +114,12 @@ class MyPageControllerTest {
     @WithMockUser(username = "test-user-uuid-3")
     void 마이_페이지_조회_실패_사용자정보_없음() throws Exception {
         // given
-        String accessToken = "Bearer " + jwtTokenFactory.generateAccessToken("non-existent-user");
+        String accessToken = TokenUtils.createTestOnlyToken("non-existing-user-uuid");
 
         when(myPageQueryUsecase.execute(any()))
             .thenThrow(new NoSuchElementException("User not found"));
+        when(jwtResolver.getUserDetailFromJwtToken(any()))
+            .thenReturn(new UserDetail("non-existing-user-uuid", "USER"));
 
         // when & then
         mockMvc.perform(MockMvcRequestBuilders.get("/api/v1/users/me")
