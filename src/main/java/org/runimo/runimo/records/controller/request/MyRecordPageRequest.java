@@ -14,20 +14,33 @@ import org.runimo.runimo.records.service.dto.RecordQuery;
 @Setter
 public class MyRecordPageRequest {
 
-  @Parameter(description = "페이지 번호", example = "0")
-  @Min(0)
-  private Integer page = 0;
-  @Parameter(description = "페이지 당 크기", example = "10")
-  @Min(1)
-  @Max(20)
-  private Integer size = 10;
-  @Parameter(description = "시작 날짜(기본값 : 요청 시점)", example = "2024-04-04")
-  private LocalDate startDate = LocalDate.now();
-  @Parameter(description = "종료 날짜(기본값 : 요청 시점)", example = "2024-04-04")
-  private LocalDate endDate = LocalDate.now();
+    @Parameter(description = "페이지 번호", example = "0")
+    @Min(0)
+    private Integer page = 0;
+    @Parameter(description = "페이지 당 크기", example = "10")
+    @Min(1)
+    @Max(20)
+    private Integer size = 10;
+    @Parameter(description = "시작 날짜(기본값 : 요청 시점)", example = "2024-04-04")
+    private LocalDate startDate = LocalDate.now();
+    @Parameter(description = "종료 날짜(기본값 : 요청 시점)", example = "2024-04-04")
+    private LocalDate endDate = LocalDate.now();
+    @Parameter(description = "정렬 기준", example = "createdAt")
+    @Schema(allowableValues = {"startedAt", "createdAt"})
+    private String sortBy = "startedAt";
+    @Parameter(description = "정렬 방향", example = "asc")
+    @Schema(allowableValues = {"asc", "desc"})
+    private String sortDirection = "desc";
 
-  public static RecordQuery toQuery(MyRecordPageRequest request, Long userId) {
-    return new RecordQuery(userId, request.getPage(), request.getSize(), request.getStartDate(),
-        request.getEndDate());
-  }
+    public static RecordQuery toQuery(MyRecordPageRequest request, Long userId) {
+        return RecordQuery.builder()
+            .userId(userId)
+            .page(request.getPage())
+            .startDate(request.getStartDate())
+            .endDate(request.getEndDate())
+            .size(request.getSize())
+            .sortBy(request.getSortBy())
+            .sortDirection(request.getSortDirection())
+            .build();
+    }
 }
