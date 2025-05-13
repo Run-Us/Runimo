@@ -8,14 +8,16 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Collections;
+import java.util.List;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.runimo.runimo.auth.jwt.JwtResolver;
+import org.runimo.runimo.auth.jwt.UserDetail;
 import org.runimo.runimo.common.response.ErrorResponse;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -27,6 +29,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private static final String AUTH_HEADER = "Authorization";
     private static final String AUTH_PREFIX = "Bearer ";
+    private static final String ROLE_PREFIX = "ROLE_";
     private static final int TOKEN_PREFIX_LENGTH = 7;
     private final JwtResolver jwtResolver;
     private final ObjectMapper objectMapper = new ObjectMapper();
@@ -64,11 +67,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private boolean processToken(String jwtToken, HttpServletResponse response) throws IOException {
         try {
-            String userId = jwtResolver.getUserIdFromJwtToken(jwtToken);
+            UserDetail userDetail = jwtResolver.getUserDetailFromJwtToken(jwtToken);
             Authentication authentication = new UsernamePasswordAuthenticationToken(
-                userId,
+                userDetail.userId(),
                 null,
-                Collections.emptyList()
+                List.of(new SimpleGrantedAuthority(ROLE_PREFIX + userDetail.role()))
             );
             SecurityContextHolder.getContext().setAuthentication(authentication);
             return true;

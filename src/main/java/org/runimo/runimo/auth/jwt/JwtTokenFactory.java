@@ -24,15 +24,16 @@ public class JwtTokenFactory {
         this.tempJwtExpiration = tempJwtExpiration;
     }
 
-    public String generateAccessToken(String userPublicId) {
+    public String generateAccessToken(User user) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtExpiration);
 
         return JWT.create()
-            .withSubject(userPublicId)
+            .withSubject(user.getPublicId())
             .withIssuedAt(now)
             .withExpiresAt(expiryDate)
             .withIssuer(ISSUER)
+            .withClaim("role", user.getRole().name())
             .sign(Algorithm.HMAC256(jwtSecret));
     }
 
@@ -65,7 +66,7 @@ public class JwtTokenFactory {
     }
 
     public TokenPair generateTokenPair(User user) {
-        String accessToken = generateAccessToken(user.getPublicId());
+        String accessToken = generateAccessToken(user);
         String refreshToken = generateRefreshToken(user.getPublicId());
         return new TokenPair(accessToken, refreshToken);
     }

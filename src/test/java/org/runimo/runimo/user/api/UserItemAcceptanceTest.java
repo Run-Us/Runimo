@@ -9,6 +9,7 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
+import static org.runimo.runimo.TestConsts.TEST_USER_UUID;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,6 +21,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.runimo.runimo.CleanUpUtil;
+import org.runimo.runimo.TokenUtils;
 import org.runimo.runimo.auth.controller.request.AuthSignupRequest;
 import org.runimo.runimo.auth.jwt.JwtTokenFactory;
 import org.runimo.runimo.auth.service.SignUpUsecase;
@@ -36,8 +38,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.jdbc.Sql;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserItemAcceptanceTest {
 
     @LocalServerPort
@@ -51,13 +53,16 @@ class UserItemAcceptanceTest {
     @MockitoBean
     private SignUpUsecase signUpUsecaseImpl;
 
-
+    @Autowired
+    private TokenUtils tokenUtils;
+    private String token;
     @Autowired
     private CleanUpUtil cleanUpUtil;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        token = tokenUtils.createTokenByUserPublicId(TEST_USER_UUID);
     }
 
     @AfterEach()
@@ -69,11 +74,9 @@ class UserItemAcceptanceTest {
     @Sql(scripts = "/sql/user_item_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void 아이템_조회_성공() {
         // given
-        String jwt = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
-
         // when + then
         given()
-            .header("Authorization", jwt)
+            .header("Authorization", token)
             .when()
             .get("/api/v1/users/eggs")
             .then()
@@ -90,12 +93,11 @@ class UserItemAcceptanceTest {
     @Test
     @Sql(scripts = "/sql/user_item_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void 아이템_사용시_보유량감소() throws JsonProcessingException {
-        String jwt = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
 
         UseItemRequest request = new UseItemRequest(1L, 2L);
 
         given()
-            .header("Authorization", jwt)
+            .header("Authorization", token)
             .body(objectMapper.writeValueAsString(request))
             .contentType(ContentType.JSON)
             .when()
@@ -105,7 +107,7 @@ class UserItemAcceptanceTest {
             .statusCode(HttpStatus.OK.value());
 
         given()
-            .header("Authorization", jwt)
+            .header("Authorization", token)
             .when()
             .get("/api/v1/users/eggs")
             .then()
@@ -119,11 +121,10 @@ class UserItemAcceptanceTest {
     @Test
     @Sql(scripts = "/sql/user_item_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void 보유한_수량보다_더_많은_요청_시_에러() throws JsonProcessingException {
-        String jwt = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
         UseItemRequest request = new UseItemRequest(1L, 10L);
 
         given()
-            .header("Authorization", jwt)
+            .header("Authorization", token)
             .body(objectMapper.writeValueAsString(request))
             .contentType(ContentType.JSON)
             .when()
@@ -138,7 +139,6 @@ class UserItemAcceptanceTest {
     void 카카오_회원가입후_알_지급_성공() throws JsonProcessingException {
         String registerToken = jwtTokenFactory.generateSignupTemporalToken("test-pid",
             SocialProvider.KAKAO, UUID.randomUUID().toString());
-        String token = jwtTokenFactory.generateAccessToken("test-user-uuid-1");
         when(signUpUsecaseImpl.register(any()))
             .thenReturn(new SignupUserResponse(
                 1L,
@@ -166,7 +166,7 @@ class UserItemAcceptanceTest {
             .getString("payload.token_pair.access_token");
 
         given()
-            .header("Authorization", "Bearer " + accessToken)
+            .header("Authorization", accessToken)
             .when()
             .get("/api/v1/users/eggs")
             .then()

@@ -4,6 +4,7 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.runimo.runimo.TestConsts.TEST_USER_UUID;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,7 +14,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.runimo.runimo.CleanUpUtil;
-import org.runimo.runimo.auth.jwt.JwtTokenFactory;
+import org.runimo.runimo.TokenUtils;
 import org.runimo.runimo.user.controller.request.RegisterEggRequest;
 import org.runimo.runimo.user.controller.request.UseLovePointRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,16 +32,18 @@ class IncubatingEggAcceptanceTest {
     int port;
 
     @Autowired
-    private JwtTokenFactory jwtTokenFactory;
-
-    @Autowired
     private CleanUpUtil cleanUpUtil;
     @Autowired
     private ObjectMapper objectMapper;
 
+    @Autowired
+    private TokenUtils tokenUtils;
+    private String token;
+
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        token = tokenUtils.createTokenByUserPublicId(TEST_USER_UUID);
     }
 
     @AfterEach
@@ -51,7 +54,6 @@ class IncubatingEggAcceptanceTest {
     @Test
     @Sql(scripts = "/sql/incubating_egg_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void 사용자의_부화중인_알_조회_성공() {
-        String token = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
 
         given()
             .header("Authorization", token)
@@ -73,7 +75,6 @@ class IncubatingEggAcceptanceTest {
     @Test
     @Sql(scripts = "/sql/incubating_egg_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void 사용자의_알을_부화중으로_변경() throws JsonProcessingException {
-        String token = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
         RegisterEggRequest request = new RegisterEggRequest(1L);
 
         given()
@@ -93,7 +94,6 @@ class IncubatingEggAcceptanceTest {
     @Test
     @Sql(scripts = "/sql/incubating_egg_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void 부화중인_알에_애정을_부여() throws JsonProcessingException {
-        String token = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
         Long incubatingEggId = 1L;
         UseLovePointRequest request = new UseLovePointRequest(20L);
         given()
@@ -115,8 +115,6 @@ class IncubatingEggAcceptanceTest {
     @Sql(scripts = "/sql/incubating_egg_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void 알에_애정을_부여하면_사용자의_보유_애정이_감소한다() throws JsonProcessingException {
         // given
-        String userUuid = "test-user-uuid-1";
-        String token = "Bearer " + jwtTokenFactory.generateAccessToken(userUuid);
         Long incubatingEggId = 1L;
 
         // 사용자의 초기 애정 포인트 조회
@@ -157,7 +155,8 @@ class IncubatingEggAcceptanceTest {
             .then()
             .log().all()
             .statusCode(200)
-            .body("payload.user_info.love_point", equalTo(initialLovePoint - useLovePointAmount.intValue()));
+            .body("payload.user_info.love_point",
+                equalTo(initialLovePoint - useLovePointAmount.intValue()));
     }
 
 
@@ -165,8 +164,6 @@ class IncubatingEggAcceptanceTest {
     @Sql(scripts = "/sql/incubating_egg_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void 보유한_애정보다_더_많은_애정부여_요청_시_예외() throws JsonProcessingException {
         // given
-        String userUuid = "test-user-uuid-1";
-        String token = "Bearer " + jwtTokenFactory.generateAccessToken(userUuid);
         Long incubatingEggId = 1L;
 
         // 사용자의 초기 애정 포인트 조회
@@ -201,8 +198,6 @@ class IncubatingEggAcceptanceTest {
     @Sql(scripts = "/sql/incubating_egg_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void 애정부여_예외_시_애정보유량_유지() throws JsonProcessingException {
         // given
-        String userUuid = "test-user-uuid-1";
-        String token = "Bearer " + jwtTokenFactory.generateAccessToken(userUuid);
         Long incubatingEggId = 1L;
 
         // 사용자의 초기 애정 포인트 조회
@@ -248,25 +243,22 @@ class IncubatingEggAcceptanceTest {
     @Test
     @Sql(scripts = "/sql/user_item_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void 알_등록_후_조회() throws JsonProcessingException {
-        String token = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
-
         Integer eggId =
             given()
-            .header("Authorization", token)
-            .contentType(ContentType.JSON)
+                .header("Authorization", token)
+                .contentType(ContentType.JSON)
 
-            .when()
-            .get("/api/v1/users/eggs")
+                .when()
+                .get("/api/v1/users/eggs")
 
-            .then()
-            .log().ifError()
-            .statusCode(200)
-            .body("payload.items", notNullValue())
-            .extract()
-            .path("payload.items[0].item_id");
+                .then()
+                .log().ifError()
+                .statusCode(200)
+                .body("payload.items", notNullValue())
+                .extract()
+                .path("payload.items[0].item_id");
 
-
-        RegisterEggRequest request = new RegisterEggRequest((long)eggId);
+        RegisterEggRequest request = new RegisterEggRequest((long) eggId);
 
         given()
             .header("Authorization", token)
@@ -293,7 +285,6 @@ class IncubatingEggAcceptanceTest {
             .statusCode(200)
             .body("payload.incubating_eggs", notNullValue())
             .body("payload.incubating_eggs[0].name", notNullValue());
-
 
 
     }

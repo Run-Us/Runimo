@@ -2,6 +2,7 @@ package org.runimo.runimo.user.api;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
+import static org.runimo.runimo.TestConsts.TEST_USER_UUID;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -9,7 +10,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.runimo.runimo.CleanUpUtil;
-import org.runimo.runimo.auth.jwt.JwtTokenFactory;
+import org.runimo.runimo.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -20,18 +21,19 @@ import org.springframework.test.context.jdbc.Sql;
 @ActiveProfiles("test")
 class MainViewAcceptanceTest {
 
-    private static final String USER_UUID = "test-user-uuid-1";
-    private static final String AUTH_HEADER_PREFIX = "Bearer ";
     @LocalServerPort
     int port;
     @Autowired
-    private JwtTokenFactory jwtTokenFactory;
-    @Autowired
     private CleanUpUtil cleanUpUtil;
+
+    @Autowired
+    private TokenUtils tokenUtils;
+    private String token;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        token = tokenUtils.createTokenByUserPublicId(TEST_USER_UUID);
     }
 
     @AfterEach
@@ -42,9 +44,6 @@ class MainViewAcceptanceTest {
     @Test
     @Sql(scripts = "/sql/main_view_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void 메인화면_조회_성공시_정확한_정보를_반환한다() {
-        // given
-        String token = AUTH_HEADER_PREFIX + jwtTokenFactory.generateAccessToken(USER_UUID);
-
         // when & then
         given()
             .header("Authorization", token)
@@ -66,8 +65,8 @@ class MainViewAcceptanceTest {
     @Test
     @Sql(scripts = "/sql/main_view_data.sql")
     void 메인화면_조회시_대표_러니모가_없으면_null_로반환() {
-        String token = AUTH_HEADER_PREFIX + jwtTokenFactory.generateAccessToken("test-user-uuid-2");
         // when & then
+        String token = tokenUtils.createTokenByUserPublicId("test-user-uuid-2");
         given()
             .header("Authorization", token)
             .contentType(ContentType.JSON)

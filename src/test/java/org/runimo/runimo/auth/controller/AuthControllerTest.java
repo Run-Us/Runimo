@@ -28,8 +28,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-
 @ControllerTest(controllers = {AuthController.class})
+
 class AuthControllerTest {
 
     @Autowired
@@ -55,6 +55,7 @@ class AuthControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
+
 
     @Test
     void 카카오_로그인_INVALID_401응답() throws Exception {

@@ -3,6 +3,7 @@ package org.runimo.runimo.runimo.controller;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
+import static org.runimo.runimo.TestConsts.TEST_USER_UUID;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
@@ -11,7 +12,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.runimo.runimo.CleanUpUtil;
-import org.runimo.runimo.auth.jwt.JwtTokenFactory;
+import org.runimo.runimo.TokenUtils;
 import org.runimo.runimo.exceptions.code.CustomResponseCode;
 import org.runimo.runimo.runimo.exception.RunimoHttpResponseCode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +30,11 @@ class RunimoControllerTest {
     int port;
 
     @Autowired
-    private JwtTokenFactory jwtTokenFactory;
-
-    @Autowired
     private CleanUpUtil cleanUpUtil;
+    @Autowired
+    private TokenUtils tokenUtils;
+
+    private String token;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -40,6 +42,7 @@ class RunimoControllerTest {
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        token = tokenUtils.createTokenByUserPublicId(TEST_USER_UUID);
     }
 
     @AfterEach
@@ -51,7 +54,6 @@ class RunimoControllerTest {
     @Test
     @Sql(scripts = "/sql/get_my_runimo_list_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void 보유_러니모_목록_조회_성공() {
-        String token = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
 
         given()
             .header("Authorization", token)
@@ -79,7 +81,6 @@ class RunimoControllerTest {
     @Test
     @Sql(scripts = "/sql/get_all_runimo_type_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void 전체_러니모_종류_조회_성공() {
-        String token = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
 
         given()
             .header("Authorization", token)
@@ -113,7 +114,6 @@ class RunimoControllerTest {
     @Test
     @Sql(scripts = "/sql/set_main_runimo_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void 대표_러니모_설정_성공() {
-        String token = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
 
         given()
             .header("Authorization", token)
@@ -133,7 +133,6 @@ class RunimoControllerTest {
     @Test
     @Sql(scripts = "/sql/set_main_runimo_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void 대표_러니모_설정_실패_러니모의_소유자_아님() {
-        String token = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
         CustomResponseCode responseCode = RunimoHttpResponseCode.USER_DO_NOT_OWN_RUNIMO;
 
         given()
@@ -154,7 +153,6 @@ class RunimoControllerTest {
     @Test
     @Sql(scripts = "/sql/set_main_runimo_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void 대표_러니모_설정_실패_러니모_존재하지않음() {
-        String token = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
         CustomResponseCode responseCode = RunimoHttpResponseCode.RUNIMO_NOT_FOUND;
 
         given()

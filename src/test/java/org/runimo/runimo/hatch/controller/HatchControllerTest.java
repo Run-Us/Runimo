@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.startsWith;
+import static org.runimo.runimo.TestConsts.TEST_USER_UUID;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
@@ -13,7 +14,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.runimo.runimo.CleanUpUtil;
-import org.runimo.runimo.auth.jwt.JwtTokenFactory;
+import org.runimo.runimo.TokenUtils;
 import org.runimo.runimo.exceptions.code.CustomResponseCode;
 import org.runimo.runimo.hatch.exception.HatchHttpResponseCode;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,19 +30,18 @@ class HatchControllerTest {
 
     @LocalServerPort
     int port;
-
-    @Autowired
-    private JwtTokenFactory jwtTokenFactory;
-
     @Autowired
     private CleanUpUtil cleanUpUtil;
-
+    @Autowired
+    private TokenUtils tokenUtils;
+    private String token;
     @Autowired
     private ObjectMapper objectMapper;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        token = tokenUtils.createTokenByUserPublicId(TEST_USER_UUID);
     }
 
     @AfterEach
@@ -52,7 +52,6 @@ class HatchControllerTest {
     @Test
     @Sql(scripts = "/sql/hatch_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void 사용자의_알_부화_성공_8회() {
-        String token = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
 
         for (int i = 0; i < 8; i++) {
             int incubationEggId = i + 3;
@@ -79,7 +78,6 @@ class HatchControllerTest {
     @Test
     @Sql(scripts = "/sql/hatch_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void 사용자의_알_부화_실패_부화가능한_상태가_아님() {
-        String token = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
         CustomResponseCode responseCode = HatchHttpResponseCode.HATCH_EGG_NOT_READY;
 
         given()
@@ -100,7 +98,6 @@ class HatchControllerTest {
     @Test
     @Sql(scripts = "/sql/hatch_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void 사용자의_알_부화_실패_알_존재하지_않음() {
-        String token = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
         CustomResponseCode responseCode = HatchHttpResponseCode.HATCH_EGG_NOT_FOUND;
 
         given()

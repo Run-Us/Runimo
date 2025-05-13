@@ -2,6 +2,7 @@ package org.runimo.runimo.user.api;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
+import static org.runimo.runimo.TestConsts.TEST_USER_UUID;
 
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
@@ -11,7 +12,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.runimo.runimo.CleanUpUtil;
-import org.runimo.runimo.auth.jwt.JwtTokenFactory;
+import org.runimo.runimo.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -27,12 +28,15 @@ class MyPageAcceptanceTest {
     private Integer port;
     @Autowired
     private CleanUpUtil cleanUpUtil;
+
     @Autowired
-    private JwtTokenFactory jwtTokenFactory;
+    private TokenUtils tokenUtils;
+    private String token;
 
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
+        token = tokenUtils.createTokenByUserPublicId(TEST_USER_UUID);
     }
 
     @AfterEach
@@ -45,11 +49,10 @@ class MyPageAcceptanceTest {
     @Sql(scripts = "/sql/user_mypage_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void 마이페이지_조회_시_프로필정보와_최근_달리기가_표시된다() {
 
-        String accessToken = "Bearer " + jwtTokenFactory.generateAccessToken("test-user-uuid-1");
         int diff = (int) LocalDateTime.parse("2025-03-29T13:00:00")
             .until(LocalDateTime.now(), ChronoUnit.DAYS);
         given()
-            .header("Authorization", accessToken)
+            .header("Authorization", token)
             .contentType(ContentType.JSON)
             .when()
             .get("/api/v1/users/me")
