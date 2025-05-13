@@ -16,43 +16,42 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RecordRepository extends JpaRepository<RunningRecord, Long> {
 
-  Optional<RunningRecord> findByRecordPublicId(String id);
+    Optional<RunningRecord> findByRecordPublicId(String id);
 
-  @Query("SELECT r FROM RunningRecord r " +
-      "WHERE r.userId = :userId " +
-      "AND r.startedAt BETWEEN :startOfWeek AND :now")
-  Slice<RunningRecord> findFirstRunOfWeek(
-      @Param("userId") Long userId,
-      @Param("startOfWeek") LocalDateTime startOfWeek,
-      @Param("now") LocalDateTime now,
-      Pageable pageable
-  );
+    @Query("SELECT r FROM RunningRecord r " +
+        "WHERE r.userId = :userId " +
+        "AND r.startedAt BETWEEN :startOfWeek AND :now")
+    Slice<RunningRecord> findFirstRunOfWeek(
+        @Param("userId") Long userId,
+        @Param("startOfWeek") LocalDateTime startOfWeek,
+        @Param("now") LocalDateTime now,
+        Pageable pageable
+    );
 
-  @Query("SELECT COUNT(r.id) FROM RunningRecord r WHERE r.userId = :id")
-  Long countByUserId(Long id);
+    @Query("SELECT COUNT(r.id) FROM RunningRecord r WHERE r.userId = :id")
+    Long countByUserId(Long id);
 
-  @Query("select r from RunningRecord r where r.userId = :userId")
-  Slice<RunningRecord> findLatestByUserId(Long userId, Pageable pageRequest);
+    @Query("select r from RunningRecord r where r.userId = :userId")
+    Slice<RunningRecord> findLatestByUserId(Long userId, Pageable pageRequest);
 
-  @Query("select new org.runimo.runimo.records.service.dto.RecordStatDto(" +
-      "r.startedAt, " +
-      "r.endAt, " +
-      "r.totalDistance.amount) " +
-      "from RunningRecord r " +
-      "where r.userId = :userId " +
-      "and r.startedAt between :startOfWeek and :now " +
-      "order by r.startedAt asc")
-  List<RecordStatDto> findRecordStatByUserIdAndBetween(Long userId, LocalDateTime startOfWeek,
-      LocalDateTime now);
+    @Query("select new org.runimo.runimo.records.service.dto.RecordStatDto(" +
+        "r.startedAt, " +
+        "r.endAt, " +
+        "r.totalDistance.amount) " +
+        "from RunningRecord r " +
+        "where r.userId = :userId " +
+        "and r.startedAt between :startOfWeek and :now " +
+        "order by r.startedAt asc")
+    List<RecordStatDto> findRecordStatByUserIdAndBetween(Long userId, LocalDateTime startOfWeek,
+        LocalDateTime now);
 
-  Page<RunningRecord> findRecordByUserIdOrderByStartedAtDesc(Long id, Pageable pageable);
+    Page<RunningRecord> findRecordByUserIdOrderByStartedAtDesc(Long id, Pageable pageable);
 
 
-  @Query("select r " +
-      "from RunningRecord r " +
-      "where r.userId = :userId " +
-      "and r.startedAt between :from and :to " +
-      "order by r.startedAt asc")
-  Page<RunningRecord> findRecordByUserIdAndBetween(Long userId, LocalDateTime from,
-      LocalDateTime to, Pageable pageRequest);
+    @Query("select r " +
+        "from RunningRecord r " +
+        "where r.userId = :userId " +
+        "and r.startedAt between :from and :to")
+    Page<RunningRecord> findRecordByUserIdAndBetween(Long userId, LocalDateTime from,
+        LocalDateTime to, Pageable pageRequest);
 }
