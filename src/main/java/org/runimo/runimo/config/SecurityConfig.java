@@ -29,6 +29,7 @@ public class SecurityConfig {
             )
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/api/v1/auth/**").permitAll()
+                .requestMatchers("/checker/**").permitAll()
                 .requestMatchers(("/error")).permitAll()
                 .anyRequest().authenticated()
             )
@@ -52,6 +53,7 @@ public class SecurityConfig {
                 .permitAll()
                 .requestMatchers(("/error")).permitAll()
                 .requestMatchers("/api/v1/users/**").hasAnyRole("USER", "ADMIN")
+                .requestMatchers("/checker/**").permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

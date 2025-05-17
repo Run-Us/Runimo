@@ -14,7 +14,8 @@ public final class GlobalConsts {
         "/api/v1/auth",
         "/swagger-ui",
         "/v3/api-docs",
-        "/actuator"
+        "/actuator",
+        "/checker"
     );
 
     public static final String EMPTYFIELD = "EMPTY";
