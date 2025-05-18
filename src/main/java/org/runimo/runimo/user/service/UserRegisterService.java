@@ -2,7 +2,6 @@ package org.runimo.runimo.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.auth.exceptions.SignUpException;
-import org.runimo.runimo.rewards.service.eggs.EggGrantService;
 import org.runimo.runimo.user.domain.SocialProvider;
 import org.runimo.runimo.user.domain.User;
 import org.runimo.runimo.user.enums.UserHttpResponseCode;
@@ -18,7 +17,6 @@ public class UserRegisterService {
 
     private final UserCreator userCreator;
     private final UserItemCreator userItemCreator;
-    private final EggGrantService eggGrantService;
     private final OAuthInfoRepository oAuthInfoRepository;
 
     @Transactional
@@ -28,13 +26,12 @@ public class UserRegisterService {
         userCreator.createUserOAuthInfo(savedUser, command.socialProvider(), command.providerId());
         userCreator.createLovePoint(savedUser.getId());
         userItemCreator.createAll(savedUser.getId());
-        eggGrantService.grantGreetingEggToUser(savedUser);
         return savedUser;
     }
 
     public void validateExistingUser(String providerId, SocialProvider socialProvider) {
-        if(oAuthInfoRepository.existsByProviderIdAndProvider(
-                providerId, socialProvider)) {
+        if (oAuthInfoRepository.existsByProviderIdAndProvider(
+            providerId, socialProvider)) {
             throw new SignUpException(UserHttpResponseCode.SIGNIN_FAIL_ALREADY_EXIST);
         }
     }
