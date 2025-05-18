@@ -15,7 +15,7 @@ public record RewardResponse(
         return new RewardResponse(
             egg != Egg.EMPTY,
             egg.getItemCode(),
-            egg.getName(),
+            egg.getEggType().getName(),
             egg.getImgUrl(),
             lovePointAmount
         );
