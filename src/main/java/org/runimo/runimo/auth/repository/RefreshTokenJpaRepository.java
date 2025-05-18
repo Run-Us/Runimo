@@ -15,4 +15,6 @@ public interface RefreshTokenJpaRepository extends JpaRepository<RefreshToken, S
     @Query("select distinct r from RefreshToken r " +
         "where r.userId = :userId and r.updatedAt > :cutOffDateTime")
     Optional<RefreshToken> findByUserIdAfterCutoffTime(Long userId, LocalDateTime cutOffDateTime);
+
+    void deleteByUserId(Long userId);
 }

@@ -7,4 +7,6 @@ public interface JwtTokenRepository {
     Optional<String> findRefreshTokenByUserId(Long userId);
 
     void saveRefreshTokenWithUserId(Long userId, String refreshToken);
+
+    void deleteRefreshTokenByUserId(Long userId);
 }

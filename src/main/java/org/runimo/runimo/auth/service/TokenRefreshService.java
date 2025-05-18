@@ -48,4 +48,13 @@ public class TokenRefreshService {
         String newAccessToken = jwtTokenFactory.generateAccessToken(user);
         return new TokenPair(newAccessToken, refreshToken);
     }
+
+    /**
+     * 해당 사용자의 refresh token 삭제
+     *
+     * @param userId 사용자 식별자
+     */
+    public void removeRefreshToken(Long userId) {
+        jwtTokenRepository.deleteRefreshTokenByUserId(userId);
+    }
 }
