@@ -219,7 +219,9 @@ class RewardAcceptanceTest {
             .log().all()
             .statusCode(HttpStatus.OK.value())
             .body("payload.love_point_amount", notNullValue())
-            .body("payload.love_point_amount", greaterThan(0));
+            .body("payload.love_point_amount", greaterThan(0))
+            .body("payload.love_point_amount", equalTo(5))
+            .body("payload.egg_img_url", notNullValue());
     }
 
     @Test
