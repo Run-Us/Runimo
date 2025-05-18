@@ -144,7 +144,10 @@ class UserItemAcceptanceTest {
                 1L,
                 "test-user",
                 "https://test-image.com",
-                new TokenPair(token, "token2")
+                new TokenPair(token, "token2"),
+                "마당알",
+                "MADANG",
+                "test.url"
             ));
 
         AuthSignupRequest request = new AuthSignupRequest(

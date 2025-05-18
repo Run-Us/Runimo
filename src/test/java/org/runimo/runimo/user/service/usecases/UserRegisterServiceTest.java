@@ -13,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.runimo.runimo.rewards.service.eggs.EggGrantService;
 import org.runimo.runimo.user.domain.Gender;
 import org.runimo.runimo.user.domain.SocialProvider;
 import org.runimo.runimo.user.domain.User;
@@ -29,9 +28,6 @@ class UserRegisterServiceTest {
 
     @Mock
     private UserItemCreator userItemCreator;
-
-    @Mock
-    private EggGrantService eggGrantService;
 
     @InjectMocks
     private UserRegisterService userRegisterService;
@@ -66,6 +62,5 @@ class UserRegisterServiceTest {
             providerId);
         verify(userCreator, times(1)).createLovePoint(anyLong());
         verify(userItemCreator, times(1)).createAll(anyLong());
-        verify(eggGrantService, times(1)).grantGreetingEggToUser(mockUser);
     }
 }
