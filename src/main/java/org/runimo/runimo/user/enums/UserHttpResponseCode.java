@@ -22,7 +22,11 @@ public enum UserHttpResponseCode implements CustomResponseCode {
     JWT_TOKEN_BROKEN(HttpStatus.BAD_REQUEST, "JWT 토큰이 손상되었습니다", "JWT 토큰이 손상되었습니다"),
     TOKEN_REFRESH_FAIL(HttpStatus.FORBIDDEN, "토큰 재발급 실패", "Refresh 토큰이 유효하지 않습니다."),
     TOKEN_INVALID(HttpStatus.UNAUTHORIZED, "인증 실패", "JWT 토큰 인증 실패"),
-    REFRESH_EXPIRED(HttpStatus.FORBIDDEN, "리프레시 토큰 만료", "리프레시 토큰 만료");
+    REFRESH_EXPIRED(HttpStatus.FORBIDDEN, "리프레시 토큰 만료", "리프레시 토큰 만료"),
+    TOKEN_DELETE_REFRESH_FAIL(HttpStatus.FORBIDDEN, "토큰 삭제 실패",
+        "사용자가 유효하지 않습니다. Refresh 토큰 삭제에 실패했습니다"),
+    LOG_OUT_SUCCESS(HttpStatus.OK, "로그아웃 성공", "로그아웃 성공"),
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없음", "사용자를 찾을 수 없음");
 
     private final HttpStatus code;
     private final String clientMessage;
