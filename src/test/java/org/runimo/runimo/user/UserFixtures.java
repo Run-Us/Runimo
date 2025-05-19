@@ -24,7 +24,7 @@ public final class UserFixtures {
     public static User getUserWithId(Long id) {
         User user = User.builder()
             .nickname(TEST_USER_NICKNAME)
-            .imgUrl(TEST_USER_NICKNAME)
+            .imgUrl(TEST_USER_IMG_URL)
             .totalDistanceInMeters(0L)
             .totalTimeInSeconds(0L)
             .build();
