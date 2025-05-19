@@ -1,4 +1,4 @@
-package org.runimo.runimo.user.controller;
+package org.runimo.runimo.auth.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -6,8 +6,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.common.response.SuccessResponse;
+import org.runimo.runimo.user.controller.UserId;
 import org.runimo.runimo.user.enums.UserHttpResponseCode;
-import org.runimo.runimo.user.service.usecases.logout.LogOutUsecase;
+import org.runimo.runimo.auth.service.logout.LogOutUsecase;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "USER-LOG-OUT", description = "로그아웃 API")
 @RestController
-@RequestMapping("/api/v1/users")
+@RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 public class LogOutController {
 

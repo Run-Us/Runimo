@@ -1,4 +1,4 @@
-package org.runimo.runimo.user.service.usecases.logout;
+package org.runimo.runimo.auth.service.logout;
 
 import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.auth.service.TokenRefreshService;
