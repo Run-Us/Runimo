@@ -11,6 +11,8 @@ import org.runimo.runimo.auth.repository.SignupTokenRepository;
 import org.runimo.runimo.auth.service.dto.SignupUserResponse;
 import org.runimo.runimo.auth.service.dto.UserSignupCommand;
 import org.runimo.runimo.external.FileStorageService;
+import org.runimo.runimo.item.domain.Egg;
+import org.runimo.runimo.rewards.service.eggs.EggGrantService;
 import org.runimo.runimo.user.domain.AppleUserToken;
 import org.runimo.runimo.user.domain.SocialProvider;
 import org.runimo.runimo.user.domain.User;
@@ -28,6 +30,7 @@ public class SignUpUsecaseImpl implements SignUpUsecase {
     private static final int REGISTER_CUTOFF_MIN = 10;
     private final UserRegisterService userRegisterService;
     private final FileStorageService fileStorageService;
+    private final EggGrantService eggGrantService;
     private final JwtTokenFactory jwtTokenFactory;
     private final SignupTokenRepository signupTokenRepository;
     private final AppleUserTokenRepository appleUserTokenRepository;
@@ -50,8 +53,11 @@ public class SignUpUsecaseImpl implements SignUpUsecase {
         if (payload.socialProvider() == SocialProvider.APPLE) {
             createAppleUserToken(savedUser.getId(), signupToken);
         }
+        Egg grantedEgg = eggGrantService.grantGreetingEggToUser(savedUser);
+
         removeSignupToken(payload.token());
-        return new SignupUserResponse(savedUser, jwtTokenFactory.generateTokenPair(savedUser));
+        return new SignupUserResponse(savedUser, jwtTokenFactory.generateTokenPair(savedUser),
+            grantedEgg);
     }
 
     private void removeSignupToken(String token) {

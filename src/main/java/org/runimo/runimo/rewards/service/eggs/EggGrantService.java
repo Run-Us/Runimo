@@ -23,12 +23,13 @@ public class EggGrantService {
     private final EggTypeRepository eggTypeRepository;
 
     @Transactional
-    public void grantGreetingEggToUser(User user) {
+    public Egg grantGreetingEggToUser(User user) {
         if (!user.checkUserFirstRun()) {
-            return;
+            return Egg.EMPTY;
         }
         Egg grantedEgg = eggFactory.createGreetingEgg();
         userItemProcessor.updateItemQuantity(user.getId(), grantedEgg.getId(), GREETING_EGG_AMOUNT);
+        return grantedEgg;
     }
 
     @Transactional
