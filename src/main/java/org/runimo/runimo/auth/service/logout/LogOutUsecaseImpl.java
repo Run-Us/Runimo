@@ -16,9 +16,11 @@ public class LogOutUsecaseImpl implements LogOutUsecase {
     private final TokenRefreshService tokenRefreshService;
 
     @Override
-    public void execute(Long userId) {
-        User user = userFinder.findUserById(userId).orElseThrow(() -> UserException.of(
+    public void execute(String accessToken) {
+        String userPublicId = tokenRefreshService.getUserPublicIdFromJwt(accessToken);
+        User user = userFinder.findUserByPublicId(userPublicId).orElseThrow(() -> UserException.of(
             UserHttpResponseCode.USER_NOT_FOUND));
+
         tokenRefreshService.removeRefreshToken(user.getId());
     }
 }

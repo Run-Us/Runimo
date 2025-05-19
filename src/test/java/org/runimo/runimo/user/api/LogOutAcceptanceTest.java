@@ -48,7 +48,7 @@ class LogOutAcceptanceTest {
 
     @Test
     @Sql(scripts = "/sql/log_out_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    void logOut() {
+    void 로그아웃_성공() {
         CustomResponseCode responseCode = UserHttpResponseCode.LOG_OUT_SUCCESS;
 
         given()
@@ -56,7 +56,7 @@ class LogOutAcceptanceTest {
             .contentType(ContentType.JSON)
 
             .when()
-            .post("/api/v1/users/log-out")
+            .post("/api/v1/auth/log-out")
 
             .then()
             .log().all()
