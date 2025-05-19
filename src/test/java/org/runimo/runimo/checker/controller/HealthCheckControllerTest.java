@@ -23,14 +23,10 @@ class HealthCheckControllerTest {
     @LocalServerPort
     int port;
 
-    @Autowired
-    private CleanUpUtil cleanUpUtil;
-
     @BeforeEach
     void setUp() {
         RestAssured.port = port;
     }
-
 
     @Test
     void healthCheck() {

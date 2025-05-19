@@ -1,8 +1,7 @@
-package org.runimo.runimo.user.controller;
+package org.runimo.runimo.user.api;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.runimo.runimo.TestConsts.TEST_USER_UUID;
 
 import io.restassured.RestAssured;
@@ -23,7 +22,7 @@ import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
-class LogOutControllerTest {
+class LogOutAcceptanceTest {
 
     @LocalServerPort
     int port;
