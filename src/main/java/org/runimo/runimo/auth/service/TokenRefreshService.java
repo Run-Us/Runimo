@@ -27,7 +27,7 @@ public class TokenRefreshService {
     }
 
     public TokenPair refreshAccessToken(String refreshToken) {
-        String userPublicId = getUserPublicIdFromJwt(refreshToken);
+        String userPublicId = jwtResolver.getUserIdFromJwtToken(refreshToken);
 
         User user = userFinder.findUserByPublicId(userPublicId)
             .orElseThrow(() -> UserJwtException.of(UserHttpResponseCode.TOKEN_REFRESH_FAIL));
@@ -41,20 +41,6 @@ public class TokenRefreshService {
 
         String newAccessToken = jwtTokenFactory.generateAccessToken(user);
         return new TokenPair(newAccessToken, refreshToken);
-    }
-
-    /**
-     * JWT token 검증 및 사용자 정보 추출
-     */
-    public String getUserPublicIdFromJwt(String token) {
-        String userPublicId;
-        try {
-            jwtResolver.verifyJwtToken(token);
-            userPublicId = jwtResolver.getUserIdFromJwtToken(token);
-        } catch (Exception e) {
-            throw UserJwtException.of(UserHttpResponseCode.TOKEN_INVALID);
-        }
-        return userPublicId;
     }
 
     /**
