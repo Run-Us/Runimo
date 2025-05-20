@@ -29,8 +29,14 @@ public class JwtResolver {
     }
 
     public String getUserIdFromJwtToken(String token) throws JWTVerificationException {
-        DecodedJWT jwt = verifyJwtToken(token);
-        return jwt.getSubject();
+        String userPublicId;
+        try {
+            DecodedJWT jwt = verifyJwtToken(token);
+            userPublicId = jwt.getSubject();
+        } catch (Exception e) {
+            throw UserJwtException.of(UserHttpResponseCode.TOKEN_INVALID);
+        }
+        return userPublicId;
     }
 
     public SignupTokenPayload getSignupTokenPayload(String token)
