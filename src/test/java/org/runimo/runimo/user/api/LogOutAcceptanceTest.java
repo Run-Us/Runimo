@@ -1,7 +1,6 @@
 package org.runimo.runimo.user.api;
 
 import static io.restassured.RestAssured.given;
-import static io.restassured.RestAssured.when;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.ArgumentMatchers.any;
@@ -9,18 +8,15 @@ import static org.runimo.runimo.TestConsts.TEST_USER_UUID;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import groovy.util.logging.Slf4j;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.ValidatableResponse;
-import org.checkerframework.checker.units.qual.C;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.runimo.runimo.CleanUpUtil;
 import org.runimo.runimo.TokenUtils;
-import org.runimo.runimo.auth.controller.request.AuthSignupRequest;
 import org.runimo.runimo.auth.controller.request.KakaoLoginRequest;
 import org.runimo.runimo.auth.jwt.JwtTokenFactory;
 import org.runimo.runimo.auth.service.TokenRefreshService;
@@ -29,27 +25,21 @@ import org.runimo.runimo.auth.service.dto.AuthStatus;
 import org.runimo.runimo.auth.service.dto.TokenPair;
 import org.runimo.runimo.auth.service.login.kakao.KakaoLoginHandler;
 import org.runimo.runimo.exceptions.code.CustomResponseCode;
-import org.runimo.runimo.user.domain.Gender;
 import org.runimo.runimo.user.domain.User;
 import org.runimo.runimo.user.enums.UserHttpResponseCode;
 import org.runimo.runimo.user.repository.UserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.jdbc.Sql;
-import org.springframework.test.web.servlet.MockMvc;
 
 
-@Slf4j
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("test")
 class LogOutAcceptanceTest {
 
-    private static final Logger log = LoggerFactory.getLogger(LogOutAcceptanceTest.class);
     @LocalServerPort
     int port;
 
@@ -58,10 +48,8 @@ class LogOutAcceptanceTest {
 
     @Autowired
     private JwtTokenFactory jwtTokenFactory;
-
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private TokenRefreshService tokenRefreshService;
 
@@ -145,7 +133,7 @@ class LogOutAcceptanceTest {
         // 로그아웃
         CustomResponseCode logOutSuccessCode = UserHttpResponseCode.LOG_OUT_SUCCESS;
         given()
-            .header("Authorization", accessToken) //"Bearer " +
+            .header("Authorization", accessToken)
             .contentType(ContentType.JSON)
 
             .when()
