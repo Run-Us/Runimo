@@ -17,12 +17,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.runimo.runimo.CleanUpUtil;
 import org.runimo.runimo.TokenUtils;
+import org.runimo.runimo.auth.controller.request.AppleLoginRequest;
 import org.runimo.runimo.auth.controller.request.KakaoLoginRequest;
 import org.runimo.runimo.auth.jwt.JwtTokenFactory;
 import org.runimo.runimo.auth.service.TokenRefreshService;
 import org.runimo.runimo.auth.service.dto.AuthResult;
 import org.runimo.runimo.auth.service.dto.AuthStatus;
 import org.runimo.runimo.auth.service.dto.TokenPair;
+import org.runimo.runimo.auth.service.login.apple.AppleLoginHandler;
 import org.runimo.runimo.auth.service.login.kakao.KakaoLoginHandler;
 import org.runimo.runimo.exceptions.code.CustomResponseCode;
 import org.runimo.runimo.user.domain.User;
@@ -45,6 +47,8 @@ class LogOutAcceptanceTest {
 
     @MockitoBean
     private KakaoLoginHandler kakaoLoginHandler;
+    @MockitoBean
+    private AppleLoginHandler appleLoginHandler;
 
     @Autowired
     private JwtTokenFactory jwtTokenFactory;
@@ -100,7 +104,7 @@ class LogOutAcceptanceTest {
     @Sql(scripts = "/sql/log_out_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void 카카오_로그인_후_로그아웃_성공_200() throws JsonProcessingException {
         // OIDC 토큰 처리 mocking
-        AuthResult authResult = createAuthResultOfTestUser();
+        AuthResult authResult = createAuthResultOfTestUser(1L);
 
         Mockito.when(kakaoLoginHandler.validateAndLogin(any()))
             .thenReturn(authResult);
@@ -146,13 +150,53 @@ class LogOutAcceptanceTest {
     }
 
     @Test
-    void 로그아웃_성공_이미_로그아웃된_사용자() { // refresh token 존재 안함
+    @Sql(scripts = "/sql/log_out_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void 애플_로그인_후_로그아웃_성공_200() throws JsonProcessingException {
+        // OIDC 토큰 처리 mocking
+        AuthResult authResult = createAuthResultOfTestUser(2L);
 
-    }
+        Mockito.when(appleLoginHandler.validateAndLogin(any(), any()))
+            .thenReturn(authResult);
 
-    @Test
-    void 로그아웃_실패_사용자_정보_없음() {
+        // 로그인
+        AppleLoginRequest loginReq = new AppleLoginRequest("test-auth-code-1",
+            "test-auth-verifier-1");
 
+        UserHttpResponseCode loginSuccessCode = UserHttpResponseCode.LOGIN_SUCCESS;
+        ValidatableResponse loginRes = given()
+            .body(objectMapper.writeValueAsString(loginReq))
+            .contentType(ContentType.JSON)
+
+            .when()
+            .post("/api/v1/auth/apple")
+
+            .then()
+            .log().all()
+            .statusCode(loginSuccessCode.getHttpStatusCode().value())
+
+            .body("code", equalTo(loginSuccessCode.getCode()))
+            .body("message", equalTo(loginSuccessCode.getClientMessage()))
+            .body("payload.access_token", notNullValue())
+            .body("payload.refresh_token", notNullValue())
+            .body("payload.img_url", notNullValue());
+
+        String accessToken = loginRes.extract().body().path("payload.access_token");
+
+        // 로그아웃
+        CustomResponseCode logOutSuccessCode = UserHttpResponseCode.LOG_OUT_SUCCESS;
+        given()
+            .header("Authorization", accessToken)
+            .contentType(ContentType.JSON)
+
+            .when()
+            .post("/api/v1/auth/log-out")
+
+            .then()
+            .log().all()
+            .statusCode(logOutSuccessCode.getHttpStatusCode().value())
+
+            .body("code", equalTo(logOutSuccessCode.getCode()))
+            .body("message", equalTo(logOutSuccessCode.getClientMessage()));
     }
 
     private AuthResult createAuthResultOfTestUser() {
@@ -167,7 +211,7 @@ class LogOutAcceptanceTest {
         return tokenPair;
     }
 
-    private User getTestUser() {
-        return userRepository.findById(1L).orElseThrow();
+    private User getTestUser(Long userId) {
+        return userRepository.findById(userId).orElseThrow();
     }
 }
