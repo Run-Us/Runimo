@@ -26,6 +26,7 @@ public enum UserHttpResponseCode implements CustomResponseCode {
     TOKEN_DELETE_REFRESH_FAIL(HttpStatus.FORBIDDEN, "토큰 삭제 실패",
         "사용자가 유효하지 않습니다. Refresh 토큰 삭제에 실패했습니다"),
     LOG_OUT_SUCCESS(HttpStatus.OK, "로그아웃 성공", "로그아웃 성공"),
+    ALREADY_LOG_OUT_SUCCESS(HttpStatus.OK, "로그아웃 성공 (이미 로그아웃된 사용자)", "로그아웃 성공 (이미 로그아웃된 사용자)"),
     USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없음", "사용자를 찾을 수 없음");
 
     private final HttpStatus code;

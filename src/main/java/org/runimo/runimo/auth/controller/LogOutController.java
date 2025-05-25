@@ -25,6 +25,7 @@ public class LogOutController {
     @Operation(summary = "로그아웃", description = "사용자를 로그아웃 처리합니다.")
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "로그아웃 성공"),
+        @ApiResponse(responseCode = "200", description = "로그아웃 성공 (이미 로그아웃된 사용자)"),
         @ApiResponse(responseCode = "401", description = "토큰 검증 실패"),
         @ApiResponse(responseCode = "404", description = "사용자를 찾을 수 없음")
     })
@@ -33,8 +34,11 @@ public class LogOutController {
         @RequestHeader("Authorization") String accessTokenHeader
     ) {
         String token = accessTokenHeader.replace("Bearer ", "");
-        logOutUsecase.execute(token);
+        boolean logoutProcessed = logOutUsecase.execute(token);
+
+        UserHttpResponseCode responseCode = logoutProcessed ? UserHttpResponseCode.LOG_OUT_SUCCESS
+            : UserHttpResponseCode.ALREADY_LOG_OUT_SUCCESS;
         return ResponseEntity.ok()
-            .body(SuccessResponse.of(UserHttpResponseCode.LOG_OUT_SUCCESS, null));
+            .body(SuccessResponse.of(responseCode, null));
     }
 }
