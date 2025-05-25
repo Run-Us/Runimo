@@ -81,8 +81,8 @@ class LogOutAcceptanceTest {
 
     @Test
     @Sql(scripts = "/sql/log_out_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    void 로그아웃_성공() {
-        CustomResponseCode responseCode = UserHttpResponseCode.LOG_OUT_SUCCESS;
+    void 로그아웃_성공_이미_로그아웃된_사용자_200() {
+        CustomResponseCode responseCode = UserHttpResponseCode.ALREADY_LOG_OUT_SUCCESS;
 
         given()
             .header("Authorization", token)
@@ -198,9 +198,34 @@ class LogOutAcceptanceTest {
             .body("code", equalTo(logOutSuccessCode.getCode()))
             .body("message", equalTo(logOutSuccessCode.getClientMessage()));
     }
+//
+//    @Test
+//    void 로그아웃_실패_사용자_찾을_수_없음() {
+//        CustomResponseCode responseCode = UserHttpResponseCode.USER_NOT_FOUND;
+//
+//        given()
+//            .header("Authorization", token)
+//            .contentType(ContentType.JSON)
+//
+//            .when()
+//            .post("/api/v1/auth/log-out")
+//
+//            .then()
+//            .log().all()
+//            .statusCode(responseCode.getHttpStatusCode().value())
+//
+//            .body("code", equalTo(responseCode.getCode()))
+//            .body("message", equalTo(responseCode.getClientMessage()));
+//
+//    }
+//
+//    @Test
+//    void 로그아웃_실패_토큰_인증_불가() {
+//
+//    }
 
-    private AuthResult createAuthResultOfTestUser() {
-        User user = getTestUser();
+    private AuthResult createAuthResultOfTestUser(Long userId) {
+        User user = getTestUser(userId);
         TokenPair tokenPair = getTokenPair(user);
         return AuthResult.success(AuthStatus.LOGIN_SUCCESS, user, tokenPair);
     }
