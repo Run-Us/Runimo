@@ -99,13 +99,11 @@ class LogOutAcceptanceTest {
     @Test
     @Sql(scripts = "/sql/log_out_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
     void 카카오_로그인_후_로그아웃_성공_200() throws JsonProcessingException {
-        // 카카오 토큰 처리 mocking
-        User user = userRepository.findById(1L).orElseThrow();
-        TokenPair tokenPair = jwtTokenFactory.generateTokenPair(user);
-        tokenRefreshService.putRefreshToken(user.getPublicId(), tokenPair.refreshToken());
+        // OIDC 토큰 처리 mocking
+        AuthResult authResult = createAuthResultOfTestUser();
 
         Mockito.when(kakaoLoginHandler.validateAndLogin(any()))
-            .thenReturn(AuthResult.success(AuthStatus.LOGIN_SUCCESS, user, tokenPair));
+            .thenReturn(authResult);
 
         // 로그인
         KakaoLoginRequest loginReq = new KakaoLoginRequest("test-oidc-token-1");
@@ -145,5 +143,31 @@ class LogOutAcceptanceTest {
 
             .body("code", equalTo(logOutSuccessCode.getCode()))
             .body("message", equalTo(logOutSuccessCode.getClientMessage()));
+    }
+
+    @Test
+    void 로그아웃_성공_이미_로그아웃된_사용자() { // refresh token 존재 안함
+
+    }
+
+    @Test
+    void 로그아웃_실패_사용자_정보_없음() {
+
+    }
+
+    private AuthResult createAuthResultOfTestUser() {
+        User user = getTestUser();
+        TokenPair tokenPair = getTokenPair(user);
+        return AuthResult.success(AuthStatus.LOGIN_SUCCESS, user, tokenPair);
+    }
+
+    private TokenPair getTokenPair(User user) {
+        TokenPair tokenPair = jwtTokenFactory.generateTokenPair(user);
+        tokenRefreshService.putRefreshToken(user.getPublicId(), tokenPair.refreshToken());
+        return tokenPair;
+    }
+
+    private User getTestUser() {
+        return userRepository.findById(1L).orElseThrow();
     }
 }
