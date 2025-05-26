@@ -8,6 +8,7 @@ import org.runimo.runimo.auth.domain.RefreshToken;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Profile({"prod", "dev"})
 @Repository
@@ -20,9 +21,8 @@ public class DatabaseTokenRepository implements JwtTokenRepository {
 
 
     /**
-     * @param userId 사용자 ID
-     * 만료되지않은 refreshToken을 조회합니다.
-     * */
+     * @param userId 사용자 ID 만료되지않은 refreshToken을 조회합니다.
+     */
     @Override
     public Optional<String> findRefreshTokenByUserId(final Long userId) {
         LocalDateTime REPLACE_CUTOFF_TIME = LocalDateTime.now()
@@ -32,10 +32,9 @@ public class DatabaseTokenRepository implements JwtTokenRepository {
     }
 
     /**
-     * @param userId 사용자 ID
-     * @param refreshToken refreshToken
-     * refreshToken 엔티티를 UPSERT합니다.
-     * */
+     * @param userId       사용자 ID
+     * @param refreshToken refreshToken refreshToken 엔티티를 UPSERT합니다.
+     */
     @Override
     public void saveRefreshTokenWithUserId(final Long userId, final String refreshToken) {
 
@@ -52,5 +51,13 @@ public class DatabaseTokenRepository implements JwtTokenRepository {
         refreshTokenJpaRepository.save(updatedRefreshToken);
     }
 
+    /**
+     * @param userId 사용자 ID 사용자의 refreshToken을 DELETE 합니다.
+     */
+    @Override
+    @Transactional
+    public void deleteRefreshTokenByUserId(Long userId) {
+        refreshTokenJpaRepository.deleteByUserId(userId);
+    }
 
 }

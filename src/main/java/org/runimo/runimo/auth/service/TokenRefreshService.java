@@ -27,25 +27,38 @@ public class TokenRefreshService {
     }
 
     public TokenPair refreshAccessToken(String refreshToken) {
-        String userPublicId;
-        try {
-            jwtResolver.verifyJwtToken(refreshToken);
-            userPublicId = jwtResolver.getUserIdFromJwtToken(refreshToken);
-        } catch (Exception e) {
-            throw UserJwtException.of(UserHttpResponseCode.TOKEN_REFRESH_FAIL);
-        }
+        String userPublicId = jwtResolver.getUserIdFromJwtToken(refreshToken);
 
         User user = userFinder.findUserByPublicId(userPublicId)
             .orElseThrow(() -> UserJwtException.of(UserHttpResponseCode.TOKEN_REFRESH_FAIL));
 
         // Check if the refresh token is expired
-        String storedToken = jwtTokenRepository.findRefreshTokenByUserId(user.getId())
-            .orElseThrow(() -> UserJwtException.of(UserHttpResponseCode.REFRESH_EXPIRED));
+        String storedToken = getStoredRefreshToken(user.getId());
         if (!storedToken.equals(refreshToken)) {
             throw UserJwtException.of(UserHttpResponseCode.TOKEN_INVALID);
         }
 
         String newAccessToken = jwtTokenFactory.generateAccessToken(user);
         return new TokenPair(newAccessToken, refreshToken);
+    }
+
+    /**
+     * 해당 사용자의 refresh token 조회
+     *
+     * @param userId 사용자 식별자
+     * @return refresh 토큰
+     */
+    public String getStoredRefreshToken(Long userId) {
+        return jwtTokenRepository.findRefreshTokenByUserId(userId)
+            .orElseThrow(() -> UserJwtException.of(UserHttpResponseCode.REFRESH_EXPIRED));
+    }
+
+    /**
+     * 해당 사용자의 refresh token 삭제
+     *
+     * @param userId 사용자 식별자
+     */
+    public void removeRefreshToken(Long userId) {
+        jwtTokenRepository.deleteRefreshTokenByUserId(userId);
     }
 }

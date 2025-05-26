@@ -3,6 +3,7 @@ package org.runimo.runimo.user.service;
 import java.util.NoSuchElementException;
 import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.auth.service.EncryptUtil;
+import org.runimo.runimo.auth.service.TokenRefreshService;
 import org.runimo.runimo.auth.service.login.apple.AppleTokenVerifier;
 import org.runimo.runimo.user.domain.AppleUserToken;
 import org.runimo.runimo.user.domain.OAuthInfo;
@@ -23,6 +24,7 @@ public class WithdrawService {
     private final AppleTokenVerifier appleTokenVerifier;
     private final AppleUserTokenRepository appleUserTokenRepository;
     private final EncryptUtil encryptUtil;
+    private final TokenRefreshService tokenRefreshService;
 
     @Transactional
     public void withdraw(Long userId) {
@@ -34,6 +36,7 @@ public class WithdrawService {
         }
         oAuthInfoRepository.delete(oAuthInfo);
         userRepository.delete(user);
+        tokenRefreshService.removeRefreshToken(user.getId());
     }
 
     private void withdrawAppleUser(User user) {

@@ -10,6 +10,7 @@ import org.runimo.runimo.common.response.ErrorResponse;
 import org.runimo.runimo.external.ExternalServiceException;
 import org.runimo.runimo.hatch.exception.HatchException;
 import org.runimo.runimo.runimo.exception.RunimoException;
+import org.runimo.runimo.user.exception.UserException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -43,6 +44,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UserJwtException.class)
     public ResponseEntity<ErrorResponse> handleUserJwtException(UserJwtException e) {
+        log.warn("{} {}", ERROR_LOG_HEADER, e.getMessage(), e);
+        return ResponseEntity.status(e.getHttpStatusCode())
+            .body(ErrorResponse.of(e.getErrorCode()));
+    }
+
+    @ExceptionHandler(UserException.class)
+    public ResponseEntity<ErrorResponse> handleUserJwtException(UserException e) {
         log.warn("{} {}", ERROR_LOG_HEADER, e.getMessage(), e);
         return ResponseEntity.status(e.getHttpStatusCode())
             .body(ErrorResponse.of(e.getErrorCode()));
