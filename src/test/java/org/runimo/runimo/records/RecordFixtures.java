@@ -12,6 +12,7 @@ public class RecordFixtures {
             LocalDateTime.of(2025, 3, 30, 9, 30, 0),
             LocalDateTime.of(2025, 3, 30, 10, 0, 0),
             5000L,
+            1800L,
             360000L,
             List.of(new SegmentPace(1.0, 732000))
         );

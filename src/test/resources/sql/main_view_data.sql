@@ -20,8 +20,8 @@ VALUES ('마당알', 'A100', '마당알: 기본 알', 'USABLE', 'example.url', '
 TRUNCATE TABLE runimo_definition;
 INSERT INTO runimo_definition (id, name, code, description, img_url, egg_type_id, created_at,
                                updated_at)
-VALUES       (1, '토끼', 'R-101', '마당-토끼예여', 'http://dummy1', 1, NOW(), NOW()),
-        (2, '강아지', 'R-102', '마당-강아지예여', 'http://dummy1', 1, NOW(), NOW()),
+VALUES (1, '토끼', 'R-101', '마당-토끼예여', 'http://dummy1', 1, NOW(), NOW()),
+       (2, '강아지', 'R-102', '마당-강아지예여', 'http://dummy1', 1, NOW(), NOW()),
        (3, '오리', 'R-103', '마당-오리예여', 'http://dummy1', 1, NOW(), NOW()),
        (4, '고양이', 'R-104', '마당-고양이예여', 'http://dummy1', 1, NOW(), NOW()),
        (5, '늑대 강아지', 'R-105', '늑대 강아지예여', 'http://dummy2', 2, NOW(), NOW()),
@@ -33,10 +33,13 @@ VALUES       (1, '토끼', 'R-101', '마당-토끼예여', 'http://dummy1', 1, N
 
 TRUNCATE TABLE running_record;
 INSERT INTO running_record (id, user_id, record_public_id, title, started_at, end_at,
-                            total_distance, pace_in_milli_seconds, is_rewarded, created_at,
+                            total_distance, total_time_in_seconds, pace_in_milli_seconds,
+                            is_rewarded, created_at,
                             updated_at)
-VALUES (1, 1, 'record-public-id-1', 'record-title-1', NOW(), NOW(), 1000, 100, false, NOW(), NOW()),
-       (2, 1, 'record-public-id-2', 'record-title-2', NOW(), NOW(), 2000, 200, false, NOW(), NOW());
+VALUES (1, 1, 'record-public-id-1', 'record-title-1', NOW(), NOW(), 1000, 1000, 100, false, NOW(),
+        NOW()),
+       (2, 1, 'record-public-id-2', 'record-title-2', NOW(), NOW(), 2000, 1000, 200, false, NOW(),
+        NOW());
 
 TRUNCATE TABLE runimo;
 INSERT INTO runimo (id, user_id, runimo_definition_id, total_run_count, total_distance_in_meters,

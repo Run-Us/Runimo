@@ -10,7 +10,7 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 TRUNCATE TABLE oauth_account;
 INSERT INTO oauth_account (id, created_at, deleted_at, updated_at, provider, provider_id, user_id)
-    VALUES (1, NOW(), null, NOW(), 'KAKAO', 1234, 1);
+VALUES (1, NOW(), null, NOW(), 'KAKAO', 1234, 1);
 
 -- 보유 아이템
 TRUNCATE TABLE user_item;
@@ -25,10 +25,11 @@ VALUES (1001, 1, 0, NOW(), NOW());
 
 TRUNCATE TABLE running_record;
 INSERT INTO running_record (id, user_id, record_public_id, title, started_at, end_at,
-                            total_distance, pace_in_milli_seconds, is_rewarded, created_at,
+                            total_distance, total_time_in_seconds, pace_in_milli_seconds,
+                            is_rewarded, created_at,
                             updated_at)
 VALUES (1, 1, 'record-public-id-1', 'record-title-1', '2025-03-20 13:00:00', '2025-03-20 13:00:00',
-        1234, 6666, false, NOW(), NOW()),
+        1234, 3600, 6666, false, NOW(), NOW()),
        (2, 1, 'record-public-id-2', 'record-title-2', '2025-03-29 13:00:00', '2025-03-29 14:00:00',
-        2345, 6700, false, NOW(), NOW());
+        2345, 3600, 6700, false, NOW(), NOW());
 

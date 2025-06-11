@@ -13,6 +13,8 @@ public record RecordSaveRequest(
     LocalDateTime endAt,
     @Schema(description = "달린 거리 (미터)", example = "10000")
     Long totalDistanceInMeters,
+    @Schema(description = "달린 시간 (초)", example = "3600000")
+    Long totalTimeInSeconds,
     @Schema(description = "평균 페이스 (밀리초)", example = "300000")
     Long averagePaceInMilliSeconds,
     @Schema(description = "세그먼트 페이스 리스트")

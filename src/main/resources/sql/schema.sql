@@ -25,14 +25,14 @@ CREATE TABLE `users`
     `public_id`                VARCHAR(255),
     `nickname`                 VARCHAR(255),
     `img_url`                  VARCHAR(255),
-    `total_distance_in_meters` BIGINT    NOT NULL DEFAULT 0,
-    `total_time_in_seconds`    BIGINT    NOT NULL DEFAULT 0,
+    `total_distance_in_meters` BIGINT      NOT NULL DEFAULT 0,
+    `total_time_in_seconds`    BIGINT      NOT NULL DEFAULT 0,
     `main_runimo_id`           BIGINT,
     `gender`                   VARCHAR(24),
     `role`                     VARCHAR(24) NOT NULL DEFAULT 'USER',
-    `updated_at`               TIMESTAMP          DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `created_at`               TIMESTAMP          DEFAULT CURRENT_TIMESTAMP,
-    `deleted_at`               TIMESTAMP NULL
+    `updated_at`               TIMESTAMP            DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `created_at`               TIMESTAMP            DEFAULT CURRENT_TIMESTAMP,
+    `deleted_at`               TIMESTAMP   NULL
 );
 
 CREATE TABLE `user_token`
@@ -93,7 +93,7 @@ CREATE TABLE `signup_token`
 CREATE TABLE `running_record`
 (
     `id`                    BIGINT PRIMARY KEY AUTO_INCREMENT,
-    `user_id`               BIGINT      NOT NULL,
+    `user_id`               BIGINT       NOT NULL,
     `record_public_id`      VARCHAR(255) NOT NULL,
     `title`                 VARCHAR(255),
     `description`           VARCHAR(255),
@@ -101,6 +101,7 @@ CREATE TABLE `running_record`
     `started_at`            TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `end_at`                TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `total_distance`        BIGINT,
+    `total_time_in_seconds` BIGINT,
     `pace_in_milli_seconds` BIGINT,
     `is_rewarded`           BOOLEAN,
     `pace_per_km`           VARCHAR(10000),
@@ -141,8 +142,8 @@ CREATE TABLE `egg_type`
 CREATE TABLE `item_activity`
 (
     `id`                  BIGINT PRIMARY KEY AUTO_INCREMENT,
-    `activity_user_id`    BIGINT      NOT NULL,
-    `activity_item_id`    BIGINT      NOT NULL,
+    `activity_user_id`    BIGINT       NOT NULL,
+    `activity_item_id`    BIGINT       NOT NULL,
     `activity_event_type` VARCHAR(255) NOT NULL,
     `quantity`            BIGINT,
     `created_at`          TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -153,9 +154,9 @@ CREATE TABLE `item_activity`
 CREATE TABLE `user_item`
 (
     `id`         BIGINT PRIMARY KEY AUTO_INCREMENT,
-    `user_id`    BIGINT   NOT NULL,
-    `item_id`    BIGINT   NOT NULL,
-    `quantity`   BIGINT   NOT NULL,
+    `user_id`    BIGINT    NOT NULL,
+    `item_id`    BIGINT    NOT NULL,
+    `quantity`   BIGINT    NOT NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     `deleted_at` TIMESTAMP NULL
@@ -164,8 +165,8 @@ CREATE TABLE `user_item`
 CREATE TABLE `incubating_egg`
 (
     `id`                        BIGINT PRIMARY KEY AUTO_INCREMENT,
-    `user_id`                   BIGINT   NOT NULL,
-    `egg_id`                    BIGINT   NOT NULL,
+    `user_id`                   BIGINT    NOT NULL,
+    `egg_id`                    BIGINT    NOT NULL,
     `current_love_point_amount` BIGINT,
     `hatch_require_amount`      BIGINT,
     `egg_status`                VARCHAR(255),
@@ -201,9 +202,9 @@ CREATE TABLE `runimo`
 
 CREATE TABLE `user_refresh_token`
 (
-    `id` BIGINT PRIMARY KEY AUTO_INCREMENT,
-    `user_id` BIGINT NOT NULL UNIQUE ,
-    `refresh_token` TEXT NOT NULL,
+    `id`            BIGINT PRIMARY KEY AUTO_INCREMENT,
+    `user_id`       BIGINT NOT NULL UNIQUE,
+    `refresh_token` TEXT   NOT NULL,
     `created_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at`    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );

@@ -74,7 +74,8 @@ class RewardTest {
             null,
             SocialProvider.KAKAO
         ));
-        UserSignupCommand command = new UserSignupCommand(registerToken, "name", null, Gender.UNKNOWN);
+        UserSignupCommand command = new UserSignupCommand(registerToken, "name", null,
+            Gender.UNKNOWN);
         Long useId = signUpUsecaseImpl.register(command).userId();
         savedUser = userRepository.findById(useId).orElse(null);
     }
@@ -91,6 +92,7 @@ class RewardTest {
             savedUser.getId(),
             LocalDateTime.now(),
             LocalDateTime.now().plusHours(1),
+            1800L,
             new Pace(1909L),
             new Distance(10000L),
             List.of()
@@ -104,7 +106,7 @@ class RewardTest {
             findEggByUserIdAndEggCode(
                 savedUser.getId(),
                 rewardResponse.eggCode())
-            .get();
+            .orElse(null);
 
         assertNotNull(rewardResponse.eggCode());
         assertNotNull(savedItem);

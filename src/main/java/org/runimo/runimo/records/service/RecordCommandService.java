@@ -41,6 +41,7 @@ public class RecordCommandService {
             .endAt(command.endAt())
             .averagePace(command.averagePace())
             .totalDistance(command.totalDistance())
+            .totalTimeInSeconds(command.totalTimeInSeconds())
             .isRewarded(false)
             .pacePerKm(command.segmentPaces())
             .build();

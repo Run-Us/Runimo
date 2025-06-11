@@ -10,6 +10,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -35,6 +36,7 @@ public class RunningRecord extends BaseEntity {
     private String imgUrl;
     private LocalDateTime startedAt;
     private LocalDateTime endAt;
+    private Long totalTimeInSeconds;
     @Embedded
     @AttributeOverride(name = "amount", column = @Column(name = "total_distance"))
     private Distance totalDistance;
@@ -55,6 +57,7 @@ public class RunningRecord extends BaseEntity {
         LocalDateTime startedAt,
         LocalDateTime endAt,
         Distance totalDistance,
+        Long totalTimeInSeconds,
         Pace averagePace,
         Boolean isRewarded,
         List<SegmentPace> pacePerKm) {
@@ -67,6 +70,7 @@ public class RunningRecord extends BaseEntity {
         this.endAt = endAt;
         this.isRewarded = isRewarded;
         this.totalDistance = totalDistance;
+        this.totalTimeInSeconds = totalTimeInSeconds;
         this.averagePace = averagePace;
         setTitleIfNull();
     }
@@ -104,7 +108,7 @@ public class RunningRecord extends BaseEntity {
     }
 
     public Duration getRunningTime() {
-        return Duration.between(startedAt, endAt);
+        return Duration.of(this.totalTimeInSeconds, ChronoUnit.SECONDS);
     }
 
     @PrePersist
@@ -115,7 +119,9 @@ public class RunningRecord extends BaseEntity {
     }
 
     private void setTitleIfNull() {
-        if (this.title != null) return;
+        if (this.title != null) {
+            return;
+        }
         this.title = DefaultTitle.fromTime(this.startedAt).getTitle();
     }
 
