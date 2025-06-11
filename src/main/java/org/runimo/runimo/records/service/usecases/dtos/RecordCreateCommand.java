@@ -11,6 +11,7 @@ public record RecordCreateCommand(
     Long userId,
     LocalDateTime startedAt,
     LocalDateTime endAt,
+    Long totalTimeInSeconds,
     Pace averagePace,
     Distance totalDistance,
     List<SegmentPace> segmentPaces
@@ -21,6 +22,7 @@ public record RecordCreateCommand(
             userId,
             request.startedAt(),
             request.endAt(),
+            request.totalTimeInSeconds(),
             new Pace(request.averagePaceInMilliSeconds()),
             new Distance(request.totalDistanceInMeters()),
             request.segmentPaces()
