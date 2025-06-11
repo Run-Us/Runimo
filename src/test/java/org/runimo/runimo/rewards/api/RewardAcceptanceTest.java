@@ -136,6 +136,7 @@ class RewardAcceptanceTest {
             pivotTime,
             pivotTime.plusMinutes(20),
             1000L,
+            1200L,
             1000L,
             null);
         ValidatableResponse firstRes = given()
@@ -157,6 +158,7 @@ class RewardAcceptanceTest {
             pivotTime.minusDays(1),
             pivotTime.minusDays(1).plusMinutes(20),
             1000L,
+            1200L,
             1000L,
             null);
         given()
@@ -231,6 +233,7 @@ class RewardAcceptanceTest {
             pivotTime,
             pivotTime.plusMinutes(20),
             900L,
+            1200L,
             1000L,
             List.of()
         );

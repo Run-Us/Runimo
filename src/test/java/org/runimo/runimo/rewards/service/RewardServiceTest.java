@@ -48,6 +48,7 @@ class RewardServiceTest {
             .userId(userId)
             .isRewarded(isRewarded)
             .totalDistance(new Distance(1000L))
+            .totalTimeInSeconds(1800L)
             .startedAt(LocalDateTime.now())
             .build();
         ReflectionTestUtils.setField(runningRecord, "id", recordId);
@@ -68,9 +69,11 @@ class RewardServiceTest {
     @Test
     void 보상을_받지_않은_이번주_첫_기록이라면_알을_지급한다() {
         RunningRecord unRewardedRecord = getRunningRecordWithIds(1L, 1L, false);
-        RewardClaimCommand command = new RewardClaimCommand(1L, unRewardedRecord.getRecordPublicId());
+        RewardClaimCommand command = new RewardClaimCommand(1L,
+            unRewardedRecord.getRecordPublicId());
 
-        when(recordFinder.findByPublicId(any())).thenReturn(java.util.Optional.of(unRewardedRecord));
+        when(recordFinder.findByPublicId(any())).thenReturn(
+            java.util.Optional.of(unRewardedRecord));
         when(recordFinder.findFirstRunOfCurrentWeek(any())).thenReturn(
             java.util.Optional.of(unRewardedRecord));
         when(eggGrantService.grantRandomEggToUser(any())).thenReturn(
@@ -94,7 +97,8 @@ class RewardServiceTest {
         RewardClaimCommand command = new RewardClaimCommand(1L,
             alreadyRewardedRecord.getRecordPublicId());
 
-        when(recordFinder.findByPublicId(any())).thenReturn(java.util.Optional.of(alreadyRewardedRecord));
+        when(recordFinder.findByPublicId(any())).thenReturn(
+            java.util.Optional.of(alreadyRewardedRecord));
         when(recordFinder.findFirstRunOfCurrentWeek(any())).thenReturn(
             java.util.Optional.of(alreadyRewardedRecord));
         when(eggGrantService.grantRandomEggToUser(any())).thenReturn(
@@ -113,9 +117,11 @@ class RewardServiceTest {
     void 이번주_첫_기록이_아니면_알을_지급하지_않는다() {
         RunningRecord unRewardedRecord = getRunningRecordWithIds(1L, 1L, false);
         RunningRecord anotherRecord = getRunningRecordWithIds(1L, 2L, false);
-        RewardClaimCommand command = new RewardClaimCommand(1L, unRewardedRecord.getRecordPublicId());
+        RewardClaimCommand command = new RewardClaimCommand(1L,
+            unRewardedRecord.getRecordPublicId());
 
-        when(recordFinder.findByPublicId(any())).thenReturn(java.util.Optional.of(unRewardedRecord));
+        when(recordFinder.findByPublicId(any())).thenReturn(
+            java.util.Optional.of(unRewardedRecord));
         when(recordFinder.findFirstRunOfCurrentWeek(any())).thenReturn(Optional.of(anotherRecord));
         when(loveGrantService.grantLoveToUserWithDistance(any())).thenReturn(10L);
 
