@@ -30,7 +30,7 @@ public class UserRegisterService {
     }
 
     public void validateExistingUser(String providerId, SocialProvider socialProvider) {
-        if (oAuthInfoRepository.existsByProviderIdAndProvider(
+        if (oAuthInfoRepository.existsByProviderIdAndProviderAndDeletedAtIsNull(
             providerId, socialProvider)) {
             throw new SignUpException(UserHttpResponseCode.SIGNIN_FAIL_ALREADY_EXIST);
         }
