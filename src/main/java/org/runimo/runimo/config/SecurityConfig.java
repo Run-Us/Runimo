@@ -11,9 +11,11 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true) // 메서드 레벨 보안 활성화
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -30,6 +32,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/api/v1/auth/**").permitAll()
                 .requestMatchers("/api/v1/users/**").hasAnyRole("USER", "ADMIN")
+                .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                 .requestMatchers("/checker/**").permitAll()
                 .requestMatchers("/actuator/**").permitAll()
                 .requestMatchers(("/error")).permitAll()
@@ -55,6 +58,7 @@ public class SecurityConfig {
                 .permitAll()
                 .requestMatchers(("/error")).permitAll()
                 .requestMatchers("/api/v1/users/**").hasAnyRole("USER", "ADMIN")
+                .requestMatchers("/api/v1/admin/**").hasRole("ADMIN")
                 .requestMatchers("/checker/**").permitAll()
                 .anyRequest().authenticated()
             )
