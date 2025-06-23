@@ -25,10 +25,10 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     public void handle(HttpServletRequest request, HttpServletResponse response,
         AccessDeniedException accessDeniedException) throws IOException {
 
-        log.warn("[ERROR]접근 거부됨 - URI: {}, 사용자: {}",
-            request.getRequestURI(),
-            SecurityContextHolder.getContext().getAuthentication().getName());
-        
+        log.warn("[ERROR]접근 거부됨 - URI: {}, 사용자: {}", request.getRequestURI(),
+            SecurityContextHolder.getContext().getAuthentication() != null
+                ? SecurityContextHolder.getContext().getAuthentication().getName() : "Unknown");
+
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding("UTF-8");
