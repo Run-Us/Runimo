@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.runimo.runimo.auth.jwt.JwtResolver;
 import org.runimo.runimo.auth.jwt.UserDetail;
 import org.runimo.runimo.common.response.ErrorResponse;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -39,6 +40,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         @NonNull HttpServletResponse response, @NonNull FilterChain filterChain)
         throws IOException {
         try {
+
+            var auth = SecurityContextHolder.getContext().getAuthentication();
+            if (auth != null && auth.isAuthenticated() &&
+                !(auth instanceof AnonymousAuthenticationToken)) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
             if (!hasValidAuthorizationHeader(request)) {
                 setErrorResponse(UserErrorCode.JWT_NOT_FOUND, response);
                 return;
