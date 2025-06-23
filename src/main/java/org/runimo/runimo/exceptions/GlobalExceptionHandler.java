@@ -4,7 +4,7 @@ import jakarta.persistence.LockTimeoutException;
 import java.util.NoSuchElementException;
 import lombok.extern.slf4j.Slf4j;
 import org.runimo.runimo.auth.exceptions.SignUpException;
-import org.runimo.runimo.auth.exceptions.UnRegisteredUserException;
+import org.runimo.runimo.auth.exceptions.UnauthorizedAccessException;
 import org.runimo.runimo.auth.exceptions.UserJwtException;
 import org.runimo.runimo.common.response.ErrorResponse;
 import org.runimo.runimo.external.ExternalServiceException;
@@ -26,6 +26,14 @@ public class GlobalExceptionHandler {
 
     private static final String ERROR_LOG_HEADER = "ERROR: ";
 
+
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    public ResponseEntity<ErrorResponse> handleUnauthorizedAccessException(
+        UnauthorizedAccessException e) {
+        log.debug("{} {}", ERROR_LOG_HEADER, e.getMessage(), e);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+            .body(ErrorResponse.of(e.getErrorCode()));
+    }
 
     @ExceptionHandler(RunimoException.class)
     public ResponseEntity<ErrorResponse> handleRunimoException(RunimoException e) {
