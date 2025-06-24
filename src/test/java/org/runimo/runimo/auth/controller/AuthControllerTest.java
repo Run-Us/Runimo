@@ -18,6 +18,7 @@ import org.runimo.runimo.auth.service.SignUpUsecase;
 import org.runimo.runimo.auth.service.TokenRefreshService;
 import org.runimo.runimo.auth.service.dto.AuthResult;
 import org.runimo.runimo.auth.service.dto.AuthStatus;
+import org.runimo.runimo.auth.service.dto.SignupUserResponse;
 import org.runimo.runimo.auth.service.dto.TokenPair;
 import org.runimo.runimo.configs.ControllerTest;
 import org.runimo.runimo.user.UserFixtures;
@@ -28,8 +29,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-@ControllerTest(controllers = {AuthController.class})
 
+@ControllerTest(controllers = {AuthController.class})
 class AuthControllerTest {
 
     @Autowired
@@ -137,12 +138,70 @@ class AuthControllerTest {
 
         // when & then
         mockMvc.perform(
-            multipart(
-                "/api/v1/auth/signup")
-                .param("request", "{\"registerToken\":\"invalid-token\", \"nickname\":\"RunimoUser\"}"))
+                multipart("/api/v1/auth/signup")
+                    .param("request",
+                        "{\"registerToken\":\"invalid-token\", \"nickname\":\"RunimoUser\"}"))
             .andExpect(status().isUnauthorized())
             .andExpect(jsonPath("$.code").value(UserHttpResponseCode.TOKEN_INVALID.getCode()))
             .andExpect(
                 jsonPath("$.message").value(UserHttpResponseCode.TOKEN_INVALID.getClientMessage()));
+    }
+
+    @Test
+    @DisplayName("디바이스 토큰 없이 회원가입 요청시 201 응답 (구버전 앱 호환)")
+    void 회원가입_디바이스_토큰_없음_201응답() throws Exception {
+        // given - 디바이스 토큰 없는 회원가입도 성공해야 함
+        given(signUpUsecase.register(any())).willReturn(
+            new SignupUserResponse(
+                1L, "RunimoUser", "profile_url", new TokenPair("access_token", "refresh_token"),
+                "exmaple_egg_name",
+                "example_egg_type",
+                "example_egg_url"
+            )
+        );
+
+        // when & then
+        mockMvc.perform(
+                multipart("/api/v1/auth/signup")
+                    .param("request",
+                        "{\"registerToken\":\"valid-token\", \"nickname\":\"RunimoUser\"}"))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.code").value(UserHttpResponseCode.SIGNUP_SUCCESS.getCode()));
+    }
+
+    @Test
+    @DisplayName("디바이스 토큰 있으나 플랫폼 없이 회원가입 요청시 400 응답")
+    void 회원가입_플랫폼_없음_400응답() throws Exception {
+        //given
+        given(signUpUsecase.register(any()))
+            .willThrow(new IllegalArgumentException("디바이스 토큰이 있으면 플랫폼도 필수입니다."));
+
+        mockMvc.perform(
+                multipart("/api/v1/auth/signup")
+                    .param("request",
+                        "{\"registerToken\":\"valid-token\", \"nickname\":\"RunimoUser\", \"deviceToken\":\"valid_device_token\"}"))
+            .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("정상적인 회원가입 요청시 201 응답")
+    void 회원가입_성공_201응답() throws Exception {
+        // given
+        given(signUpUsecase.register(any())).willReturn(
+            new SignupUserResponse(
+                1L, "RunimoUser", "profile_url", new TokenPair("access_token", "refresh_token"),
+                "exmaple_egg_name",
+                "example_egg_type",
+                "example_egg_url"
+            )
+        );
+
+        // when & then
+        mockMvc.perform(
+                multipart("/api/v1/auth/signup")
+                    .param("request",
+                        "{\"registerToken\":\"valid-token\", \"nickname\":\"RunimoUser\", \"deviceToken\":\"valid_device_token\", \"devicePlatform\":\"FCM\"}"))
+            .andExpect(status().isCreated())
+            .andExpect(jsonPath("$.code").value(UserHttpResponseCode.SIGNUP_SUCCESS.getCode()));
     }
 }
