@@ -4,7 +4,7 @@ import jakarta.persistence.LockTimeoutException;
 import java.util.NoSuchElementException;
 import lombok.extern.slf4j.Slf4j;
 import org.runimo.runimo.auth.exceptions.SignUpException;
-import org.runimo.runimo.auth.exceptions.UnRegisteredUserException;
+import org.runimo.runimo.auth.exceptions.UnauthorizedAccessException;
 import org.runimo.runimo.auth.exceptions.UserJwtException;
 import org.runimo.runimo.common.response.ErrorResponse;
 import org.runimo.runimo.external.ExternalServiceException;
@@ -19,6 +19,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @Slf4j
 @RestControllerAdvice
@@ -26,6 +27,22 @@ public class GlobalExceptionHandler {
 
     private static final String ERROR_LOG_HEADER = "ERROR: ";
 
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    public ResponseEntity<ErrorResponse> handleNoResourceFoundException(
+        NoResourceFoundException e) {
+        log.warn("{} {}", ERROR_LOG_HEADER, e.getMessage(), e);
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(ErrorResponse.of("요청한 리소스를 찾을 수 없습니다.", e.getMessage()));
+    }
+
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    public ResponseEntity<ErrorResponse> handleUnauthorizedAccessException(
+        UnauthorizedAccessException e) {
+        log.debug("{} {}", ERROR_LOG_HEADER, e.getMessage(), e);
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+            .body(ErrorResponse.of(e.getErrorCode()));
+    }
 
     @ExceptionHandler(RunimoException.class)
     public ResponseEntity<ErrorResponse> handleRunimoException(RunimoException e) {
