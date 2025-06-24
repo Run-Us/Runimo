@@ -26,6 +26,8 @@ public class UserRegisterService {
         userCreator.createUserOAuthInfo(savedUser, command.socialProvider(), command.providerId());
         userCreator.createLovePoint(savedUser.getId());
         userItemCreator.createAll(savedUser.getId());
+        userCreator.createUserDeviceToken(savedUser, command.deviceToken(),
+            command.devicePlatform());
         return savedUser;
     }
 
