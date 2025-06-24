@@ -1,7 +1,6 @@
 package org.runimo.runimo.user.service;
 
 import lombok.RequiredArgsConstructor;
-import org.runimo.runimo.user.domain.DevicePlatform;
 import org.runimo.runimo.user.domain.LovePoint;
 import org.runimo.runimo.user.domain.OAuthInfo;
 import org.runimo.runimo.user.domain.SocialProvider;
@@ -11,6 +10,7 @@ import org.runimo.runimo.user.repository.LovePointRepository;
 import org.runimo.runimo.user.repository.OAuthInfoRepository;
 import org.runimo.runimo.user.repository.UserDeviceTokenRepository;
 import org.runimo.runimo.user.repository.UserRepository;
+import org.runimo.runimo.user.service.dto.command.DeviceTokenDto;
 import org.runimo.runimo.user.service.dto.command.UserCreateCommand;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,14 +54,16 @@ public class UserCreator {
     }
 
     @Transactional
-    public UserDeviceToken createUserDeviceToken(User user, String deviceToken,
-        DevicePlatform platform) {
+    public void createUserDeviceToken(User user, DeviceTokenDto deviceTokenDto) {
+        if (deviceTokenDto.isEmpty()) {
+            return;
+        }
         UserDeviceToken userDeviceToken = UserDeviceToken.builder()
             .user(user)
-            .deviceToken(deviceToken)
-            .platform(platform)
+            .deviceToken(deviceTokenDto.token())
+            .platform(deviceTokenDto.platform())
             .notificationAllowed(true)
             .build();
-        return userDeviceTokenRepository.save(userDeviceToken);
+        userDeviceTokenRepository.save(userDeviceToken);
     }
 }

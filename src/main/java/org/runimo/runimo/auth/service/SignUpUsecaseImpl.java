@@ -19,6 +19,7 @@ import org.runimo.runimo.user.domain.User;
 import org.runimo.runimo.user.enums.UserHttpResponseCode;
 import org.runimo.runimo.user.repository.AppleUserTokenRepository;
 import org.runimo.runimo.user.service.UserRegisterService;
+import org.runimo.runimo.user.service.dto.command.DeviceTokenDto;
 import org.runimo.runimo.user.service.dto.command.UserRegisterCommand;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,13 +44,8 @@ public class SignUpUsecaseImpl implements SignUpUsecase {
         SignupToken signupToken = findUnExpiredSignupToken(payload.token());
         userRegisterService.validateExistingUser(payload.providerId(), payload.socialProvider());
         String imgUrl = fileStorageService.storeFile(command.profileImage());
-        User savedUser = userRegisterService.registerUser(new UserRegisterCommand(
-            command.nickname(),
-            imgUrl,
-            command.gender(),
-            payload.providerId(),
-            payload.socialProvider())
-        );
+        User savedUser = userRegisterService.registerUser(
+            mapToUserCreateCommand(payload, imgUrl, command));
         if (payload.socialProvider() == SocialProvider.APPLE) {
             createAppleUserToken(savedUser.getId(), signupToken);
         }
@@ -77,5 +73,17 @@ public class SignUpUsecaseImpl implements SignUpUsecase {
             signupToken.getRefreshToken()
         );
         appleUserTokenRepository.save(appleUserToken);
+    }
+
+    private UserRegisterCommand mapToUserCreateCommand(SignupTokenPayload payload, String imgUrl,
+        UserSignupCommand command) {
+        return new UserRegisterCommand(
+            command.nickname(),
+            imgUrl,
+            command.gender(),
+            payload.providerId(),
+            payload.socialProvider(),
+            DeviceTokenDto.of(command.deviceToken(), command.devicePlatform())
+        );
     }
 }
