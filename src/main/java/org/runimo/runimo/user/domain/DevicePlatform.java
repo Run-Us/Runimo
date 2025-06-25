@@ -2,7 +2,8 @@ package org.runimo.runimo.user.domain;
 
 public enum DevicePlatform {
     FCM,
-    APNS;
+    APNS,
+    NONE;
 
 
     public static DevicePlatform fromString(String value) {
