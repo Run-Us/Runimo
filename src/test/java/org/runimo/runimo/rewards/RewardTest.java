@@ -23,6 +23,7 @@ import org.runimo.runimo.records.service.usecases.dtos.RecordSaveResponse;
 import org.runimo.runimo.rewards.service.RewardService;
 import org.runimo.runimo.rewards.service.dto.RewardClaimCommand;
 import org.runimo.runimo.rewards.service.dto.RewardResponse;
+import org.runimo.runimo.user.domain.DevicePlatform;
 import org.runimo.runimo.user.domain.Gender;
 import org.runimo.runimo.user.domain.SocialProvider;
 import org.runimo.runimo.user.domain.User;
@@ -74,8 +75,9 @@ class RewardTest {
             null,
             SocialProvider.KAKAO
         ));
-        UserSignupCommand command = new UserSignupCommand(registerToken, "name", null,
-            Gender.UNKNOWN);
+        UserSignupCommand command = new UserSignupCommand(registerToken, "nickname", null,
+            Gender.UNKNOWN,
+            "device_token", DevicePlatform.APNS);
         Long useId = signUpUsecaseImpl.register(command).userId();
         savedUser = userRepository.findById(useId).orElse(null);
     }

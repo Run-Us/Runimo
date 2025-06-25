@@ -10,6 +10,7 @@ import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.when;
 import static org.runimo.runimo.TestConsts.TEST_USER_UUID;
+import static org.runimo.runimo.user.domain.DevicePlatform.APNS;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -153,7 +154,9 @@ class UserItemAcceptanceTest {
         AuthSignupRequest request = new AuthSignupRequest(
             registerToken,
             "test-user",
-            Gender.FEMALE
+            Gender.FEMALE,
+            "device_token",
+            APNS.name()
         );
 
         ValidatableResponse res = given()
