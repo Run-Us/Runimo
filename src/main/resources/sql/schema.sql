@@ -37,11 +37,15 @@ CREATE TABLE `users`
 
 CREATE TABLE `user_token`
 (
-    `user_id`      BIGINT       NOT NULL,
-    `device_token` VARCHAR(255) NOT NULL,
-    `created_at`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `updated_at`   TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    `deleted_at`   TIMESTAMP    NULL,
+    `id`                   BIGINT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    `user_id`              BIGINT                            NOT NULL,
+    `device_token`         VARCHAR(255)                      NOT NULL,
+    `platform`             ENUM ('FCM', 'APNS')              NOT NULL DEFAULT 'APNS',
+    `notification_allowed` BOOLEAN                           NOT NULL DEFAULT TRUE,
+    `last_used_at`         TIMESTAMP                                  DEFAULT CURRENT_TIMESTAMP,
+    `created_at`           TIMESTAMP                                  DEFAULT CURRENT_TIMESTAMP,
+    `updated_at`           TIMESTAMP                                  DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at`           TIMESTAMP                         NULL,
 
     FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 );

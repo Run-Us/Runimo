@@ -3,6 +3,7 @@ package org.runimo.runimo.auth.controller;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.runimo.runimo.user.domain.DevicePlatform.APNS;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -10,6 +11,7 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.runimo.runimo.CleanUpUtil;
 import org.runimo.runimo.auth.controller.request.AuthSignupRequest;
@@ -33,127 +35,178 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 @ActiveProfiles("test")
 class AuthAcceptanceTest {
 
-  @LocalServerPort
-  private int port;
-  @MockitoBean
-  private FileStorageService fileStorageService;
-  @MockitoBean
-  private KakaoTokenVerifier kakaoTokenVerifier;
-  @MockitoBean
-  private AppleTokenVerifier appleTokenVerifier;
+    @LocalServerPort
+    private int port;
+    @MockitoBean
+    private FileStorageService fileStorageService;
+    @MockitoBean
+    private KakaoTokenVerifier kakaoTokenVerifier;
+    @MockitoBean
+    private AppleTokenVerifier appleTokenVerifier;
 
-  @Autowired
-  private SignupTokenRepository signupTokenRepository;
+    @Autowired
+    private SignupTokenRepository signupTokenRepository;
 
-  @Autowired
-  private KakaoLoginHandler kakaoLoginHandler;
+    @Autowired
+    private KakaoLoginHandler kakaoLoginHandler;
 
-  private String token;
-  @Autowired
-  private ObjectMapper objectMapper;
-  @Autowired
-  private CleanUpUtil cleanUpUtil;
-  @Autowired
-  private JwtTokenFactory jwtTokenFactory;
+    private String token;
+    @Autowired
+    private ObjectMapper objectMapper;
+    @Autowired
+    private CleanUpUtil cleanUpUtil;
+    @Autowired
+    private JwtTokenFactory jwtTokenFactory;
 
-  @BeforeEach
-  void setUp() {
-    RestAssured.port = port;
-    // Save a valid signup token in the database
-    SignupToken signupToken = new SignupToken(
-        "valid-token",
-        "provider-id",
-        "refresh-token",
-        SocialProvider.KAKAO
-    );
-    token = jwtTokenFactory.generateSignupTemporalToken("provider-id", SocialProvider.KAKAO,
-        "valid-token");
-    signupTokenRepository.save(signupToken);
-  }
+    @BeforeEach
+    void setUp() {
+        RestAssured.port = port;
+        // Save a valid signup token in the database
+        SignupToken signupToken = new SignupToken(
+            "valid-token",
+            "provider-id",
+            "refresh-token",
+            SocialProvider.KAKAO
+        );
+        token = jwtTokenFactory.generateSignupTemporalToken("provider-id", SocialProvider.KAKAO,
+            "valid-token");
+        signupTokenRepository.save(signupToken);
+    }
 
-  @AfterEach
-  void tearDown() {
-    cleanUpUtil.cleanUpUserInfos();
-  }
+    @AfterEach
+    void tearDown() {
+        cleanUpUtil.cleanUpUserInfos();
+        signupTokenRepository.deleteAll();
 
-  @Test
-  void 회원가입_성공_201응답() throws JsonProcessingException {
+    }
 
-    AuthSignupRequest request = new AuthSignupRequest(token, "username", Gender.UNKNOWN);
+    @Test
+    void 회원가입_성공_201응답() throws JsonProcessingException {
 
-    given()
-        .contentType(ContentType.MULTIPART)
-        .multiPart("request", objectMapper.writeValueAsString(request))
-        .when()
-        .post("/api/v1/auth/signup")
-        .then()
-        .statusCode(HttpStatus.CREATED.value())
-        .log().all()
-        .body("payload.nickname", equalTo("username"))
-        .body("payload.token_pair.access_token", notNullValue())
-        .body("payload.token_pair.refresh_token", notNullValue());
-  }
+        AuthSignupRequest request = new AuthSignupRequest(token, "username", Gender.UNKNOWN);
 
-  @Test
-  void 토큰_오류_회원가입_실패_401응답() throws JsonProcessingException {
-    AuthSignupRequest request = new AuthSignupRequest(token, "username", Gender.UNKNOWN);
+        given()
+            .contentType(ContentType.MULTIPART)
+            .multiPart("request", objectMapper.writeValueAsString(request))
+            .when()
+            .post("/api/v1/auth/signup")
+            .then()
+            .statusCode(HttpStatus.CREATED.value())
+            .log().all()
+            .body("payload.nickname", equalTo("username"))
+            .body("payload.token_pair.access_token", notNullValue())
+            .body("payload.token_pair.refresh_token", notNullValue());
+    }
 
-    given()
-        .contentType(ContentType.MULTIPART)
-        .multiPart("request", objectMapper.writeValueAsString(request))
-        .when()
-        .post("/api/v1/auth/signup")
-        .then()
-        .statusCode(HttpStatus.CREATED.value())
-        .log().all()
-        .body("payload.nickname", equalTo("username"))
-        .body("payload.token_pair.access_token", notNullValue())
-        .body("payload.token_pair.refresh_token", notNullValue());
+    @Test
+    void 토큰_오류_회원가입_실패_401응답() throws JsonProcessingException {
+        AuthSignupRequest request = new AuthSignupRequest(token, "username", Gender.UNKNOWN);
 
-    given()
-        .contentType(ContentType.MULTIPART)
-        .multiPart("request", objectMapper.writeValueAsString(request))
-        .when()
-        .post("/api/v1/auth/signup")
-        .then()
-        .statusCode(HttpStatus.UNAUTHORIZED.value());
-  }
+        given()
+            .contentType(ContentType.MULTIPART)
+            .multiPart("request", objectMapper.writeValueAsString(request))
+            .when()
+            .post("/api/v1/auth/signup")
+            .then()
+            .statusCode(HttpStatus.CREATED.value())
+            .log().all()
+            .body("payload.nickname", equalTo("username"))
+            .body("payload.token_pair.access_token", notNullValue())
+            .body("payload.token_pair.refresh_token", notNullValue());
 
-  @Test
-  void 중복_유저_회원가입_409응답() throws JsonProcessingException {
-    AuthSignupRequest request = new AuthSignupRequest(token, "username", Gender.UNKNOWN);
+        given()
+            .contentType(ContentType.MULTIPART)
+            .multiPart("request", objectMapper.writeValueAsString(request))
+            .when()
+            .post("/api/v1/auth/signup")
+            .then()
+            .statusCode(HttpStatus.UNAUTHORIZED.value());
+    }
 
-    given()
-        .contentType(ContentType.MULTIPART)
-        .multiPart("request", objectMapper.writeValueAsString(request))
-        .when()
-        .post("/api/v1/auth/signup")
-        .then()
-        .statusCode(HttpStatus.CREATED.value())
-        .log().all()
-        .body("payload.nickname", equalTo("username"))
-        .body("payload.token_pair.access_token", notNullValue())
-        .body("payload.token_pair.refresh_token", notNullValue());
+    @Test
+    void 중복_유저_회원가입_409응답() throws JsonProcessingException {
+        AuthSignupRequest request = new AuthSignupRequest(token, "username", Gender.UNKNOWN);
 
-    SignupToken signupToken = new SignupToken(
-        "valid-token",
-        "provider-id",
-        "refresh-token",
-        SocialProvider.KAKAO
-    );
-    token = jwtTokenFactory.generateSignupTemporalToken("provider-id", SocialProvider.KAKAO,
-        "valid-token");
-    signupTokenRepository.save(signupToken);
-    request = new AuthSignupRequest(token, "username", Gender.UNKNOWN);
+        given()
+            .contentType(ContentType.MULTIPART)
+            .multiPart("request", objectMapper.writeValueAsString(request))
+            .when()
+            .post("/api/v1/auth/signup")
+            .then()
+            .statusCode(HttpStatus.CREATED.value())
+            .log().all()
+            .body("payload.nickname", equalTo("username"))
+            .body("payload.token_pair.access_token", notNullValue())
+            .body("payload.token_pair.refresh_token", notNullValue());
 
-    given()
-        .contentType(ContentType.MULTIPART)
-        .multiPart("request", objectMapper.writeValueAsString(request))
-        .when()
-        .post("/api/v1/auth/signup")
-        .then()
-        .statusCode(HttpStatus.CONFLICT.value());
+        SignupToken signupToken = new SignupToken(
+            "valid-token",
+            "provider-id",
+            "refresh-token",
+            SocialProvider.KAKAO
+        );
+        token = jwtTokenFactory.generateSignupTemporalToken("provider-id", SocialProvider.KAKAO,
+            "valid-token");
+        signupTokenRepository.save(signupToken);
+        request = new AuthSignupRequest(token, "username", Gender.UNKNOWN);
 
-    signupTokenRepository.delete(signupToken);
-  }
+        given()
+            .contentType(ContentType.MULTIPART)
+            .multiPart("request", objectMapper.writeValueAsString(request))
+            .when()
+            .post("/api/v1/auth/signup")
+            .then()
+            .statusCode(HttpStatus.CONFLICT.value());
+
+        signupTokenRepository.delete(signupToken);
+    }
+
+    @Test
+    @DisplayName("디바이스 토큰을 포함하여 회원가입 성공 201응답")
+    void 회원가입_디바이스_토큰_포함_성공_201응답() throws JsonProcessingException {
+        AuthSignupRequest request = buildSignupRequest(token, "username", Gender.UNKNOWN);
+        given()
+            .contentType(ContentType.MULTIPART)
+            .multiPart("request", objectMapper.writeValueAsString(request))
+            .when()
+            .post("/api/v1/auth/signup")
+            .then()
+            .statusCode(HttpStatus.CREATED.value())
+            .log().all()
+            .body("payload.nickname", equalTo("username"))
+            .body("payload.token_pair.access_token", notNullValue())
+            .body("payload.token_pair.refresh_token", notNullValue());
+    }
+
+    @Test
+    @DisplayName("디바이스 토큰을 포함했지만 디바이스 플랫폼을 미포함하여 400응답")
+    void 회원가입_디바이스_토큰_포함_플랫폼_미포함_실패_400응답() throws JsonProcessingException {
+        AuthSignupRequest request = new AuthSignupRequest(token, "nickname", null,
+            "example_device_token", null);
+        given()
+            .contentType(ContentType.MULTIPART)
+            .multiPart("request", objectMapper.writeValueAsString(request))
+            .when()
+            .post("/api/v1/auth/signup")
+            .then()
+            .statusCode(HttpStatus.BAD_REQUEST.value());
+    }
+
+    @Test
+    @DisplayName("APNS_플랫폼으로_회원가입_성공_201응답")
+    void 회원가입_APNS_플랫폼으로_성공_201응답() throws JsonProcessingException {
+        AuthSignupRequest request = buildSignupRequest(token, "username", Gender.UNKNOWN);
+        given()
+            .contentType(ContentType.MULTIPART)
+            .multiPart("request", objectMapper.writeValueAsString(request))
+            .when()
+            .post("/api/v1/auth/signup")
+            .then()
+            .statusCode(HttpStatus.CREATED.value())
+            .log().all();
+    }
+
+    private AuthSignupRequest buildSignupRequest(String token, String nickname, Gender gender) {
+        return new AuthSignupRequest(token, nickname, gender, "example_device_token", APNS.name());
+    }
 }

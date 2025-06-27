@@ -25,6 +25,7 @@ import org.runimo.runimo.external.FileStorageService;
 import org.runimo.runimo.item.EggFixtures;
 import org.runimo.runimo.rewards.service.eggs.EggGrantService;
 import org.runimo.runimo.user.UserFixtures;
+import org.runimo.runimo.user.domain.DevicePlatform;
 import org.runimo.runimo.user.domain.Gender;
 import org.runimo.runimo.user.domain.SocialProvider;
 import org.runimo.runimo.user.enums.UserHttpResponseCode;
@@ -81,7 +82,8 @@ class SignUpUsecaseTest {
         when(jwtTokenFactory.generateTokenPair(any())).thenReturn(UserFixtures.TEST_TOKEN_PAIR);
 
         SignupUserResponse response = sut
-            .register(new UserSignupCommand(registerToken, "nickname", null, Gender.UNKNOWN));
+            .register(new UserSignupCommand(registerToken, "nickname", null, Gender.UNKNOWN,
+                "device_token", DevicePlatform.APNS));
 
         assertEquals(1L, response.userId());
         assertEquals(UserFixtures.TEST_USER_NICKNAME, response.nickname());
@@ -110,7 +112,8 @@ class SignUpUsecaseTest {
             .validateExistingUser(payload.providerId(), payload.socialProvider());
 
         assertThrows(SignUpException.class, () -> {
-            sut.register(new UserSignupCommand(registerToken, "nickname", null, Gender.UNKNOWN));
+            sut.register(new UserSignupCommand(registerToken, "nickname", null, Gender.UNKNOWN,
+                "device_token", DevicePlatform.APNS));
         });
     }
 }

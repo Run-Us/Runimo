@@ -9,7 +9,8 @@ public record UserRegisterCommand(
     String imgUrl,
     Gender gender,
     @NotNull String providerId,
-    @NotNull SocialProvider socialProvider
+    @NotNull SocialProvider socialProvider,
+    DeviceTokenDto deviceToken
 ) {
 
 }

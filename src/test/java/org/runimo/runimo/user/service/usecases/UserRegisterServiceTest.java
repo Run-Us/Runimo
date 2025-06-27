@@ -13,12 +13,14 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.runimo.runimo.user.domain.DevicePlatform;
 import org.runimo.runimo.user.domain.Gender;
 import org.runimo.runimo.user.domain.SocialProvider;
 import org.runimo.runimo.user.domain.User;
 import org.runimo.runimo.user.service.UserCreator;
 import org.runimo.runimo.user.service.UserItemCreator;
 import org.runimo.runimo.user.service.UserRegisterService;
+import org.runimo.runimo.user.service.dto.command.DeviceTokenDto;
 import org.runimo.runimo.user.service.dto.command.UserRegisterCommand;
 
 class UserRegisterServiceTest {
@@ -47,7 +49,8 @@ class UserRegisterServiceTest {
                 "https://test.com",
                 Gender.UNKNOWN,
                 providerId,
-                SocialProvider.KAKAO
+                SocialProvider.KAKAO,
+                DeviceTokenDto.of("example-device-token", DevicePlatform.APNS)
             );
         User mockUser = mock(User.class);
         when(userCreator.createUser(any())).thenReturn(mockUser);
