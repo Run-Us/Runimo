@@ -37,6 +37,20 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Performance Testing ###
+# Performance test build outputs
+performance/dist/
+performance/node_modules/
+performance/package-lock.json
+performance/.env
+performance/*.log
+performance/reports/
+performance/summary.*
+
+# Log files
+logs/
+
 # Compiled class file
 *.class
 

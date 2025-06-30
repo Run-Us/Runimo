@@ -1,0 +1,25 @@
+{
+  "name": "k6-performance-tests",
+  "version": "1.0.0",
+  "description": "K6 performance tests written in TypeScript",
+  "scripts": {
+    "build": "webpack",
+    "build:watch": "webpack --watch",
+    "clean": "rm -rf dist",
+    "test:basic-load": "k6 run dist/basic-load.js",
+    "test:simple": "k6 run dist/simple-iteration.js", 
+    "test:real-user": "k6 run dist/real-user-simulation.js",
+    "test:multi": "k6 run dist/multi-scenario.js",
+    "test:all": "npm run build && npm run test:basic-load && npm run test:simple && npm run test:real-user && npm run test:multi"
+  },
+  "devDependencies": {
+    "@types/k6": "^0.47.0",
+    "typescript": "^5.0.0",
+    "webpack": "^5.88.0",
+    "webpack-cli": "^5.1.0",
+    "ts-loader": "^9.4.0"
+  },
+  "keywords": ["k6", "performance", "testing", "typescript"],
+  "author": "",
+  "license": "MIT"
+}
