@@ -69,6 +69,8 @@ export const options: Options = {
   },
 };
 
+const userPatterns = new RealUserPatterns();
+
 export function setup(): TestSetupData {
   const userIds = generateUserIds(config.maxUsers);
   const tokens = setupUsers(userIds);
@@ -76,22 +78,18 @@ export function setup(): TestSetupData {
 }
 
 export function light_browsing(data: TestSetupData) {
-  const userPatterns = new RealUserPatterns();
   userPatterns.lightBrowsing(data.tokens);
 }
 
 export function browsing_session(data: TestSetupData) {
-  const userPatterns = new RealUserPatterns();
   userPatterns.browsing_session(data.tokens);
 }
 
 export function active_user_session(data: TestSetupData) {
-  const userPatterns = new RealUserPatterns();
   userPatterns.activeUserSession(data.tokens);
 }
 
 export function heavy_user_session(data: TestSetupData) {
-  const userPatterns = new RealUserPatterns();
   userPatterns.heavyUserSession(data.tokens);
 }
 
