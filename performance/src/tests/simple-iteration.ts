@@ -29,6 +29,5 @@ export default function(data: TestSetupData) {
 }
 
 export function teardown() {
-  const totalDurationInSeconds = 120; // 2분
-  console.log(`\n---\n 테스트 완료\n---`);
+  console.log(`\n---\n 간단한 반복 테스트 완료 (지속시간: ${config.testDuration})\n---`);
 }

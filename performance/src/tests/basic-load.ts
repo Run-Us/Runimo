@@ -1,6 +1,5 @@
 import { Options } from 'k6/options';
 import { group } from 'k6';
-import { htmlReport } from "https://raw.githubusercontent.com/benc-uk/k6-reporter/main/dist/bundle.js";
 import { config, thresholds } from '../config/environment';
 import { setupUsers } from '../lib/auth';
 import { generateUserIds } from '../lib/utils';
@@ -33,7 +32,7 @@ export function setup(): TestSetupData {
 
 export default function(data: TestSetupData) {
   const recordsScenarios = new RecordsBrowsingScenarios();
-  
+
   group('get records', function () {
     recordsScenarios.basicRecordsQuery(data.tokens);
   });
@@ -56,7 +55,6 @@ p95 응답 시간: ${data.metrics.http_req_duration?.values['p(95)']?.toFixed(2)
 
   return {
     stdout: textSummary,
-    'summary.html': config.enableHtmlReport ? htmlReport(data) : '',
     'summary.json': JSON.stringify(data, null, 2),
     'summary.txt': textSummary,
   };

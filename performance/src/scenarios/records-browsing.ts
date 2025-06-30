@@ -10,28 +10,33 @@ export class RecordsBrowsingScenarios {
     this.apiClient = new ApiClient();
   }
 
+  private generateQueryParams(maxDaysBack: number = 30): QueryParams {
+
+    const params: QueryParams = {
+          page: randomIntBetween(0, 5),
+          size: randomIntBetween(1, 20),
+        };
+
+        let startDate = getRandomDateInPast(maxDaysBack);
+        let endDate = getRandomDateInPast(maxDaysBack);
+
+        if (startDate > endDate) {
+          [startDate, endDate] = [endDate, startDate];
+        }
+
+        params.startDate = formatDate(startDate);
+        params.endDate = formatDate(endDate);
+
+       return params;
+  }
+
   // 기본 레코드 조회 (k6.js 스타일)
   basicRecordsQuery(tokens: UserToken[]): void {
     const vuIndex = (__VU - 1) % tokens.length;
     const user = tokens[vuIndex];
     let accessToken = user.accessToken;
 
-    // 랜덤 파라미터 생성
-    const params: QueryParams = {
-      page: randomIntBetween(0, 5),
-      size: randomIntBetween(1, 20),
-    };
-
-    let startDate = getRandomDateInPast(30);
-    let endDate = getRandomDateInPast(30);
-
-    // 시작일이 종료일보다 나중이면 교체
-    if (startDate > endDate) {
-      [startDate, endDate] = [endDate, startDate];
-    }
-
-    params.startDate = formatDate(startDate);
-    params.endDate = formatDate(endDate);
+   const params = this.generateQueryParams(30);
 
     const result = this.apiClient.get('/records/me', user, params);
 
@@ -57,20 +62,7 @@ export class RecordsBrowsingScenarios {
     const vuIndex = (__VU - 1) % tokens.length;
     const user = tokens[vuIndex];
 
-    const params: QueryParams = {
-      page: randomIntBetween(0, 5),
-      size: randomIntBetween(1, 20),
-    };
-
-    let startDate = getRandomDateInPast(30);
-    let endDate = getRandomDateInPast(30);
-
-    if (startDate > endDate) {
-      [startDate, endDate] = [endDate, startDate];
-    }
-
-    params.startDate = formatDate(startDate);
-    params.endDate = formatDate(endDate);
+    const params = this.generateQueryParams(60);
 
     const result = this.apiClient.get('/records/me', user, params);
 
@@ -91,20 +83,9 @@ export class RecordsBrowsingScenarios {
     const user = tokens[vuIndex];
 
     for (let i = 0; i < pageCount; i++) {
-      const params: QueryParams = {
-        page: i,
-        size: randomIntBetween(5, 20),
-      };
-
-      let startDate = getRandomDateInPast(60);
-      let endDate = getRandomDateInPast(30);
-
-      if (startDate > endDate) {
-        [startDate, endDate] = [endDate, startDate];
-      }
-
-      params.startDate = formatDate(startDate);
-      params.endDate = formatDate(endDate);
+      const params = this.generateQueryParams(60);
+      params.page = i;
+      params.size = randomIntBetween(5, 20);
 
       const result = this.apiClient.get('/records/me', user, params);
 
