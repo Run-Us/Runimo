@@ -153,7 +153,8 @@ class AuthAcceptanceTest {
     }
 
     @Test
-    void 중복_유저_회원가입_409응답() throws JsonProcessingException {
+    @DisplayName("중복된 유저를 회원가입 시도하면 401응답 - 동일한 토큰")
+    void 중복_유저_회원가입_401응답() throws JsonProcessingException {
         AuthSignupRequest request = new AuthSignupRequest(token, "username", Gender.UNKNOWN);
 
         given()
@@ -176,6 +177,44 @@ class AuthAcceptanceTest {
         );
         token = jwtTokenFactory.generateSignupTemporalToken("provider-id", SocialProvider.KAKAO,
             "valid-token");
+        request = new AuthSignupRequest(token, "username", Gender.UNKNOWN);
+
+        given()
+            .contentType(ContentType.MULTIPART)
+            .multiPart("request", objectMapper.writeValueAsString(request))
+            .when()
+            .post("/api/v1/auth/signup")
+            .then()
+            .statusCode(HttpStatus.UNAUTHORIZED.value());
+
+        signupTokenRepository.delete(signupToken);
+    }
+
+    @Test
+    @DisplayName("중복된 유저를 회원가입 시도하면 409응답 - 동일한 토큰")
+    void 중복_유저_회원가입_409응답_다른토큰() throws JsonProcessingException {
+        AuthSignupRequest request = new AuthSignupRequest(token, "username", Gender.UNKNOWN);
+
+        given()
+            .contentType(ContentType.MULTIPART)
+            .multiPart("request", objectMapper.writeValueAsString(request))
+            .when()
+            .post("/api/v1/auth/signup")
+            .then()
+            .statusCode(HttpStatus.CREATED.value())
+            .log().all()
+            .body("payload.nickname", equalTo("username"))
+            .body("payload.token_pair.access_token", notNullValue())
+            .body("payload.token_pair.refresh_token", notNullValue());
+
+        SignupToken signupToken = new SignupToken(
+            "valid-token-2",
+            "provider-id",
+            "refresh-token",
+            SocialProvider.KAKAO
+        );
+        token = jwtTokenFactory.generateSignupTemporalToken("provider-id", SocialProvider.KAKAO,
+            "valid-token-2");
         signupTokenRepository.save(signupToken);
         request = new AuthSignupRequest(token, "username", Gender.UNKNOWN);
 
