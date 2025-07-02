@@ -40,15 +40,19 @@ public class SignUpUsecaseImpl implements SignUpUsecase {
     @Override
     @Transactional
     public SignupUserResponse register(UserSignupCommand command) {
+        // 1. 토큰 검증
         SignupTokenPayload payload = jwtResolver.getSignupTokenPayload(command.registerToken());
         SignupToken signupToken = findUnExpiredSignupToken(payload.token());
+        // 2. 유저생성
         userRegisterService.validateExistingUser(payload.providerId(), payload.socialProvider());
         String imgUrl = fileStorageService.storeFile(command.profileImage());
         User savedUser = userRegisterService.registerUser(
             mapToUserCreateCommand(payload, imgUrl, command));
+        // 3. 애플 토큰 생성
         if (payload.socialProvider() == SocialProvider.APPLE) {
             createAppleUserToken(savedUser.getId(), signupToken);
         }
+        // 4. 신규회원 보상 지급
         Egg grantedEgg = eggGrantService.grantGreetingEggToUser(savedUser);
 
         removeSignupToken(payload.token());
