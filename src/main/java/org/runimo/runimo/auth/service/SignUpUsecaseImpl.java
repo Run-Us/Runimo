@@ -12,6 +12,7 @@ import org.runimo.runimo.auth.service.dto.SignupUserResponse;
 import org.runimo.runimo.auth.service.dto.UserSignupCommand;
 import org.runimo.runimo.external.FileStorageService;
 import org.runimo.runimo.item.domain.Egg;
+import org.runimo.runimo.item.domain.EggType;
 import org.runimo.runimo.rewards.service.eggs.EggGrantService;
 import org.runimo.runimo.user.domain.AppleUserToken;
 import org.runimo.runimo.user.domain.SocialProvider;
@@ -50,10 +51,11 @@ public class SignUpUsecaseImpl implements SignUpUsecase {
             createAppleUserToken(savedUser.getId(), signupToken);
         }
         Egg grantedEgg = eggGrantService.grantGreetingEggToUser(savedUser);
+        EggType eggType = grantedEgg.getEggType();
 
         removeSignupToken(payload.token());
         return new SignupUserResponse(savedUser, jwtTokenFactory.generateTokenPair(savedUser),
-            grantedEgg);
+            grantedEgg, eggType.getCode());
     }
 
     private void removeSignupToken(String token) {

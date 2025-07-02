@@ -26,7 +26,7 @@ public interface IncubatingEggRepository extends JpaRepository<IncubatingEgg, In
     List<IncubatingEgg> findAllByUserId(Long userId);
 
     @Query(
-        "select new org.runimo.runimo.user.service.dto.IncubatingEggView(ie.id, e.name, e.imgUrl, ie.hatchRequireAmount, ie.currentLovePointAmount, ie.status) "
+        "select new org.runimo.runimo.user.service.dto.IncubatingEggView(ie.id, e.name, e.imgUrl, ie.hatchRequireAmount, ie.currentLovePointAmount, ie.status, e.eggType.code) "
             +
             "from IncubatingEgg ie " +
             "join Egg e on e.id = ie.eggId " +

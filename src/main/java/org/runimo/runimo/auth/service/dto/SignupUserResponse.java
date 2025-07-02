@@ -10,17 +10,20 @@ public record SignupUserResponse(
     TokenPair tokenPair,
     String greetingEggName,
     String greetingEggType,
-    String greetingEggImgUrl
+    String greetingEggImgUrl,
+    String eggCode
 ) {
 
-    public SignupUserResponse(final User user, final TokenPair tokenPair, final Egg greetingEgg) {
+    public SignupUserResponse(final User user, final TokenPair tokenPair, final Egg greetingEgg,
+        final String eggCode) {
         this(user.getId(),
             user.getNickname(),
             user.getImgUrl(),
             tokenPair,
             greetingEgg.getName(),
             greetingEgg.getEggType().getName(),
-            greetingEgg.getImgUrl()
+            greetingEgg.getImgUrl(),
+            eggCode
         );
     }
 }

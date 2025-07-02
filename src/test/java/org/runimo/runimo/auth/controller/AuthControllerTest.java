@@ -156,7 +156,8 @@ class AuthControllerTest {
                 1L, "RunimoUser", "profile_url", new TokenPair("access_token", "refresh_token"),
                 "exmaple_egg_name",
                 "example_egg_type",
-                "example_egg_url"
+                "example_egg_url",
+                "ECODE"
             )
         );
 
@@ -166,7 +167,9 @@ class AuthControllerTest {
                     .param("request",
                         "{\"registerToken\":\"valid-token\", \"nickname\":\"RunimoUser\"}"))
             .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.code").value(UserHttpResponseCode.SIGNUP_SUCCESS.getCode()));
+            .andExpect(jsonPath("$.payload.egg_code").value("ECODE"))
+            .andExpect(jsonPath("$.code")
+                .value(UserHttpResponseCode.SIGNUP_SUCCESS.getCode()));
     }
 
     @Test
@@ -192,7 +195,8 @@ class AuthControllerTest {
                 1L, "RunimoUser", "profile_url", new TokenPair("access_token", "refresh_token"),
                 "exmaple_egg_name",
                 "example_egg_type",
-                "example_egg_url"
+                "example_egg_url",
+                "ECODE"
             )
         );
 

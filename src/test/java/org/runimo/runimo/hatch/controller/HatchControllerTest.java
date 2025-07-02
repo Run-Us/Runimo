@@ -65,12 +65,13 @@ class HatchControllerTest {
 
                 .then()
                 .log().all()
-                 .statusCode(HttpStatus.CREATED.value())
+                .statusCode(HttpStatus.CREATED.value())
 
                 .body("code", equalTo("HSH2011"))
                 .body("payload.name", notNullValue())
                 .body("payload.img_url", startsWith("http://"))
                 .body("payload.code", startsWith("R-10"))
+                .body("payload.egg_code", notNullValue())
                 .body("payload.is_duplicated", anyOf(equalTo(true), equalTo(false)));
         }
     }
