@@ -148,7 +148,8 @@ class UserItemAcceptanceTest {
                 new TokenPair(token, "token2"),
                 "마당알",
                 "MADANG",
-                "test.url"
+                "test.url",
+                "ECODE"
             ));
 
         AuthSignupRequest request = new AuthSignupRequest(
