@@ -8,17 +8,14 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.when;
 
-import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.runimo.runimo.auth.domain.SignupToken;
 import org.runimo.runimo.auth.exceptions.SignUpException;
-import org.runimo.runimo.auth.jwt.JwtResolver;
 import org.runimo.runimo.auth.jwt.JwtTokenFactory;
 import org.runimo.runimo.auth.jwt.SignupTokenPayload;
-import org.runimo.runimo.auth.repository.SignupTokenRepository;
 import org.runimo.runimo.auth.service.dto.SignupUserResponse;
 import org.runimo.runimo.auth.service.dto.UserSignupCommand;
 import org.runimo.runimo.external.FileStorageService;
@@ -43,11 +40,9 @@ class SignUpUsecaseTest {
     @Mock
     private JwtTokenFactory jwtTokenFactory;
     @Mock
-    private SignupTokenRepository signupTokenRepository;
-    @Mock
     private AppleUserTokenRepository appleUserTokenRepository;
     @Mock
-    private JwtResolver jwtResolver;
+    private SignupTokenService signupTokenService;
 
     private SignUpUsecase sut;
 
@@ -59,9 +54,8 @@ class SignUpUsecaseTest {
             fileStorageService,
             eggGrantService,
             jwtTokenFactory,
-            signupTokenRepository,
             appleUserTokenRepository,
-            jwtResolver
+            signupTokenService
         );
     }
 
@@ -72,10 +66,10 @@ class SignUpUsecaseTest {
         SignupTokenPayload payload = new SignupTokenPayload(registerToken, "socialId123",
             SocialProvider.KAKAO);
 
-        when(jwtResolver.getSignupTokenPayload(registerToken)).thenReturn(payload);
-        when(signupTokenRepository.findByIdAndCreatedAtAfter(eq(registerToken), any()))
-            .thenReturn(Optional.of(new SignupToken(
-                registerToken, "refresh", "refresh", SocialProvider.KAKAO)));
+        when(signupTokenService.extractPayload(registerToken)).thenReturn(payload);
+        when(signupTokenService.findUnExpiredToken(eq(registerToken)))
+            .thenReturn(new SignupToken(
+                registerToken, "refresh", "refresh", SocialProvider.KAKAO));
         when(userRegisterService.registerUser(any())).thenReturn(UserFixtures.getUserWithId(1L));
         when(eggGrantService.grantGreetingEggToUser(any())).thenReturn(
             EggFixtures.createDefaultEgg());
@@ -101,10 +95,10 @@ class SignUpUsecaseTest {
         SignupTokenPayload payload = new SignupTokenPayload(registerToken, "socialId123",
             SocialProvider.KAKAO);
 
-        when(jwtResolver.getSignupTokenPayload(registerToken)).thenReturn(payload);
-        when(signupTokenRepository.findByIdAndCreatedAtAfter(eq(registerToken), any()))
-            .thenReturn(Optional.of(new SignupToken(
-                registerToken, "refresh", "refresh", SocialProvider.KAKAO)));
+        when(signupTokenService.extractPayload(registerToken)).thenReturn(payload);
+        when(signupTokenService.findUnExpiredToken(eq(registerToken)))
+            .thenReturn(new SignupToken(
+                registerToken, "refresh", "refresh", SocialProvider.KAKAO));
 
         doThrow(new org.runimo.runimo.auth.exceptions.SignUpException(
             UserHttpResponseCode.SIGNIN_FAIL_ALREADY_EXIST))
