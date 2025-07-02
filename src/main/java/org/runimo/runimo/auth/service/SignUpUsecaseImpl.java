@@ -57,13 +57,9 @@ public class SignUpUsecaseImpl implements SignUpUsecase {
         Egg grantedEgg = eggGrantService.grantGreetingEggToUser(savedUser);
         EggType eggType = grantedEgg.getEggType();
 
-        removeSignupToken(payload.token());
+        signupToken.markAsUsed();
         return new SignupUserResponse(savedUser, jwtTokenFactory.generateTokenPair(savedUser),
             grantedEgg, eggType.getCode());
-    }
-
-    private void removeSignupToken(String token) {
-        signupTokenRepository.deleteByToken(token);
     }
 
     private SignupToken findUnExpiredSignupToken(String token) {
