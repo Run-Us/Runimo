@@ -102,7 +102,7 @@ class AuthAcceptanceTest {
     void 회원가입_시_애정포인트_10_지급() throws JsonProcessingException {
         AuthSignupRequest request = new AuthSignupRequest(token, "username", Gender.UNKNOWN);
 
-        String token = String.valueOf(given()
+        String accessToken = String.valueOf(given()
             .contentType(ContentType.MULTIPART)
             .multiPart("request", objectMapper.writeValueAsString(request))
             .when()
@@ -118,7 +118,7 @@ class AuthAcceptanceTest {
 
         given()
             .contentType(ContentType.JSON)
-            .header("Authorization", "Bearer " + token)
+            .header("Authorization", "Bearer " + accessToken)
             .when()
             .get("/api/v1/main")
             .then()
