@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserCreator {
 
+    private final static long GREETING_LOVE_POINT = 10;
     private final UserRepository userRepository;
     private final OAuthInfoRepository oAuthInfoRepository;
     private final LovePointRepository lovePointRepository;
@@ -48,7 +49,7 @@ public class UserCreator {
     public LovePoint createLovePoint(Long userId) {
         LovePoint lovePoint = LovePoint.builder()
             .userId(userId)
-            .amount(0L)
+            .amount(GREETING_LOVE_POINT)
             .build();
         return lovePointRepository.save(lovePoint);
     }

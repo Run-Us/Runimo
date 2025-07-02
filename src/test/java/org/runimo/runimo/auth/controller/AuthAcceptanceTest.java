@@ -99,6 +99,35 @@ class AuthAcceptanceTest {
     }
 
     @Test
+    void 회원가입_시_애정포인트_10_지급() throws JsonProcessingException {
+        AuthSignupRequest request = new AuthSignupRequest(token, "username", Gender.UNKNOWN);
+
+        String accessToken = String.valueOf(given()
+            .contentType(ContentType.MULTIPART)
+            .multiPart("request", objectMapper.writeValueAsString(request))
+            .when()
+            .post("/api/v1/auth/signup")
+            .then()
+            .statusCode(HttpStatus.CREATED.value())
+            .log().all()
+            .body("payload.nickname", equalTo("username"))
+            .body("payload.token_pair.access_token", notNullValue())
+            .body("payload.token_pair.refresh_token", notNullValue())
+            .extract()
+            .path("payload.token_pair.access_token").toString());
+
+        given()
+            .contentType(ContentType.JSON)
+            .header("Authorization", "Bearer " + accessToken)
+            .when()
+            .get("/api/v1/main")
+            .then()
+            .statusCode(HttpStatus.OK.value())
+            .log().all()
+            .body("payload.user_info.love_point", equalTo(10));
+    }
+
+    @Test
     void 토큰_오류_회원가입_실패_401응답() throws JsonProcessingException {
         AuthSignupRequest request = new AuthSignupRequest(token, "username", Gender.UNKNOWN);
 
