@@ -22,6 +22,7 @@ import org.runimo.runimo.user.repository.AppleUserTokenRepository;
 import org.runimo.runimo.user.service.UserRegisterService;
 import org.runimo.runimo.user.service.dto.command.DeviceTokenDto;
 import org.runimo.runimo.user.service.dto.command.UserRegisterCommand;
+import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -57,9 +58,18 @@ public class SignUpUsecaseImpl implements SignUpUsecase {
         Egg grantedEgg = eggGrantService.grantGreetingEggToUser(savedUser);
         EggType eggType = grantedEgg.getEggType();
 
-        signupToken.markAsUsed();
+        invalidateSignupToken(signupToken);
         return new SignupUserResponse(savedUser, jwtTokenFactory.generateTokenPair(savedUser),
             grantedEgg, eggType.getCode());
+    }
+
+    private void invalidateSignupToken(SignupToken signupToken) {
+        try {
+            signupToken.markAsUsed();
+            signupTokenRepository.save(signupToken);
+        } catch (OptimisticLockingFailureException e) {
+            throw new SignUpException(UserHttpResponseCode.SIGNIN_FAIL_ALREADY_EXIST);
+        }
     }
 
     private SignupToken findUnExpiredSignupToken(String token) {
