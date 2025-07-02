@@ -55,7 +55,8 @@ public class HatchUsecaseImpl implements HatchUsecase {
             runimoDefinition.getName(),
             runimoDefinition.getImgUrl(),
             runimoDefinition.getCode(),
-            isDuplicatedRunimo
+            isDuplicatedRunimo,
+            egg.getEggType().getCode()
         );
     }
 

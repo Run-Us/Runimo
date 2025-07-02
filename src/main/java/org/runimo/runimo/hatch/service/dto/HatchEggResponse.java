@@ -17,7 +17,10 @@ public record HatchEggResponse(
     String code,
 
     @Schema(description = "부화 결과 생성된 러니모를 이미 보유중인지", example = "true")
-    Boolean isDuplicated
+    Boolean isDuplicated,
+
+    @Schema(description = "부화 시킨 알의 코드", example = "R-101")
+    String eggCode
 ) {
 
 }
