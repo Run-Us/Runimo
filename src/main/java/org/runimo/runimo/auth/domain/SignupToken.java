@@ -6,11 +6,14 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.runimo.runimo.auth.exceptions.SignUpException;
 import org.runimo.runimo.common.CreatedAuditEntity;
 import org.runimo.runimo.user.domain.SocialProvider;
+import org.runimo.runimo.user.enums.UserHttpResponseCode;
 
 @Table(name = "signup_token")
 @Entity
@@ -32,6 +35,13 @@ public class SignupToken extends CreatedAuditEntity {
     @Enumerated(EnumType.STRING)
     private SocialProvider socialProvider;
 
+    @Version
+    @Column(name = "version")
+    private Long version;
+
+    @Column(name = "used", nullable = false)
+    private Boolean used = false;
+
     @Builder
     public SignupToken(String token, String providerId, String refreshToken,
         SocialProvider socialProvider) {
@@ -39,5 +49,12 @@ public class SignupToken extends CreatedAuditEntity {
         this.providerId = providerId;
         this.refreshToken = refreshToken;
         this.socialProvider = socialProvider;
+    }
+
+    public void markAsUsed() {
+        if (this.used) {
+            throw new SignUpException(UserHttpResponseCode.SIGNIN_FAIL_ALREADY_EXIST);
+        }
+        this.used = true;
     }
 }

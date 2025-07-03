@@ -9,7 +9,9 @@ import org.springframework.data.jpa.repository.Query;
 public interface SignupTokenRepository extends JpaRepository<SignupToken, String> {
 
     @Query(
-        "SELECT st FROM SignupToken st WHERE st.token = :token AND st.createdAt > :createdAtAfter"
+        "SELECT st FROM SignupToken st WHERE st.token = :token "
+            + "AND st.createdAt > :createdAtAfter "
+            + "AND st.used = false"
     )
     Optional<SignupToken> findByIdAndCreatedAtAfter(String token, LocalDateTime createdAtAfter);
 

@@ -1,13 +1,9 @@
 package org.runimo.runimo.auth.service;
 
-import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.auth.domain.SignupToken;
-import org.runimo.runimo.auth.exceptions.SignUpException;
-import org.runimo.runimo.auth.jwt.JwtResolver;
 import org.runimo.runimo.auth.jwt.JwtTokenFactory;
 import org.runimo.runimo.auth.jwt.SignupTokenPayload;
-import org.runimo.runimo.auth.repository.SignupTokenRepository;
 import org.runimo.runimo.auth.service.dto.SignupUserResponse;
 import org.runimo.runimo.auth.service.dto.UserSignupCommand;
 import org.runimo.runimo.external.FileStorageService;
@@ -17,7 +13,6 @@ import org.runimo.runimo.rewards.service.eggs.EggGrantService;
 import org.runimo.runimo.user.domain.AppleUserToken;
 import org.runimo.runimo.user.domain.SocialProvider;
 import org.runimo.runimo.user.domain.User;
-import org.runimo.runimo.user.enums.UserHttpResponseCode;
 import org.runimo.runimo.user.repository.AppleUserTokenRepository;
 import org.runimo.runimo.user.service.UserRegisterService;
 import org.runimo.runimo.user.service.dto.command.DeviceTokenDto;
@@ -29,21 +24,19 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class SignUpUsecaseImpl implements SignUpUsecase {
 
-    private static final int REGISTER_CUTOFF_MIN = 10;
     private final UserRegisterService userRegisterService;
     private final FileStorageService fileStorageService;
     private final EggGrantService eggGrantService;
     private final JwtTokenFactory jwtTokenFactory;
-    private final SignupTokenRepository signupTokenRepository;
     private final AppleUserTokenRepository appleUserTokenRepository;
-    private final JwtResolver jwtResolver;
+    private final SignupTokenService signupTokenService;
 
     @Override
     @Transactional
     public SignupUserResponse register(UserSignupCommand command) {
         // 1. 토큰 검증
-        SignupTokenPayload payload = jwtResolver.getSignupTokenPayload(command.registerToken());
-        SignupToken signupToken = findUnExpiredSignupToken(payload.token());
+        SignupTokenPayload payload = signupTokenService.extractPayload(command.registerToken());
+        SignupToken signupToken = signupTokenService.findUnExpiredToken(payload.token());
         // 2. 유저생성
         userRegisterService.validateExistingUser(payload.providerId(), payload.socialProvider());
         String imgUrl = fileStorageService.storeFile(command.profileImage());
@@ -57,20 +50,9 @@ public class SignUpUsecaseImpl implements SignUpUsecase {
         Egg grantedEgg = eggGrantService.grantGreetingEggToUser(savedUser);
         EggType eggType = grantedEgg.getEggType();
 
-        removeSignupToken(payload.token());
+        signupTokenService.invalidateSignupToken(signupToken);
         return new SignupUserResponse(savedUser, jwtTokenFactory.generateTokenPair(savedUser),
             grantedEgg, eggType.getCode());
-    }
-
-    private void removeSignupToken(String token) {
-        signupTokenRepository.deleteByToken(token);
-    }
-
-    private SignupToken findUnExpiredSignupToken(String token) {
-        LocalDateTime cutOffTime = LocalDateTime.now().minusMinutes(REGISTER_CUTOFF_MIN);
-        return signupTokenRepository.
-            findByIdAndCreatedAtAfter(token, cutOffTime)
-            .orElseThrow(() -> new SignUpException(UserHttpResponseCode.TOKEN_INVALID));
     }
 
     private void createAppleUserToken(Long userId, SignupToken signupToken) {
