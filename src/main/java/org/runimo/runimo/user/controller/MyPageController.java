@@ -2,11 +2,15 @@ package org.runimo.runimo.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.runimo.runimo.common.response.SuccessResponse;
+import org.runimo.runimo.user.controller.request.UpdateNotificationAllowedRequst;
 import org.runimo.runimo.user.enums.UserHttpResponseCode;
 import org.runimo.runimo.user.service.dto.response.MyPageViewResponse;
+import org.runimo.runimo.user.service.usecases.UpdateUserDetailUsecase;
 import org.runimo.runimo.user.service.usecases.query.MyPageQueryUsecase;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MyPageController {
 
     private final MyPageQueryUsecase myPageQueryUsecase;
+    private final UpdateUserDetailUsecase updateUserDetailUsecase;
 
     @GetMapping
     public ResponseEntity<SuccessResponse<MyPageViewResponse>> queryMyPageView(
@@ -23,6 +28,16 @@ public class MyPageController {
         MyPageViewResponse response = myPageQueryUsecase.execute(userId);
         return ResponseEntity.ok(
             SuccessResponse.of(UserHttpResponseCode.MY_PAGE_DATA_FETCHED, response));
+    }
+
+    @PatchMapping("/notifications/permission")
+    public ResponseEntity<SuccessResponse<Void>> updateNotificationPermission(
+        @UserId Long userId,
+        @RequestBody UpdateNotificationAllowedRequst request
+    ) {
+        updateUserDetailUsecase.updateUserNotificationAllowed(userId, request.allowed());
+        return ResponseEntity.ok().body(
+            SuccessResponse.messageOnly(UserHttpResponseCode.NOTIFICATION_ALLOW_UPDATED));
     }
 
 }
