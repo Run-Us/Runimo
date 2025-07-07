@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.runimo.runimo.CleanUpUtil;
 import org.runimo.runimo.TokenUtils;
 import org.runimo.runimo.user.controller.request.WithdrawRequest;
+import org.runimo.runimo.user.domain.WithdrawalReason;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -55,7 +56,7 @@ class UserWithdrawAcceptanceTest {
     void 회원_탈퇴_성공_시_유저_조회_불가() throws JsonProcessingException {
 
         WithdrawRequest request = new WithdrawRequest(
-            "LACK_OF_IMPROVEMENT",
+            WithdrawalReason.NO_LONGER_NEEDED.name(),
             ""
         );
 
