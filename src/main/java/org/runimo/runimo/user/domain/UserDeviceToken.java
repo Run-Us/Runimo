@@ -57,4 +57,8 @@ public class UserDeviceToken extends CreateUpdateAuditEntity {
             .build();
     }
 
+    public void updateNotificationAllowed(Boolean allowed) {
+        this.notificationAllowed = allowed;
+    }
+
 }
