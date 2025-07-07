@@ -3,6 +3,8 @@ package org.runimo.runimo.user.api;
 import static io.restassured.RestAssured.given;
 import static org.runimo.runimo.TestConsts.TEST_USER_UUID;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import org.junit.jupiter.api.AfterEach;
@@ -10,6 +12,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.runimo.runimo.CleanUpUtil;
 import org.runimo.runimo.TokenUtils;
+import org.runimo.runimo.user.controller.request.WithdrawRequest;
+import org.runimo.runimo.user.domain.WithdrawalReason;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -26,6 +30,9 @@ class UserWithdrawAcceptanceTest {
 
     @Autowired
     private CleanUpUtil cleanUpUtil;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
 
     @Autowired
@@ -46,7 +53,12 @@ class UserWithdrawAcceptanceTest {
 
     @Test
     @Sql(scripts = "/sql/user_mypage_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    void 회원_탈퇴_성공_시_유저_조회_불가() {
+    void 회원_탈퇴_성공_시_유저_조회_불가() throws JsonProcessingException {
+
+        WithdrawRequest request = new WithdrawRequest(
+            WithdrawalReason.NO_LONGER_NEEDED.name(),
+            ""
+        );
 
         given()
             .header("Authorization", token)
@@ -58,10 +70,9 @@ class UserWithdrawAcceptanceTest {
         given()
             .header("Authorization", token)
             .contentType(ContentType.JSON)
-
+            .body(objectMapper.writeValueAsString(request))
             .when()
             .delete("/api/v1/users")
-
             .then()
             .log().all()
             .statusCode(204);
@@ -75,4 +86,43 @@ class UserWithdrawAcceptanceTest {
 
     }
 
+    @Test
+    @Sql(scripts = "/sql/user_mypage_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void 탈퇴_사유가_기타가_아닌데_상세_사유가_있으면_에러() throws JsonProcessingException {
+
+        WithdrawRequest request = new WithdrawRequest(
+            "LACK_OF_IMPROVEMENT",
+            "예시 탈퇴 사유"
+        );
+
+        given()
+            .header("Authorization", token)
+            .contentType(ContentType.JSON)
+            .body(objectMapper.writeValueAsString(request))
+            .when()
+            .delete("/api/v1/users")
+            .then()
+            .log().all()
+            .statusCode(400);
+    }
+
+
+    @Test
+    @Sql(scripts = "/sql/user_mypage_test_data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+    void 탈퇴_사유가_255자_이상이면_에러() throws JsonProcessingException {
+        WithdrawRequest request = new WithdrawRequest(
+            "OTHER",
+            "a".repeat(512)
+        );
+
+        given()
+            .header("Authorization", token)
+            .contentType(ContentType.JSON)
+            .body(objectMapper.writeValueAsString(request))
+            .when()
+            .delete("/api/v1/users")
+            .then()
+            .log().all()
+            .statusCode(400);
+    }
 }

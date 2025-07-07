@@ -4,10 +4,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.runimo.runimo.user.controller.request.WithdrawRequest;
 import org.runimo.runimo.user.service.WithdrawService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,9 +29,10 @@ public class UserWithdrawController {
     })
     @DeleteMapping()
     public ResponseEntity<Void> deleteUser(
-        @UserId Long userId
+        @UserId Long userId,
+        @Valid @RequestBody WithdrawRequest request
     ) {
-        withdrawService.withdraw(userId);
+        withdrawService.withdraw(WithdrawRequest.toCommand(userId, request));
         return ResponseEntity.noContent().build();
     }
 }

@@ -9,9 +9,12 @@ import org.runimo.runimo.user.domain.AppleUserToken;
 import org.runimo.runimo.user.domain.OAuthInfo;
 import org.runimo.runimo.user.domain.SocialProvider;
 import org.runimo.runimo.user.domain.User;
+import org.runimo.runimo.user.domain.UserWithdrawReason;
 import org.runimo.runimo.user.repository.AppleUserTokenRepository;
 import org.runimo.runimo.user.repository.OAuthInfoRepository;
 import org.runimo.runimo.user.repository.UserRepository;
+import org.runimo.runimo.user.repository.UserWithdrawReasonRepository;
+import org.runimo.runimo.user.service.dto.command.WithdrawCommand;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,15 +28,18 @@ public class WithdrawService {
     private final AppleUserTokenRepository appleUserTokenRepository;
     private final EncryptUtil encryptUtil;
     private final TokenRefreshService tokenRefreshService;
+    private final UserWithdrawReasonRepository userWithdrawReasonRepository;
 
     @Transactional
-    public void withdraw(Long userId) {
-        OAuthInfo oAuthInfo = oAuthInfoRepository.findByUserId(userId)
+    public void withdraw(WithdrawCommand command) {
+        OAuthInfo oAuthInfo = oAuthInfoRepository.findByUserId(command.userId())
             .orElseThrow(NoSuchElementException::new);
         User user = oAuthInfo.getUser();
         if (oAuthInfo.getProvider() == SocialProvider.APPLE) {
             withdrawAppleUser(user);
         }
+        UserWithdrawReason reason = createUserWithdrawReason(command);
+        userWithdrawReasonRepository.save(reason);
         oAuthInfoRepository.delete(oAuthInfo);
         userRepository.delete(user);
         tokenRefreshService.removeRefreshToken(user.getId());
@@ -54,5 +60,13 @@ public class WithdrawService {
         } catch (Exception e) {
             throw new RuntimeException("Failed to decrypt ID token", e);
         }
+    }
+
+    private UserWithdrawReason createUserWithdrawReason(WithdrawCommand command) {
+        return UserWithdrawReason.builder()
+            .userId(command.userId())
+            .reason(command.reason())
+            .customReason(command.reasonDetail())
+            .build();
     }
 }
