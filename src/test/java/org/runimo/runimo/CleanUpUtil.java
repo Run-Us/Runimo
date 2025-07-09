@@ -15,7 +15,8 @@ public class CleanUpUtil {
         "user_love_point",
         "incubating_egg",
         "runimo",
-        "user_token"
+        "user_token",
+        "user_feedback"
     };
 
     @Autowired
