@@ -1,5 +1,6 @@
 package org.runimo.runimo.user.api;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.runimo.runimo.TestConsts.TEST_USER_UUID;
 
 import io.restassured.RestAssured;
@@ -8,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.runimo.runimo.CleanUpUtil;
 import org.runimo.runimo.TokenUtils;
+import org.runimo.runimo.user.repository.FeedbackRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
@@ -28,6 +30,8 @@ public class FeedbackAcceptanceTest {
     @Autowired
     private TokenUtils tokenUtils;
     private String token;
+    @Autowired
+    private FeedbackRepository feedbackRepository;
 
     @BeforeEach
     void setUp() {
@@ -62,8 +66,9 @@ public class FeedbackAcceptanceTest {
             .log().ifError()
             .statusCode(HttpStatus.CREATED.value());
 
-
+        var savedFeedback = feedbackRepository.findById(1L).get();
+        assertEquals("이것은 피드백입니다.", savedFeedback.getContent());
+        assertEquals(3, savedFeedback.getRate());
     }
-
 
 }
