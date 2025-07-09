@@ -21,9 +21,11 @@ public class UpdateUserDetailUsecaseImpl implements UpdateUserDetailUsecase {
     @Override
     @Transactional
     public void updateUserNotificationAllowed(UpdateNotificationAllowedCommand command) {
-        UserDeviceToken userDeviceToken = userFinder.findUserDeviceTokenByUserId(command.userId())
-            .orElse(createUserDeviceTokenIfNotExist(command));
-        userDeviceToken.updateNotificationAllowed(command.allowed());
+        UserDeviceToken token = userDeviceTokenRepository
+            .findByUserId(command.userId())
+            .orElseGet(() -> createUserDeviceTokenIfNotExist(command));
+        token.updateDeviceToken(command.deviceToken());
+        token.updateNotificationAllowed(command.allowed());
     }
 
     private UserDeviceToken createUserDeviceTokenIfNotExist(
