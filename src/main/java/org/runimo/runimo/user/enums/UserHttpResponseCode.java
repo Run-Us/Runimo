@@ -14,6 +14,8 @@ public enum UserHttpResponseCode implements CustomResponseCode {
     REGISTER_EGG_SUCCESS(HttpStatus.CREATED, "부화기 등록 성공", "부화기 등록 성공"),
     USE_LOVE_POINT_SUCCESS(HttpStatus.OK, "애정 사용 성공", "애정 사용 성공"),
     MY_INCUBATING_EGG_FETCHED(HttpStatus.OK, "부화기중인 알 조회 성공", "부화중인 알 조회 성공"),
+    NOTIFICATION_ALLOW_UPDATED(HttpStatus.OK, "알림 허용 업데이트 성공", "알림 허용 업데이트 성공"),
+    NOTIFICATION_ALLOW_FETCHED(HttpStatus.OK, "알림 허용 조회 성공", "알림 허용 조회 성공"),
 
     LOGIN_FAIL_NOT_SIGN_IN(HttpStatus.NOT_FOUND
         , "로그인 실패 - 회원가입하지 않은 사용자", "로그인 실패 - 회원가입하지 않은 사용자"),
@@ -27,7 +29,8 @@ public enum UserHttpResponseCode implements CustomResponseCode {
         "사용자가 유효하지 않습니다. Refresh 토큰 삭제에 실패했습니다"),
     LOG_OUT_SUCCESS(HttpStatus.OK, "로그아웃 성공", "로그아웃 성공"),
     ALREADY_LOG_OUT_SUCCESS(HttpStatus.OK, "로그아웃 성공 (이미 로그아웃된 사용자)", "로그아웃 성공 (이미 로그아웃된 사용자)"),
-    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없음", "사용자를 찾을 수 없음");
+    USER_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없음", "사용자를 찾을 수 없음"),
+    DEVICE_TOKEN_NOT_FOUND(HttpStatus.NOT_FOUND, "디바이스 토큰이 없음", "디바이스 토큰이 없음");
 
     private final HttpStatus code;
     private final String clientMessage;

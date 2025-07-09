@@ -57,4 +57,20 @@ public class UserDeviceToken extends CreateUpdateAuditEntity {
             .build();
     }
 
+    public void updateNotificationAllowed(Boolean allowed) {
+        this.notificationAllowed = allowed;
+    }
+
+    public void updateDeviceToken(String deviceToken) {
+        validateDeviceToken(deviceToken, this.platform);
+        this.deviceToken = deviceToken;
+        this.lastUsedAt = LocalDateTime.now();
+    }
+
+    private void validateDeviceToken(String deviceToken, DevicePlatform platform) {
+        if (deviceToken == null || deviceToken.trim().isEmpty()) {
+            throw new IllegalArgumentException("디바이스 토큰은 필수입니다");
+        }
+    }
+
 }

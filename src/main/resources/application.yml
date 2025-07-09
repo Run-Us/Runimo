@@ -117,6 +117,11 @@ spring:
         dialect: org.hibernate.dialect.MySQLDialect
     show-sql: true
 
+  flyway:
+    enabled: true
+    locations: classpath:db/migration/mysql
+    baseline-on-migrate: true
+    clean-disabled: false
 jwt:
   expiration: ${JWT_EXPIRATION:180000}
   refresh:
