@@ -16,6 +16,7 @@ public enum UserHttpResponseCode implements CustomResponseCode {
     MY_INCUBATING_EGG_FETCHED(HttpStatus.OK, "부화기중인 알 조회 성공", "부화중인 알 조회 성공"),
     NOTIFICATION_ALLOW_UPDATED(HttpStatus.OK, "알림 허용 업데이트 성공", "알림 허용 업데이트 성공"),
     NOTIFICATION_ALLOW_FETCHED(HttpStatus.OK, "알림 허용 조회 성공", "알림 허용 조회 성공"),
+    FEEDBACK_CREATED(HttpStatus.CREATED, "피드백 생성 성공", "피드백 생성 성공"),
 
     LOGIN_FAIL_NOT_SIGN_IN(HttpStatus.NOT_FOUND
         , "로그인 실패 - 회원가입하지 않은 사용자", "로그인 실패 - 회원가입하지 않은 사용자"),
