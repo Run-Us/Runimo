@@ -9,7 +9,7 @@ import org.runimo.runimo.user.service.dto.command.FeedbackCommand;
 @Schema(description = "피드백 요청 DTO")
 public record FeedbackRequest(
 
-    @Schema(description = "평가지표", example = "1")
+    @Schema(description = "평가지표 (1: 매우 불만족, 6: 매우 만족)", example = "3")
     @Min(1) @Max(6)
     Integer rate,
     @Schema(description = "피드백 내용", example = "피드백 내용")
