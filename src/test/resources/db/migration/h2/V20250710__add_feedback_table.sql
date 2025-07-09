@@ -1,9 +1,9 @@
-create table `user_feedback`
+CREATE TABLE `user_feedback`
 (
     `id`         BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     `user_id`    BIGINT NOT NULL,
     `rate`       INT,
     `content`    VARCHAR(128),
-    `created_at` TIMESTAMP,
-    `updated_at` TIMESTAMP
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
