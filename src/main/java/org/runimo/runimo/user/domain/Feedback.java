@@ -8,10 +8,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.runimo.runimo.common.CreateUpdateAuditEntity;
 
 @Table(name = "user_feedback")
+@Getter
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Feedback extends CreateUpdateAuditEntity {
@@ -31,7 +33,7 @@ public class Feedback extends CreateUpdateAuditEntity {
     public Feedback(Long userId, Integer rate, String content) {
         this.userId = userId;
         this.rate = rate;
-        this.content = content;
+        this.content = content.trim();
     }
 
 }
