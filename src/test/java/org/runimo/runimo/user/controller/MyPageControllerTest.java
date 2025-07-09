@@ -18,7 +18,9 @@ import org.runimo.runimo.auth.jwt.UserDetail;
 import org.runimo.runimo.configs.ControllerTest;
 import org.runimo.runimo.user.service.dto.LatestRunningRecord;
 import org.runimo.runimo.user.service.dto.response.MyPageViewResponse;
+import org.runimo.runimo.user.service.usecases.UpdateUserDetailUsecase;
 import org.runimo.runimo.user.service.usecases.query.MyPageQueryUsecase;
+import org.runimo.runimo.user.service.usecases.query.UserInfoQueryUsecase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
@@ -35,6 +37,10 @@ class MyPageControllerTest {
     private MockMvc mockMvc;
     @MockitoBean
     private MyPageQueryUsecase myPageQueryUsecase;
+    @MockitoBean
+    private UserInfoQueryUsecase userInfoQueryUsecase;
+    @MockitoBean
+    private UpdateUserDetailUsecase updateUserDetailUsecase;
     @MockitoBean
     private JwtResolver jwtResolver;
     @MockitoBean
