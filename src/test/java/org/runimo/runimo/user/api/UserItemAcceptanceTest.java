@@ -149,7 +149,8 @@ class UserItemAcceptanceTest {
                 "마당알",
                 "MADANG",
                 "test.url",
-                "ECODE"
+                "ECODE",
+                1L
             ));
 
         AuthSignupRequest request = new AuthSignupRequest(

@@ -11,7 +11,8 @@ public record SignupUserResponse(
     String greetingEggName,
     String greetingEggType,
     String greetingEggImgUrl,
-    String eggCode
+    String eggCode,
+    Long eggId
 ) {
 
     public SignupUserResponse(final User user, final TokenPair tokenPair, final Egg greetingEgg,
@@ -23,7 +24,8 @@ public record SignupUserResponse(
             greetingEgg.getName(),
             greetingEgg.getEggType().getName(),
             greetingEgg.getImgUrl(),
-            eggCode
+            eggCode,
+            greetingEgg.getId()
         );
     }
 }

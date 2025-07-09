@@ -157,7 +157,8 @@ class AuthControllerTest {
                 "exmaple_egg_name",
                 "example_egg_type",
                 "example_egg_url",
-                "ECODE"
+                "ECODE",
+                1L
             )
         );
 
@@ -196,7 +197,8 @@ class AuthControllerTest {
                 "exmaple_egg_name",
                 "example_egg_type",
                 "example_egg_url",
-                "ECODE"
+                "ECODE",
+                1L
             )
         );
 

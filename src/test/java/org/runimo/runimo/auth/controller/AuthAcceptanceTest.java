@@ -95,7 +95,8 @@ class AuthAcceptanceTest {
             .log().all()
             .body("payload.nickname", equalTo("username"))
             .body("payload.token_pair.access_token", notNullValue())
-            .body("payload.token_pair.refresh_token", notNullValue());
+            .body("payload.token_pair.refresh_token", notNullValue())
+            .body("payload.egg_id", notNullValue());
     }
 
     @Test
