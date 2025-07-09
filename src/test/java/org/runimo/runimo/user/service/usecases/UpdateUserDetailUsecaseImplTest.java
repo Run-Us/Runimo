@@ -61,8 +61,6 @@ class UpdateUserDetailUsecaseImplTest {
                 Optional.ofNullable(UserDeviceToken.from("token", DevicePlatform.APNS, true)));
         given(userFinder.findUserById(any()))
             .willReturn(Optional.ofNullable(UserFixtures.getDefaultUser()));
-        given(userDeviceTokenRepository.save(any()))
-            .willReturn(UserDeviceToken.from("token", DevicePlatform.APNS, true));
         var command = UpdateNotificationAllowedCommand.of(
             1L,
             new UpdateNotificationAllowedRequst(true, "token", "APNS")
